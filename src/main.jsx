@@ -19,9 +19,9 @@ createRoot(document.getElementById('root')).render(
   Order Now
 </button>
 {products.length === 0 && !loading && (
-  <div className="text-center py-32">
+  <div className="text-center py-34">
     <p className="text-4xl text-amber-900 font-medium">Menu coming soon!</p>
-    <p className="text-2xl text-gray-600 mt-6">We're crafting something special for you ☕</p>
+    <p className="text-2xl text-gray-700 mt-6">We're crafting something special for you ☕</p>
   </div>
 )}
 <footer className="bg-amber-950 text-white py-12 text-center">
