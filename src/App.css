@@ -1,42 +1,95 @@
-#root {
-  max-width: 1280px;
-  margin: 1 auto;
-  padding: 2rem;
+/* ===== Base coffee-themed background ===== */
+body {
+  background-color: #2B1B14;
+  color: #F5E6D3;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Hero section — deep espresso with warm glow + bean texture */
+#hero {
+  position: relative;
+  background:
+    radial-gradient(ellipse 800px 500px at 50% 20%, rgba(193, 127, 62, 0.25), transparent 70%),
+    linear-gradient(180deg, #2B1B14 0%, #3A2418 100%);
+  overflow: hidden;
+}
+
+#hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  background-image:
+    radial-gradient(circle at 15% 30%, #EFE0C8 0 3px, transparent 3px),
+    radial-gradient(circle at 70% 15%, #EFE0C8 0 2px, transparent 2px),
+    radial-gradient(circle at 40% 70%, #EFE0C8 0 3px, transparent 3px),
+    radial-gradient(circle at 85% 60%, #EFE0C8 0 2px, transparent 2px),
+    radial-gradient(circle at 25% 85%, #EFE0C8 0 3px, transparent 3px),
+    radial-gradient(circle at 60% 40%, #EFE0C8 0 2px, transparent 2px);
+  background-size: 400px 400px;
+  pointer-events: none;
+}
+
+#hero h1, #hero p {
+  position: relative;
+  z-index: 1;
+}
+
+/* Menu section — warm cream, contrast with hero */
+#menu {
+  background: linear-gradient(180deg, #F5E6D3 0%, #EFE0C8 100%);
+  color: #2B1B14;
+  padding: 4rem 2rem;
+}
+
+/* Subscribe section — back to deep tone, caramel accent glow */
+#subscribe {
+  position: relative;
+  background: linear-gradient(135deg, #3A2418 0%, #2B1B14 100%);
+  color: #F5E6D3;
+  padding: 4rem 2rem;
   text-align: center;
 }
 
-.logo {
-  height: 7em;
-  padding: 2.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+#subscribe::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 50%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(193,127,62,0.3), transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Buttons — caramel accent, warm hover */
+button, .subscribe-btn {
+  background: #C17F3E;
+  color: #2B1B14;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+button:hover, .subscribe-btn:hover {
+  background: #D8935A;
+  transform: translateY(-2px);
 }
 
-.card {
-  padding: 2em;
+/* Nav bar */
+nav {
+  background: rgba(43, 27, 20, 0.85);
+  backdrop-filter: blur(8px);
+  color: #F5E6D3;
 }
 
-.read-the-docs {
-  color: #888;
+nav a {
+  color: #EFE0C8;
+  text-decoration: none;
+}
+
+nav a:hover {
+  color: #C17F3E;
 }
