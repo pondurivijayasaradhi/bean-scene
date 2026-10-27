@@ -2,17 +2,35 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './index.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:8080');
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const DEFAULT_PRODUCTS = [
-  { id: 1, name: "Cappuccino", description: "Rich espresso with steamed milk foam", price: 4.50 },
-  { id: 2, name: "Latte", description: "Smooth espresso with steamed milk", price: 4.80 },
-  { id: 3, name: "Americano", description: "Espresso with hot water", price: 3.50 },
-  { id: 4, name: "Iced Coffee", description: "Chilled coffee over ice", price: 4.20 },
-  { id: 5, name: "Croissant", description: "Buttery, flaky French pastry", price: 3.90 },
-  { id: 6, name: "Blueberry Muffin", description: "Freshly baked with real blueberries", price: 3.50 }
+  { id: 1, name: "Cappuccino",       description: "Rich espresso with steamed milk foam",  price: 4.50, image: "/cappuccino.jpg",       category: "coffee",  rating: 4.9, reviews: 218, popular: true  },
+  { id: 2, name: "Latte",            description: "Smooth espresso with steamed milk",      price: 4.80, image: "/latte.jpg",            category: "coffee",  rating: 4.8, reviews: 195, popular: false },
+  { id: 3, name: "Americano",        description: "Espresso with hot water",                price: 3.50, image: "/americano.jpg",        category: "coffee",  rating: 4.7, reviews: 143, popular: false },
+  { id: 4, name: "Iced Coffee",      description: "Chilled coffee over ice",                price: 4.20, image: "/iced_coffee.jpg",      category: "iced",   rating: 4.8, reviews: 176, popular: true  },
+  { id: 5, name: "Croissant",        description: "Buttery, flaky French pastry",           price: 3.90, image: "/croissant.jpg",        category: "bakery", rating: 4.6, reviews: 112, popular: false },
+  { id: 6, name: "Blueberry Muffin", description: "Freshly baked with real blueberries",   price: 3.50, image: "/blueberry_muffin.jpg", category: "bakery", rating: 4.7, reviews: 98,  popular: true  },
 ];
+
+const CATEGORIES = [
+  { key: 'all',    label: '☕ All'    },
+  { key: 'coffee', label: '☕ Coffee' },
+  { key: 'iced',   label: '🧊 Iced'  },
+  { key: 'bakery', label: '🥐 Bakery' },
+];
+
+function StarRating({ rating }) {
+  const full  = Math.floor(rating);
+  const half  = rating - full >= 0.5;
+  const empty = 5 - full - (half ? 1 : 0);
+  return (
+    <span className="star-rating" aria-label={`Rating: ${rating} out of 5`}>
+      {'★'.repeat(full)}{half ? '½' : ''}{'☆'.repeat(empty)}
+    </span>
+  );
+}
 
 function App() {
   // Auth
@@ -30,8 +48,23 @@ function App() {
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
 
-  // Products
+  // Products + Filters
   const [products, setProducts] = useState(DEFAULT_PRODUCTS);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState('all');
+
+  // Animated hero
+  const heroWords = ['morning', 'afternoon', 'evening', 'day'];
+  const [heroWordIdx, setHeroWordIdx] = useState(0);
+  const [heroFade, setHeroFade] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroFade(false);
+      setTimeout(() => { setHeroWordIdx((i) => (i + 1) % heroWords.length); setHeroFade(true); }, 400);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
 
   // Cart & Ordering
   const [cart, setCart] = useState([]);
@@ -59,8 +92,9 @@ function App() {
   const [email, setEmail] = useState('');
   const [subscribeMessage, setSubscribeMessage] = useState('');
 
-  // Restore session
+  // Restore session & set website title
   useEffect(() => {
+    document.title = "Bean Scene | Premium Coffee & Bakery";
     const savedUser = localStorage.getItem('beanSceneUser');
     if (savedUser) {
       try {
@@ -77,18 +111,29 @@ function App() {
   // Fetch products from backend or fallback to default
   useEffect(() => {
     const fetchProducts = async () => {
+      if (!API_BASE_URL) {
+        setProducts(DEFAULT_PRODUCTS);
+        return;
+      }
       try {
         const res = await axios.get(`${API_BASE_URL}/api/products`);
         if (Array.isArray(res.data) && res.data.length > 0) {
           setProducts(res.data);
         }
       } catch {
-        // Fallback to DEFAULT_PRODUCTS seamlessly
         setProducts(DEFAULT_PRODUCTS);
       }
     };
     fetchProducts();
   }, []);
+
+  // Filtered products (search + category)
+  const filteredProducts = products.filter((p) => {
+    const matchCat = activeCategory === 'all' || p.category === activeCategory;
+    const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        p.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchCat && matchSearch;
+  });
 
   // Toast feedback
   const showToast = (msg) => {
@@ -202,7 +247,9 @@ function App() {
   };
 
   // Calculate dynamic unit and total price in modal
-  const isBakeryItem = activeItem?.name?.toLowerCase().includes('croissant') || activeItem?.name?.toLowerCase().includes('muffin');
+  const isBakeryItem = activeItem?.category === 'bakery' ||
+    activeItem?.name?.toLowerCase().includes('croissant') ||
+    activeItem?.name?.toLowerCase().includes('muffin');
   const sizeCost = orderSize === 'large' ? 0.80 : 0;
   const milkCost = !isBakeryItem && (orderMilk === 'oat' || orderMilk === 'almond') ? 0.50 : 0;
   const modalUnitPrice = (activeItem?.price || 0) + sizeCost + milkCost;
@@ -214,6 +261,7 @@ function App() {
       id: `${activeItem.id}-${Date.now()}`,
       productId: activeItem.id,
       name: activeItem.name,
+      image: activeItem.image || DEFAULT_PRODUCTS.find(p => p.id === activeItem.id)?.image,
       size: orderSize,
       milk: isBakeryItem ? null : orderMilk,
       notes: orderNotes,
@@ -376,16 +424,26 @@ function App() {
         )}
       </div>
 
-      {/* HERO SECTION WITH ATMOSPHERIC COFFEE BACKGROUND */}
+      {/* HERO — ANIMATED TEXT + STATS */}
       <section className="hero" id="home">
+        <div className="hero-badge">☕ Premium Coffee &amp; Bakery</div>
         <h1>
           We've got your<br />
-          <span>morning covered</span><br />
-          with Coffee
+          <span className={`hero-animated-word ${heroFade ? 'fade-in' : 'fade-out'}`}>
+            {heroWords[heroWordIdx]}
+          </span><br />
+          covered with Coffee
         </h1>
         <p>Premium beans. Expertly roasted. Perfectly brewed. Start your day the Bean Scene way.</p>
         <div className="hero-cta-group">
           <a href="#menu" className="btn-primary">Explore Menu →</a>
+          <div className="hero-stats">
+            <div className="hero-stat"><strong>4.9★</strong><span>Rating</span></div>
+            <div className="hero-stat-divider" />
+            <div className="hero-stat"><strong>5K+</strong><span>Orders</span></div>
+            <div className="hero-stat-divider" />
+            <div className="hero-stat"><strong>6</strong><span>Specials</span></div>
+          </div>
         </div>
       </section>
 
@@ -396,30 +454,81 @@ function App() {
           <p>Freshly brewed favorites, made just for you</p>
         </div>
 
-        {/* Cards Grid */}
-        <div className="menu-grid">
-          {products.map((product) => {
-            const btnId = `order-btn-${product.name?.toLowerCase().replace(/\s+/g, '-')}`;
-            return (
-              <div key={product.id || product.name} className="menu-card">
-                <h3>{product.name}</h3>
-                <p>{product.description}</p>
-                <div className="card-footer">
-                  <span className="price">${product.price.toFixed(2)}</span>
-                  <button
-                    id={btnId}
-                    type="button"
-                    className="order-btn"
-                    onClick={() => openOrderModal(product)}
-                    aria-label={`Order ${product.name} for $${product.price.toFixed(2)}`}
-                  >
-                    Order Now
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+        {/* Search */}
+        <div className="search-wrap">
+          <span className="search-icon">🔍</span>
+          <input
+            id="menu-search"
+            type="text"
+            className="search-input"
+            placeholder="Search menu items…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button className="search-clear" onClick={() => setSearchQuery('')} aria-label="Clear search">✕</button>
+          )}
         </div>
+
+        {/* Category Tabs */}
+        <div className="category-tabs" role="tablist">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat.key}
+              role="tab"
+              aria-selected={activeCategory === cat.key}
+              className={`category-tab ${activeCategory === cat.key ? 'active' : ''}`}
+              onClick={() => setActiveCategory(cat.key)}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Cards Grid or No Results */}
+        {filteredProducts.length === 0 ? (
+          <div className="no-results">
+            <span>😔</span>
+            <p>No items match "<strong>{searchQuery}</strong>"</p>
+            <button className="btn-secondary" onClick={() => { setSearchQuery(''); setActiveCategory('all'); }}>Clear Filters</button>
+          </div>
+        ) : (
+          <div className="menu-grid">
+            {filteredProducts.map((product) => {
+              const btnId = `order-btn-${product.name?.toLowerCase().replace(/\s+/g, '-')}`;
+              return (
+                <div key={product.id || product.name} className="menu-card">
+                  {product.popular && <div className="popular-badge">🔥 Popular</div>}
+                  {product.image && (
+                    <div className="menu-card-img-wrap">
+                      <img src={product.image} alt={product.name} className="menu-card-img" />
+                    </div>
+                  )}
+                  <div className="menu-card-body">
+                    <div className="menu-card-meta">
+                      <StarRating rating={product.rating || 4.5} />
+                      <span className="review-count">({product.reviews || 0})</span>
+                    </div>
+                    <h3>{product.name}</h3>
+                    <p>{product.description}</p>
+                    <div className="card-footer">
+                      <span className="price">${product.price.toFixed(2)}</span>
+                      <button
+                        id={btnId}
+                        type="button"
+                        className="order-btn"
+                        onClick={() => openOrderModal(product)}
+                        aria-label={`Order ${product.name} for $${product.price.toFixed(2)}`}
+                      >
+                        Order Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {/* SUBSCRIBE SECTION */}
@@ -449,10 +558,16 @@ function App() {
         <p style={{ marginTop: '0.5rem' }}>Full-Stack Project by <a href="#home">Vijaya Saradhi</a></p>
       </footer>
 
-      {/* INTERACTIVE ORDER MODAL */}
+      {/* INTERACTIVE ORDER MODAL — WITH IMAGE BANNER */}
       {showOrderModal && (
         <div className="modal-backdrop" onClick={() => setShowOrderModal(false)}>
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            {activeItem.image && (
+              <div className="modal-img-banner">
+                <img src={activeItem.image} alt={activeItem.name} />
+                <div className="modal-img-overlay" />
+              </div>
+            )}
             <div className="modal-header">
               <div>
                 <span className="modal-badge">Freshly Crafted</span>
