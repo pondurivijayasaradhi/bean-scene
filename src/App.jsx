@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './index.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:8080');
+const RAW_API_URL = import.meta.env.VITE_API_URL || '';
+const API_BASE_URL =
+  RAW_API_URL && !RAW_API_URL.includes('localhost') && !RAW_API_URL.includes('127.0.0.1')
+    ? RAW_API_URL
+    : '';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const DEFAULT_PRODUCTS = [
@@ -394,10 +398,6 @@ function App() {
   // Fetch products from backend or fallback to default
   useEffect(() => {
     const fetchProducts = async () => {
-      if (!API_BASE_URL) {
-        setProducts(DEFAULT_PRODUCTS);
-        return;
-      }
       try {
         const res = await axios.get(`${API_BASE_URL}/api/products`);
         if (Array.isArray(res.data) && res.data.length > 0) {
@@ -997,7 +997,6 @@ function App() {
   // Open Barista / Admin Hub and sync backend orders & reservations
   const openAdminHub = async () => {
     setShowAdminModal(true);
-    if (!API_BASE_URL) return;
     try {
       const [ordRes, resvRes] = await Promise.allSettled([
         axios.get(`${API_BASE_URL}/api/orders`),

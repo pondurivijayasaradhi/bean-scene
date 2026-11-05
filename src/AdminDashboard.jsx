@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = '';
 
 function AdminDashboard() {
   const [products, setProducts] = useState([]);
