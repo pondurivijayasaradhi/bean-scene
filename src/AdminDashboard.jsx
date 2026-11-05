@@ -23,7 +23,7 @@ function AdminDashboard() {
     try {
       const res = await axios.get(`${API_BASE_URL}/api/products`);
       setProducts(res.data || []);
-    } catch (err) {
+    } catch {
       setMessage('Failed to load products');
     } finally {
       setLoading(false);
@@ -31,7 +31,21 @@ function AdminDashboard() {
   };
 
   useEffect(() => {
-    fetchProducts();
+    let active = true;
+    axios
+      .get(`${API_BASE_URL}/api/products`)
+      .then((res) => {
+        if (active) setProducts(res.data || []);
+      })
+      .catch(() => {
+        if (active) setMessage('Failed to load products');
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   const handleChange = (e) => {
@@ -60,7 +74,7 @@ function AdminDashboard() {
       resetForm();
       fetchProducts();
       setTimeout(() => setMessage(''), 3000);
-    } catch (err) {
+    } catch {
       setMessage('❌ Error saving product');
     }
   };
@@ -85,7 +99,7 @@ function AdminDashboard() {
         setMessage('🗑️ Product deleted successfully!');
         fetchProducts();
         setTimeout(() => setMessage(''), 3000);
-      } catch (err) {
+      } catch {
         setMessage('❌ Error deleting product');
       }
     }

@@ -7,262 +7,28 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const DEFAULT_PRODUCTS = [
   // Hot Coffee
-  {
-    id: 1,
-    name: 'Cappuccino',
-    description: 'Rich espresso with steamed milk foam',
-    price: 4.5,
-    image: '/cappuccino.jpg',
-    category: 'coffee',
-    rating: 4.9,
-    reviews: 218,
-    popular: true,
-    calories: 120,
-    caffeine: '150mg',
-    badge: '🌱 Oat Option',
-  },
-  {
-    id: 2,
-    name: 'Latte',
-    description: 'Smooth espresso with steamed milk',
-    price: 4.8,
-    image: '/latte.jpg',
-    category: 'coffee',
-    rating: 4.8,
-    reviews: 195,
-    popular: false,
-    calories: 150,
-    caffeine: '150mg',
-    badge: '🥛 Creamy',
-  },
-  {
-    id: 3,
-    name: 'Americano',
-    description: 'Espresso with hot water',
-    price: 3.5,
-    image: '/americano.jpg',
-    category: 'coffee',
-    rating: 4.7,
-    reviews: 143,
-    popular: false,
-    calories: 15,
-    caffeine: '165mg',
-    badge: '⚡ Zero Sugar',
-  },
-  {
-    id: 7,
-    name: 'Caramel Macchiato',
-    description: 'Vanilla steamed milk marked with espresso and caramel drizzle',
-    price: 5.2,
-    image: 'https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=600&q=80',
-    category: 'coffee',
-    rating: 4.9,
-    reviews: 264,
-    popular: true,
-    calories: 210,
-    caffeine: '150mg',
-    badge: '🍯 Best Seller',
-  },
-  {
-    id: 8,
-    name: 'Caffè Mocha',
-    description: 'Full-bodied espresso with bittersweet chocolate and milk',
-    price: 5.0,
-    image: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&w=600&q=80',
-    category: 'coffee',
-    rating: 4.8,
-    reviews: 182,
-    popular: true,
-    calories: 230,
-    caffeine: '155mg',
-    badge: '🍫 Belgian Choc',
-  },
-  {
-    id: 9,
-    name: 'Flat White',
-    description: 'Velvety microfoam poured over a double ristretto shot',
-    price: 4.7,
-    image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&w=600&q=80',
-    category: 'coffee',
-    rating: 4.7,
-    reviews: 134,
-    popular: false,
-    calories: 130,
-    caffeine: '175mg',
-    badge: '✨ Ristretto',
-  },
-  {
-    id: 10,
-    name: 'Espresso Macchiato',
-    description: 'Bold double espresso topped with a dollop of milk foam',
-    price: 3.8,
-    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80',
-    category: 'coffee',
-    rating: 4.6,
-    reviews: 97,
-    popular: false,
-    calories: 35,
-    caffeine: '180mg',
-    badge: '🔥 Strong',
-  },
+  { id: 1,  name: 'Cappuccino',          description: 'Rich espresso with steamed milk foam',                          price: 4.5, image: '/cappuccino.jpg',                                                                              category: 'coffee', rating: 4.9, reviews: 218, popular: true,  calories: 120, caffeine: '150mg', badge: '🌱 Oat Option' },
+  { id: 2,  name: 'Latte',               description: 'Smooth espresso with steamed milk',                             price: 4.8, image: '/latte.jpg',                                                                                   category: 'coffee', rating: 4.8, reviews: 195, popular: false, calories: 150, caffeine: '150mg', badge: '🥛 Creamy'     },
+  { id: 3,  name: 'Americano',           description: 'Espresso with hot water',                                       price: 3.5, image: '/americano.jpg',                                                                               category: 'coffee', rating: 4.7, reviews: 143, popular: false, calories: 15,  caffeine: '165mg', badge: '⚡ Zero Sugar' },
+  { id: 7,  name: 'Caramel Macchiato',   description: 'Vanilla steamed milk marked with espresso and caramel drizzle', price: 5.2, image: 'https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.9, reviews: 264, popular: true,  calories: 210, caffeine: '150mg', badge: '🍯 Best Seller' },
+  { id: 8,  name: 'Caffè Mocha',         description: 'Full-bodied espresso with bittersweet chocolate and milk',      price: 5.0, image: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.8, reviews: 182, popular: true,  calories: 230, caffeine: '155mg', badge: '🍫 Belgian Choc' },
+  { id: 9,  name: 'Flat White',          description: 'Velvety microfoam poured over a double ristretto shot',         price: 4.7, image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.7, reviews: 134, popular: false, calories: 130, caffeine: '175mg', badge: '✨ Ristretto'  },
+  { id: 10, name: 'Espresso Macchiato',  description: 'Bold double espresso topped with a dollop of milk foam',        price: 3.8, image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.6, reviews: 97,  popular: false, calories: 35,  caffeine: '180mg', badge: '🔥 Strong'     },
 
   // Iced Beverages
-  {
-    id: 4,
-    name: 'Iced Coffee',
-    description: 'Chilled coffee over ice',
-    price: 4.2,
-    image: '/iced_coffee.jpg',
-    category: 'iced',
-    rating: 4.8,
-    reviews: 176,
-    popular: true,
-    calories: 80,
-    caffeine: '145mg',
-    badge: '🧊 Chilled',
-  },
-  {
-    id: 11,
-    name: 'Cold Brew',
-    description: 'Slow-steeped for 20 hours for an ultra-smooth finish',
-    price: 4.6,
-    image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80',
-    category: 'iced',
-    rating: 4.9,
-    reviews: 230,
-    popular: true,
-    calories: 25,
-    caffeine: '200mg',
-    badge: '⚡ 20h Steep',
-  },
-  {
-    id: 12,
-    name: 'Iced Caramel Latte',
-    description: 'Chilled espresso, milk, and sweet caramel over ice',
-    price: 5.1,
-    image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80',
-    category: 'iced',
-    rating: 4.8,
-    reviews: 189,
-    popular: true,
-    calories: 190,
-    caffeine: '150mg',
-    badge: '🍯 Sweet',
-  },
-  {
-    id: 13,
-    name: 'Iced Matcha Latte',
-    description: 'Ceremonial-grade green tea whisked with cold milk over ice',
-    price: 5.3,
-    image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80',
-    category: 'iced',
-    rating: 4.7,
-    reviews: 154,
-    popular: false,
-    calories: 140,
-    caffeine: '85mg',
-    badge: '🍵 Uji Matcha',
-  },
-  {
-    id: 14,
-    name: 'Espresso Frappe',
-    description: 'Blended iced coffee with rich espresso and whipped cream',
-    price: 5.5,
-    image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80',
-    category: 'iced',
-    rating: 4.8,
-    reviews: 167,
-    popular: false,
-    calories: 280,
-    caffeine: '140mg',
-    badge: '🍦 Blended',
-  },
+  { id: 4,  name: 'Iced Coffee',         description: 'Chilled coffee over ice',                                       price: 4.2, image: '/iced_coffee.jpg',                                                                             category: 'iced',   rating: 4.8, reviews: 176, popular: true,  calories: 80,  caffeine: '145mg', badge: '🧊 Chilled'    },
+  { id: 11, name: 'Cold Brew',           description: 'Slow-steeped for 20 hours for an ultra-smooth finish',          price: 4.6, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.9, reviews: 230, popular: true,  calories: 25,  caffeine: '200mg', badge: '⚡ 20h Steep'  },
+  { id: 12, name: 'Iced Caramel Latte',  description: 'Chilled espresso, milk, and sweet caramel over ice',            price: 5.1, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 189, popular: true,  calories: 190, caffeine: '150mg', badge: '🍯 Sweet'      },
+  { id: 13, name: 'Iced Matcha Latte',   description: 'Ceremonial-grade green tea whisked with cold milk over ice',    price: 5.3, image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.7, reviews: 154, popular: false, calories: 140, caffeine: '85mg',  badge: '🍵 Uji Matcha' },
+  { id: 14, name: 'Espresso Frappe',     description: 'Blended iced coffee with rich espresso and whipped cream',      price: 5.5, image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 167, popular: false, calories: 280, caffeine: '140mg', badge: '🍦 Blended'    },
 
   // Bakery
-  {
-    id: 5,
-    name: 'Croissant',
-    description: 'Buttery, flaky French pastry',
-    price: 3.9,
-    image: '/croissant.jpg',
-    category: 'bakery',
-    rating: 4.6,
-    reviews: 112,
-    popular: false,
-    calories: 260,
-    caffeine: '0mg',
-    badge: '🥐 French Butter',
-  },
-  {
-    id: 6,
-    name: 'Blueberry Muffin',
-    description: 'Freshly baked with real blueberries',
-    price: 3.5,
-    image: '/blueberry_muffin.jpg',
-    category: 'bakery',
-    rating: 4.7,
-    reviews: 98,
-    popular: true,
-    calories: 290,
-    caffeine: '0mg',
-    badge: '🫐 Fresh Baked',
-  },
-  {
-    id: 15,
-    name: 'Chocolate Croissant',
-    description: 'Flaky golden pastry filled with rich dark chocolate',
-    price: 4.3,
-    image: 'https://images.unsplash.com/photo-1530610476181-d83430b64dcd?auto=format&fit=crop&w=600&q=80',
-    category: 'bakery',
-    rating: 4.9,
-    reviews: 205,
-    popular: true,
-    calories: 310,
-    caffeine: '15mg',
-    badge: '🍫 Warm Center',
-  },
-  {
-    id: 16,
-    name: 'Cinnamon Roll',
-    description: 'Warm spiced swirl topped with cream cheese frosting',
-    price: 4.5,
-    image: 'https://images.unsplash.com/photo-1583527976767-5399024eeb05?auto=format&fit=crop&w=600&q=80',
-    category: 'bakery',
-    rating: 4.8,
-    reviews: 174,
-    popular: true,
-    calories: 340,
-    caffeine: '0mg',
-    badge: '✨ House Glaze',
-  },
-  {
-    id: 17,
-    name: 'Banana Walnut Bread',
-    description: 'Moist house-baked banana slice loaded with toasted walnuts',
-    price: 3.8,
-    image: 'https://images.unsplash.com/photo-1603532648955-039310d9ed75?auto=format&fit=crop&w=600&q=80',
-    category: 'bakery',
-    rating: 4.7,
-    reviews: 119,
-    popular: false,
-    calories: 270,
-    caffeine: '0mg',
-    badge: '🌰 Toasted Nuts',
-  },
-  {
-    id: 18,
-    name: 'Avocado Toast',
-    description: 'Artisan sourdough with smashed avocado and chili flakes',
-    price: 6.5,
-    image: 'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?auto=format&fit=crop&w=600&q=80',
-    category: 'bakery',
-    rating: 4.8,
-    reviews: 142,
-    popular: false,
-    calories: 320,
-    caffeine: '0mg',
-    badge: '🥑 Sourdough',
-  },
+  { id: 5,  name: 'Croissant',           description: 'Buttery, flaky French pastry',                                  price: 3.9, image: '/croissant.jpg',                                                                               category: 'bakery', rating: 4.6, reviews: 112, popular: false, calories: 260, caffeine: '0mg',   badge: '🥐 French Butter' },
+  { id: 6,  name: 'Blueberry Muffin',    description: 'Freshly baked with real blueberries',                           price: 3.5, image: '/blueberry_muffin.jpg',                                                                        category: 'bakery', rating: 4.7, reviews: 98,  popular: true,  calories: 290, caffeine: '0mg',   badge: '🫐 Fresh Baked' },
+  { id: 15, name: 'Chocolate Croissant', description: 'Flaky golden pastry filled with rich dark chocolate',           price: 4.3, image: 'https://images.unsplash.com/photo-1530610476181-d83430b64dcd?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 205, popular: true,  calories: 310, caffeine: '15mg',  badge: '🍫 Warm Center' },
+  { id: 16, name: 'Cinnamon Roll',       description: 'Warm spiced swirl topped with cream cheese frosting',           price: 4.5, image: 'https://images.unsplash.com/photo-1583527976767-5399024eeb05?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.8, reviews: 174, popular: true,  calories: 340, caffeine: '0mg',   badge: '✨ House Glaze' },
+  { id: 17, name: 'Banana Walnut Bread', description: 'Moist house-baked banana slice loaded with toasted walnuts',    price: 3.8, image: 'https://images.unsplash.com/photo-1603532648955-039310d9ed75?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.7, reviews: 119, popular: false, calories: 270, caffeine: '0mg',   badge: '🌰 Toasted Nuts' },
+  { id: 18, name: 'Avocado Toast',       description: 'Artisan sourdough with smashed avocado and chili flakes',       price: 6.5, image: 'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.8, reviews: 142, popular: false, calories: 320, caffeine: '0mg',   badge: '🥑 Sourdough'  },
 ];
 
 const CATEGORIES = [
@@ -306,6 +72,55 @@ const CUP_TOPPINGS = [
   { key: 'whip',     label: 'Vanilla Cold Foam', color: '#fffdf9', price: 0.70, kcal: 50 },
   { key: 'cinnamon', label: 'Cinnamon Dust',     color: '#b45309', price: 0.25, kcal: 5  },
   { key: 'cocoa',    label: 'Cocoa Nibs',        color: '#3f1d0b', price: 0.40, kcal: 25 },
+];
+
+const CUP_SIZES = [
+  { key: 'small',   label: 'Small (8oz)',   oz: '8oz',  priceMod: -0.40, kcalMod: 0.8, scale: 0.92 },
+  { key: 'regular', label: 'Regular (12oz)', oz: '12oz', priceMod: 0.00,  kcalMod: 1.0, scale: 1.00 },
+  { key: 'large',   label: 'Large (16oz)',   oz: '16oz', priceMod: 0.75,  kcalMod: 1.25, scale: 1.08 },
+];
+
+const CUP_PRESETS = [
+  {
+    name: '☁️ Caramel Cloud',
+    temp: 'iced',
+    size: 'large',
+    baseKey: 'coldbrew',
+    milkKey: 'oat',
+    syrupKey: 'caramel',
+    toppingKey: 'whip',
+    extraShot: false,
+  },
+  {
+    name: '🍵 Dirty Uji Matcha',
+    temp: 'iced',
+    size: 'regular',
+    baseKey: 'matcha',
+    milkKey: 'coconut',
+    syrupKey: 'vanilla',
+    toppingKey: 'whip',
+    extraShot: true,
+  },
+  {
+    name: '🍫 Mocha Velvet',
+    temp: 'hot',
+    size: 'large',
+    baseKey: 'espresso',
+    milkKey: 'whole',
+    syrupKey: 'mocha',
+    toppingKey: 'cocoa',
+    extraShot: true,
+  },
+  {
+    name: '🔥 Spiced Chai Latte',
+    temp: 'hot',
+    size: 'regular',
+    baseKey: 'chai',
+    milkKey: 'oat',
+    syrupKey: 'vanilla',
+    toppingKey: 'cinnamon',
+    extraShot: false,
+  },
 ];
 
 const CAFE_ZONES = [
@@ -412,11 +227,21 @@ function App() {
 
   // Visual Cup Customizer Studio state
   const [cupTemp, setCupTemp] = useState('hot');
+  const [cupSize, setCupSize] = useState(CUP_SIZES[1]);
   const [cupBase, setCupBase] = useState(CUP_BASES[0]);
   const [cupMilk, setCupMilk] = useState(CUP_MILKS[0]);
   const [cupSyrup, setCupSyrup] = useState(CUP_SYRUPS[0]);
   const [cupTopping, setCupTopping] = useState(CUP_TOPPINGS[0]);
+  const [extraShot, setExtraShot] = useState(false);
   const [customCupName, setCustomCupName] = useState('');
+  const [savedCups, setSavedCups] = useState(() => {
+    try {
+      const saved = localStorage.getItem('beanSceneSavedCups');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
   // Table Reservation Modal state
   const [showReserveModal, setShowReserveModal] = useState(false);
@@ -647,15 +472,22 @@ function App() {
   };
 
   // Visual Custom Cup Price & Macros
-  const customCupPrice = cupBase.price + cupMilk.price + cupSyrup.price + cupTopping.price;
-  const customCupCalories = cupBase.kcal + cupMilk.kcal + cupSyrup.kcal + cupTopping.kcal;
+  const customCupPrice = Math.max(
+    2.5,
+    cupBase.price + cupMilk.price + cupSyrup.price + cupTopping.price + cupSize.priceMod + (extraShot ? 0.85 : 0)
+  );
+  const customCupCalories = Math.round(
+    (cupBase.kcal + cupMilk.kcal + cupSyrup.kcal + cupTopping.kcal + (extraShot ? 10 : 0)) * cupSize.kcalMod
+  );
+  const customCupCaffeine = cupBase.caffeine + (extraShot ? 75 : 0);
 
   const handleAddCustomCup = () => {
     const label = customCupName.trim() || `Custom ${cupBase.label}`;
     const tempLabel = cupTemp === 'hot' ? 'Hot' : 'Iced';
+    const shotLabel = extraShot ? ' + Extra Shot' : '';
     const customItem = {
       id: `custom-${Date.now()}`,
-      name: `🎨 ${label} (${tempLabel} • ${cupMilk.label}, ${cupSyrup.label}, ${cupTopping.label})`,
+      name: `🎨 ${label} (${cupSize.oz} ${tempLabel}${shotLabel} • ${cupMilk.label}, ${cupSyrup.label}, ${cupTopping.label})`,
       image: cupTemp === 'iced' ? '/iced_coffee.jpg' : '/cappuccino.jpg',
       unitPrice: customCupPrice,
       price: customCupPrice,
@@ -663,7 +495,68 @@ function App() {
     };
     setCart((prev) => [...prev, customItem]);
     setCustomCupName('');
-    showToast(`Added "${label}" (${tempLabel}) to your cart!`);
+    showToast(`Added ${customItem.name} to your cart!`);
+  };
+
+  const handleOrderCustomCupNow = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const label = customCupName.trim() || `Custom ${cupBase.label}`;
+    const tempLabel = cupTemp === 'hot' ? 'Hot' : 'Iced';
+    const shotLabel = extraShot ? ' + Extra Shot' : '';
+    const customProduct = {
+      id: 99,
+      name: `🎨 ${label} (${cupSize.oz} ${tempLabel}${shotLabel})`,
+      description: `${cupBase.label} with ${cupMilk.label}, ${cupSyrup.label}, and ${cupTopping.label}`,
+      price: customCupPrice,
+      image: cupTemp === 'iced' ? '/iced_coffee.jpg' : '/cappuccino.jpg',
+      category: cupTemp === 'iced' ? 'iced' : 'coffee',
+    };
+    openOrderModal(customProduct);
+  };
+
+  const applyCupPreset = (preset) => {
+    setCupTemp(preset.temp);
+    setCupSize(CUP_SIZES.find((s) => s.key === preset.size) || CUP_SIZES[1]);
+    setCupBase(CUP_BASES.find((b) => b.key === preset.baseKey) || CUP_BASES[0]);
+    setCupMilk(CUP_MILKS.find((m) => m.key === preset.milkKey) || CUP_MILKS[0]);
+    setCupSyrup(CUP_SYRUPS.find((s) => s.key === preset.syrupKey) || CUP_SYRUPS[0]);
+    setCupTopping(CUP_TOPPINGS.find((t) => t.key === preset.toppingKey) || CUP_TOPPINGS[0]);
+    setExtraShot(Boolean(preset.extraShot));
+    setCustomCupName(preset.name.replace(/^[^\s]+\s/, ''));
+    showToast(`Loaded "${preset.name}" recipe into Cup Studio!`);
+  };
+
+  const handleSurpriseCup = () => {
+    const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    setCupTemp(Math.random() > 0.5 ? 'iced' : 'hot');
+    setCupSize(rand(CUP_SIZES));
+    setCupBase(rand(CUP_BASES));
+    setCupMilk(rand(CUP_MILKS));
+    setCupSyrup(rand(CUP_SYRUPS));
+    setCupTopping(rand(CUP_TOPPINGS));
+    setExtraShot(Math.random() > 0.6);
+    setCustomCupName('Barista Mystery Cup');
+    showToast('🎲 Mixed a Surprise Barista Creation for you!');
+  };
+
+  const handleSaveCustomCup = () => {
+    const label = customCupName.trim() || `Custom ${cupBase.label}`;
+    const tempLabel = cupTemp === 'hot' ? 'Hot' : 'Iced';
+    const shotLabel = extraShot ? ' + Extra Shot' : '';
+    const item = {
+      id: `custom-${Date.now()}`,
+      name: `🎨 ${label} (${cupSize.oz} ${tempLabel}${shotLabel} • ${cupMilk.label}, ${cupSyrup.label}, ${cupTopping.label})`,
+      image: cupTemp === 'iced' ? '/iced_coffee.jpg' : '/cappuccino.jpg',
+      unitPrice: customCupPrice,
+      price: customCupPrice,
+      quantity: 1,
+    };
+    setSavedCups((prev) => {
+      const next = [item, ...prev.slice(0, 5)];
+      localStorage.setItem('beanSceneSavedCups', JSON.stringify(next));
+      return next;
+    });
+    showToast('💾 Saved your custom cup recipe to My Saved Creations!');
   };
 
   // Handle Table Reservation Submit
@@ -1468,18 +1361,42 @@ function App() {
       {/* NEW: INTERACTIVE VISUAL "BUILD YOUR DREAM CUP" STUDIO */}
       <section className="section" id="customizer" style={{ paddingTop: 10, paddingBottom: 40 }}>
         <div className="section-header">
+          <span className="modal-badge">Interactive 3D Barista Lab</span>
           <h2>🎨 Build Your Dream Cup</h2>
           <p>Watch your custom creation come to life layer by layer in our interactive Barista Studio</p>
+
+          {/* 1-Click Barista Signature Presets + Surprise Me */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.55rem', flexWrap: 'wrap', marginTop: '1rem' }}>
+            {CUP_PRESETS.map((preset) => (
+              <button
+                key={preset.name}
+                type="button"
+                className="mood-pill-btn"
+                style={{ padding: '0.4rem 0.95rem', fontSize: '0.8rem' }}
+                onClick={() => applyCupPreset(preset)}
+              >
+                {preset.name}
+              </button>
+            ))}
+            <button
+              type="button"
+              className="mood-pill-btn active"
+              style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }}
+              onClick={handleSurpriseCup}
+            >
+              🎲 Surprise Me!
+            </button>
+          </div>
         </div>
 
         <div className="cup-studio-card">
           {/* Live Layered Glass Visualization */}
           <div className="cup-preview-stage">
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '0.6rem' }}>
               <button
                 type="button"
                 className={`mood-pill-btn ${cupTemp === 'hot' ? 'active' : ''}`}
-                style={{ padding: '0.32rem 0.85rem', fontSize: '0.78rem' }}
+                style={{ padding: '0.32rem 0.8rem', fontSize: '0.76rem' }}
                 onClick={() => setCupTemp('hot')}
               >
                 🔥 Hot Mug
@@ -1487,11 +1404,34 @@ function App() {
               <button
                 type="button"
                 className={`mood-pill-btn ${cupTemp === 'iced' ? 'active' : ''}`}
-                style={{ padding: '0.32rem 0.85rem', fontSize: '0.78rem' }}
+                style={{ padding: '0.32rem 0.8rem', fontSize: '0.76rem' }}
                 onClick={() => setCupTemp('iced')}
               >
                 🧊 Iced Glass
               </button>
+              <button
+                type="button"
+                className={`mood-pill-btn ${extraShot ? 'active' : ''}`}
+                style={{ padding: '0.32rem 0.8rem', fontSize: '0.76rem' }}
+                onClick={() => setExtraShot((s) => !s)}
+              >
+                ⚡ +1 Shot (+$0.85)
+              </button>
+            </div>
+
+            {/* Cup Size Pills */}
+            <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.65rem' }}>
+              {CUP_SIZES.map((sz) => (
+                <button
+                  key={sz.key}
+                  type="button"
+                  className={`mood-pill-btn ${cupSize.key === sz.key ? 'active' : ''}`}
+                  style={{ padding: '0.26rem 0.7rem', fontSize: '0.74rem' }}
+                  onClick={() => setCupSize(sz)}
+                >
+                  {sz.label}
+                </button>
+              ))}
             </div>
 
             {cupTemp === 'hot' ? (
@@ -1504,7 +1444,10 @@ function App() {
               <div style={{ height: 14 }} />
             )}
 
-            <div className="cup-glass-wrapper">
+            <div
+              className="cup-glass-wrapper"
+              style={{ transform: `scale(${cupSize.scale})`, transition: 'transform 0.3s ease' }}
+            >
               <div className="visual-cup-glass">
                 {cupTemp === 'iced' && (
                   <div className="ice-cubes-overlay">
@@ -1514,13 +1457,13 @@ function App() {
                 )}
                 <div
                   className="cup-layer"
-                  style={{ height: '34%', background: cupBase.color }}
+                  style={{ height: extraShot ? '38%' : '32%', background: cupBase.color }}
                 >
-                  {cupBase.label}
+                  {cupBase.label}{extraShot ? ' + Shot' : ''}
                 </div>
                 <div
                   className="cup-layer"
-                  style={{ height: '34%', background: cupMilk.color, color: '#222' }}
+                  style={{ height: '32%', background: cupMilk.color, color: '#222' }}
                 >
                   {cupMilk.label}
                 </div>
@@ -1543,8 +1486,8 @@ function App() {
             </div>
 
             <div className="cup-macros-bar">
-              <span className="macro-badge">{cupTemp === 'hot' ? '🔥 Hot' : '🧊 Iced'}</span>
-              <span className="macro-badge">⚡ {cupBase.caffeine}mg</span>
+              <span className="macro-badge">{cupSize.oz} • {cupTemp === 'hot' ? '🔥 Hot' : '🧊 Iced'}</span>
+              <span className="macro-badge">⚡ {customCupCaffeine}mg</span>
               <span className="macro-badge">🔥 {customCupCalories} kcal</span>
               <span className="macro-badge">💲 ${customCupPrice.toFixed(2)}</span>
             </div>
@@ -1620,21 +1563,97 @@ function App() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '1.25rem' }}>
+            <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginTop: '1.1rem' }}>
               <input
                 type="text"
                 className="modal-input"
                 placeholder="Name your creation (e.g. Alex's Cloud Latte)"
                 value={customCupName}
                 onChange={(e) => setCustomCupName(e.target.value)}
-                style={{ flex: 1, minWidth: 210 }}
+                style={{ flex: 1, minWidth: 195 }}
               />
-              <button type="button" className="btn-primary" onClick={handleAddCustomCup}>
-                + Add Custom Cup (${customCupPrice.toFixed(2)})
+              <button
+                type="button"
+                className="btn-secondary"
+                style={{ padding: '0.75rem 1.1rem', fontSize: '0.88rem' }}
+                onClick={handleSaveCustomCup}
+                title="Save this recipe to your Saved Creations"
+              >
+                💾 Save
+              </button>
+              <button
+                type="button"
+                className="btn-secondary"
+                style={{ padding: '0.75rem 1.2rem', fontSize: '0.88rem' }}
+                onClick={handleAddCustomCup}
+              >
+                + Add to Cart
+              </button>
+              <button
+                type="button"
+                className="btn-primary"
+                style={{ padding: '0.75rem 1.35rem', fontSize: '0.9rem' }}
+                onClick={handleOrderCustomCupNow}
+              >
+                ⚡ Order Cup (${customCupPrice.toFixed(2)})
               </button>
             </div>
           </div>
         </div>
+
+        {/* Saved Custom Cup Creations Shelf */}
+        {savedCups.length > 0 && (
+          <div
+            className="mood-matcher-box"
+            style={{ maxWidth: 1120, margin: '1.5rem auto 0', padding: '1.2rem 1.6rem', textAlign: 'left' }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+              <strong style={{ color: 'var(--warm)', fontSize: '0.95rem' }}>
+                💾 Your Saved Barista Creations ({savedCups.length})
+              </strong>
+              <button
+                type="button"
+                onClick={() => {
+                  setSavedCups([]);
+                  localStorage.removeItem('beanSceneSavedCups');
+                }}
+                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.78rem', cursor: 'pointer' }}
+              >
+                Clear Saved
+              </button>
+            </div>
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+              {savedCups.map((sc) => (
+                <div
+                  key={sc.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.65rem',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 14,
+                    padding: '0.5rem 0.85rem',
+                  }}
+                >
+                  <span style={{ fontSize: '0.83rem', color: '#fff', fontWeight: 600 }}>{sc.name}</span>
+                  <strong style={{ fontSize: '0.85rem', color: 'var(--warm)' }}>${sc.price.toFixed(2)}</strong>
+                  <button
+                    type="button"
+                    className="order-btn"
+                    style={{ padding: '0.28rem 0.7rem', fontSize: '0.75rem' }}
+                    onClick={() => {
+                      setCart((prev) => [...prev, { ...sc, id: `saved-${Date.now()}` }]);
+                      showToast(`Added ${sc.name} to cart!`);
+                    }}
+                  >
+                    + Cart
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* MENU SECTION */}
