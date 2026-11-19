@@ -25,6 +25,7 @@ export default function handler(req, res) {
       '/api/reservations',
       '/api/register',
       '/api/login',
+      '/api/visitors',
     ],
   });
 }

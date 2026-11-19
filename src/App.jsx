@@ -106,6 +106,36 @@ if (!API_BASE_URL) {
         token: 'bean-scene-jwt-token',
         user: { name: emailStr.split('@')[0], email: emailStr, role: 'customer' },
       };
+    } else if (url.includes('/api/visitors')) {
+      let savedVisitors = [];
+      let savedUsers = [];
+      let savedSubs = [];
+      try {
+        savedVisitors = JSON.parse(localStorage.getItem('beanSceneVisitors') || '[]');
+        savedUsers = JSON.parse(localStorage.getItem('beanSceneUsersList') || '[]');
+        savedSubs = JSON.parse(localStorage.getItem('beanSceneSubscribers') || '[]');
+      } catch {
+        // Fallback empty arrays
+      }
+      if (method === 'post') {
+        const entry = {
+          id: `vis-${Date.now()}`,
+          name: body.name || 'Guest Visitor',
+          email: body.email || 'Anonymous Session',
+          action: body.action || 'Viewing Bean Scene Live App',
+          device: body.device || 'Web Browser',
+          location: body.location || 'Live Web',
+          time: new Date().toISOString(),
+        };
+        savedVisitors = [entry, ...savedVisitors.slice(0, 49)];
+        localStorage.setItem('beanSceneVisitors', JSON.stringify(savedVisitors));
+      }
+      responseData = {
+        status: 'ok',
+        visitors: savedVisitors,
+        users: savedUsers,
+        subscribers: savedSubs,
+      };
     }
 
     return {
@@ -308,6 +338,7 @@ function App() {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
+  const [dietFilter, setDietFilter] = useState('all');
   const [sortBy, setSortBy] = useState('featured');
   const [favorites, setFavorites] = useState(() => {
     try {
@@ -350,6 +381,17 @@ function App() {
   const [wheelDeg, setWheelDeg] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [spinPrize, setSpinPrize] = useState('');
+
+  // Interactive AI Barista Concierge Chat state
+  const [showAiChat, setShowAiChat] = useState(false);
+  const [aiInput, setAiInput] = useState('');
+  const [aiMessages, setAiMessages] = useState([
+    {
+      sender: 'bot',
+      text: 'Hi! ☕ I’m your AI Barista Concierge. Ask me for low-calorie drinks, max caffeine, oat milk specials, promo codes, or order tracking!',
+      products: [DEFAULT_PRODUCTS[3], DEFAULT_PRODUCTS[8]],
+    },
+  ]);
 
   // Loyalty Points & Promo Code
   const [beanPoints, setBeanPoints] = useState(() => {
@@ -409,6 +451,8 @@ function App() {
   const [orderQty, setOrderQty] = useState(1);
   const [orderCustomer, setOrderCustomer] = useState('');
   const [orderNotes, setOrderNotes] = useState('');
+  const [orderFulfillment, setOrderFulfillment] = useState('🏪 In-Café Pickup');
+  const [paymentMethod, setPaymentMethod] = useState('📱 UPI / QR Pay');
 
   // Order Confirmation & Live Prep Tracker
   const [showOrderConfirmation, setShowOrderConfirmation] = useState(false);
@@ -435,13 +479,54 @@ function App() {
       return [];
     }
   });
+  const [visitorsList, setVisitorsList] = useState(() => {
+    try {
+      const saved = localStorage.getItem('beanSceneVisitors');
+      return saved
+        ? JSON.parse(saved)
+        : [
+            {
+              id: 'vis-init',
+              name: 'Vijaya Saradhi',
+              email: 'vijayasaradhiponduri@gmail.com',
+              action: 'Active Session • Menu & Cup Studio',
+              device: 'Chrome • Desktop',
+              location: 'Live Web App',
+              time: 'Just now',
+            },
+          ];
+    } catch {
+      return [];
+    }
+  });
+  const [usersList, setUsersList] = useState(() => {
+    try {
+      const saved = localStorage.getItem('beanSceneUsersList');
+      return saved
+        ? JSON.parse(saved)
+        : [
+            { name: 'Admin', email: 'admin@beanscene.com', role: 'admin', lastActive: 'Online' },
+            { name: 'Vijaya Saradhi', email: 'vijayasaradhiponduri@gmail.com', role: 'customer', lastActive: 'Active' },
+          ];
+    } catch {
+      return [];
+    }
+  });
+  const [subscribersList, setSubscribersList] = useState(() => {
+    try {
+      const saved = localStorage.getItem('beanSceneSubscribers');
+      return saved ? JSON.parse(saved) : ['vijayasaradhiponduri@gmail.com', 'hello@beanscene.com'];
+    } catch {
+      return ['vijayasaradhiponduri@gmail.com'];
+    }
+  });
   const [newProdName, setNewProdName] = useState('');
   const [newProdPrice, setNewProdPrice] = useState('');
   const [newProdCategory, setNewProdCategory] = useState('coffee');
   const [newProdDesc, setNewProdDesc] = useState('');
   const [newProdBadge, setNewProdBadge] = useState('✨ Barista Special');
 
-  // Sync Cart, Orders, Reservations & Reviews to localStorage
+  // Sync Cart, Orders, Reservations, Reviews & Live Users to localStorage
   useEffect(() => {
     localStorage.setItem('beanSceneCart', JSON.stringify(cart));
   }, [cart]);
@@ -457,6 +542,18 @@ function App() {
   useEffect(() => {
     localStorage.setItem('beanSceneReviews', JSON.stringify(reviewsList));
   }, [reviewsList]);
+
+  useEffect(() => {
+    localStorage.setItem('beanSceneVisitors', JSON.stringify(visitorsList));
+  }, [visitorsList]);
+
+  useEffect(() => {
+    localStorage.setItem('beanSceneUsersList', JSON.stringify(usersList));
+  }, [usersList]);
+
+  useEffect(() => {
+    localStorage.setItem('beanSceneSubscribers', JSON.stringify(subscribersList));
+  }, [subscribersList]);
 
   // Animate Live Order Preparation Tracker when confirmation modal is open
   useEffect(() => {
@@ -478,9 +575,51 @@ function App() {
   const [email, setEmail] = useState('');
   const [subscribeMessage, setSubscribeMessage] = useState('');
 
-  // Set website title
+  // Set website title & record live production visit
   useEffect(() => {
     document.title = "Bean Scene | Premium Coffee & Bakery";
+    const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
+    const isMobile = /Mobi|Android|iPhone/i.test(ua);
+    const browser = ua.includes('Edg')
+      ? 'Edge'
+      : ua.includes('Chrome')
+      ? 'Chrome'
+      : ua.includes('Firefox')
+      ? 'Firefox'
+      : ua.includes('Safari')
+      ? 'Safari'
+      : 'Browser';
+    const deviceLabel = `${browser} • ${isMobile ? 'Mobile' : 'Desktop'}`;
+
+    let currentUser = null;
+    try {
+      currentUser = JSON.parse(localStorage.getItem('beanSceneUser') || 'null');
+    } catch {
+      currentUser = null;
+    }
+
+    axios
+      .post(`${API_BASE_URL}/api/visitors`, {
+        type: 'visit',
+        name: currentUser?.name || 'Guest Visitor',
+        email: currentUser?.email || 'Anonymous Session',
+        action: 'Opened Bean Scene Live Web App',
+        device: deviceLabel,
+      })
+      .then((res) => {
+        if (Array.isArray(res.data?.visitors) && res.data.visitors.length > 0) {
+          setVisitorsList(res.data.visitors);
+        }
+        if (Array.isArray(res.data?.users) && res.data.users.length > 0) {
+          setUsersList(res.data.users);
+        }
+        if (Array.isArray(res.data?.subscribers) && res.data.subscribers.length > 0) {
+          setSubscribersList(res.data.subscribers);
+        }
+      })
+      .catch(() => {
+        // Keep local visitor state
+      });
   }, []);
 
   // Fetch products from backend or fallback to default
@@ -533,19 +672,21 @@ function App() {
 
   // Quick 1-Click Add to Cart from Menu Card
   const handleQuickAdd = (product) => {
-    const quickItem = {
-      id: `${product.id}-${Date.now()}`,
-      productId: product.id,
-      name: product.name,
-      image: product.image,
-      size: 'regular',
-      milk: product.category === 'bakery' ? null : 'whole',
-      notes: '',
-      unitPrice: product.price,
-      price: product.price,
-      quantity: 1,
-    };
-    setCart((prev) => [...prev, quickItem]);
+    setCart((prev) => [
+      ...prev,
+      {
+        id: `${product.id}-${prev.length + 1}-${product.name}`,
+        productId: product.id,
+        name: product.name,
+        image: product.image,
+        size: 'regular',
+        milk: product.category === 'bakery' ? null : 'whole',
+        notes: '',
+        unitPrice: product.price,
+        price: product.price,
+        quantity: 1,
+      },
+    ]);
     showToast(`Quick-added ${product.name} to cart!`);
   };
 
@@ -683,6 +824,26 @@ function App() {
 
     setConfirmedReservation(reservationPayload);
     setReservationsList((prev) => [reservationPayload, ...prev]);
+    setVisitorsList((prev) => [
+      {
+        id: `vis-${Date.now()}`,
+        name: guestName,
+        email: isLoggedIn ? userEmail : 'Table Guest',
+        action: `Reserved Table Pass #${passId} (${zoneObj.title} • ${reserveTime})`,
+        device: 'Web App',
+        location: 'Live Web',
+        time: new Date().toLocaleTimeString(),
+      },
+      ...prev,
+    ]);
+    axios
+      .post(`${API_BASE_URL}/api/visitors`, {
+        type: 'reservation',
+        name: guestName,
+        email: isLoggedIn ? userEmail : 'Table Guest',
+        action: `Reserved Table Pass #${passId} (${zoneObj.title} • ${reserveTime})`,
+      })
+      .catch(() => {});
     showToast(`Table Pass #${passId} reserved for ${reserveTime}! 🪑`);
   };
 
@@ -742,7 +903,19 @@ function App() {
       const matchSearch =
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.description.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchCat && matchSearch;
+      const caffNum = parseInt(String(p.caffeine || '0').replace(/\D/g, ''), 10) || 0;
+      const calNum = Number(p.calories || 0);
+      const matchDiet =
+        dietFilter === 'all'
+          ? true
+          : dietFilter === 'low-cal'
+          ? calNum > 0 && calNum <= 140
+          : dietFilter === 'high-caffeine'
+          ? caffNum >= 155
+          : dietFilter === 'bestseller'
+          ? Boolean(p.popular)
+          : true;
+      return matchCat && matchSearch && matchDiet;
     })
     .sort((a, b) => {
       if (sortBy === 'price-asc') return a.price - b.price;
@@ -750,6 +923,60 @@ function App() {
       if (sortBy === 'rating') return (b.rating || 0) - (a.rating || 0);
       return (b.popular ? 1 : 0) - (a.popular ? 1 : 0);
     });
+
+  // Interactive AI Barista Concierge Handler
+  const handleAiAsk = (rawQuery) => {
+    const q = (rawQuery || aiInput).trim();
+    if (!q) return;
+    const lower = q.toLowerCase();
+    let replyText = '';
+    let suggested = [];
+
+    if (lower.includes('low cal') || lower.includes('100') || lower.includes('light') || lower.includes('diet') || lower.includes('sugar')) {
+      suggested = products.filter((p) => (p.calories || 200) <= 120).slice(0, 3);
+      replyText = '🍃 Here are our lightest, lowest-calorie handcrafted picks (15–120 kcal):';
+    } else if (lower.includes('caffeine') || lower.includes('strong') || lower.includes('wake') || lower.includes('energy') || lower.includes('focus')) {
+      suggested = products
+        .filter((p) => (parseInt(String(p.caffeine || '0').replace(/\D/g, ''), 10) || 0) >= 160)
+        .slice(0, 3);
+      replyText = '⚡ Need a serious boost? These have our highest caffeine kick (165mg–200mg):';
+    } else if (lower.includes('oat') || lower.includes('vegan') || lower.includes('matcha') || lower.includes('milk')) {
+      suggested = products.filter((p) => p.id === 1 || p.id === 13 || p.id === 9);
+      replyText = '🌱 Our Cappuccino, Uji Matcha Latte, and Flat White pair wonderfully with creamy Oat or Almond milk:';
+    } else if (lower.includes('bakery') || lower.includes('pastry') || lower.includes('food') || lower.includes('eat') || lower.includes('croissant')) {
+      suggested = products.filter((p) => p.category === 'bakery').slice(0, 3);
+      replyText = '🥐 Fresh out of our ovens this morning:';
+    } else if (lower.includes('promo') || lower.includes('discount') || lower.includes('coupon') || lower.includes('deal')) {
+      applyPromoCode('BEAN25');
+      replyText = '🎉 I just unlocked and applied promo code BEAN25 (25% OFF) directly to your cart! You can also use BEAN20 or FIRST10.';
+    } else if (lower.includes('track') || lower.includes('order') || lower.includes('status')) {
+      if (orderHistory.length > 0) {
+        const latest = orderHistory[0];
+        setConfirmedOrder(latest);
+        setShowOrderConfirmation(true);
+        replyText = `📦 Opening live tracker for your latest Order #${latest.id} (${latest.status || 'Received'} • ${latest.fulfillment || '🏪 In-Café Pickup'})!`;
+      } else {
+        replyText = '📦 You don’t have an active order yet. Pick any drink below to place your first order!';
+        suggested = products.filter((p) => p.popular).slice(0, 2);
+      }
+    } else {
+      const matched = products.filter(
+        (p) => p.name.toLowerCase().includes(lower) || p.description.toLowerCase().includes(lower)
+      );
+      suggested = (matched.length > 0 ? matched : products.filter((p) => p.popular)).slice(0, 3);
+      replyText =
+        matched.length > 0
+          ? `☕ Here is what I found on our menu for "${q}":`
+          : '🔥 Here are our top-rated Barista Best Sellers today:';
+    }
+
+    setAiMessages((prev) => [
+      ...prev,
+      { sender: 'user', text: q },
+      { sender: 'bot', text: replyText, products: suggested },
+    ]);
+    setAiInput('');
+  };
 
   // Current Mood Pairing Objects
   const currentMoodObj = MOOD_PAIRINGS.find((m) => m.key === activeMood) || MOOD_PAIRINGS[0];
@@ -767,6 +994,30 @@ function App() {
         password: regPassword,
       });
       setRegMessage(res.data.message || 'Registration successful!');
+      setUsersList((prev) => {
+        const filtered = prev.filter((u) => u.email !== regEmail);
+        return [{ name: regName, email: regEmail, role: 'customer', lastActive: 'Just registered' }, ...filtered];
+      });
+      setVisitorsList((prev) => [
+        {
+          id: `vis-${Date.now()}`,
+          name: regName,
+          email: regEmail,
+          action: 'Created Account (Registered)',
+          device: 'Web App',
+          location: 'Live Web',
+          time: new Date().toLocaleTimeString(),
+        },
+        ...prev,
+      ]);
+      axios
+        .post(`${API_BASE_URL}/api/visitors`, {
+          type: 'register',
+          name: regName,
+          email: regEmail,
+          action: 'Created Account (Registered)',
+        })
+        .catch(() => {});
       setRegName('');
       setRegEmail('');
       setRegPassword('');
@@ -797,6 +1048,30 @@ function App() {
       setUserEmail(mail);
       setLoginMessage('Login Successful!');
       localStorage.setItem('beanSceneUser', JSON.stringify({ name, email: mail }));
+      setUsersList((prev) => {
+        const filtered = prev.filter((u) => u.email !== mail);
+        return [{ name, email: mail, role: res.data.user?.role || 'customer', lastActive: 'Signed in now' }, ...filtered];
+      });
+      setVisitorsList((prev) => [
+        {
+          id: `vis-${Date.now()}`,
+          name,
+          email: mail,
+          action: 'Signed In to Account',
+          device: 'Web App',
+          location: 'Live Web',
+          time: new Date().toLocaleTimeString(),
+        },
+        ...prev,
+      ]);
+      axios
+        .post(`${API_BASE_URL}/api/visitors`, {
+          type: 'login',
+          name,
+          email: mail,
+          action: 'Signed In to Account',
+        })
+        .catch(() => {});
 
       setTimeout(() => {
         setShowLogin(false);
@@ -810,6 +1085,10 @@ function App() {
         setUserName(name);
         setUserEmail(loginEmail);
         localStorage.setItem('beanSceneUser', JSON.stringify({ name, email: loginEmail }));
+        setUsersList((prev) => {
+          const filtered = prev.filter((u) => u.email !== loginEmail);
+          return [{ name, email: loginEmail, role: 'customer', lastActive: 'Signed in now' }, ...filtered];
+        });
         setShowLogin(false);
         showToast(`Welcome back, ${name}!`);
       } else {
@@ -835,8 +1114,30 @@ function App() {
       setTimeout(() => setSubscribeMessage(''), 3000);
       return;
     }
+    const subEmail = email.trim();
+    setSubscribersList((prev) => (prev.includes(subEmail) ? prev : [subEmail, ...prev]));
+    setVisitorsList((prev) => [
+      {
+        id: `vis-${Date.now()}`,
+        name: subEmail.split('@')[0],
+        email: subEmail,
+        action: 'Subscribed to Newsletter (FIRST10)',
+        device: 'Web App',
+        location: 'Live Web',
+        time: new Date().toLocaleTimeString(),
+      },
+      ...prev,
+    ]);
     axios
-      .post(`${API_BASE_URL}/api/subscribe`, { email })
+      .post(`${API_BASE_URL}/api/visitors`, {
+        type: 'subscribe',
+        name: subEmail.split('@')[0],
+        email: subEmail,
+        action: 'Subscribed to Newsletter (FIRST10)',
+      })
+      .catch(() => {});
+    axios
+      .post(`${API_BASE_URL}/api/subscribe`, { email: subEmail })
       .then(() => {
         setSubscribeMessage('Thank you for subscribing! Use code FIRST10 for 10% off ☕');
         setEmail('');
@@ -918,6 +1219,8 @@ function App() {
       total: modalTotalPrice,
       pointsEarned: earnedPts,
       customer: customer,
+      fulfillment: orderFulfillment,
+      paymentMethod: paymentMethod,
       placedAt: new Date().toISOString(),
       status: 'Received',
     };
@@ -928,10 +1231,34 @@ function App() {
         total: newOrder.total,
         user: customer,
         email: isLoggedIn ? userEmail : 'guest@beanscene.com',
+        fulfillment: orderFulfillment,
+        paymentMethod: paymentMethod,
       });
     } catch {
       // Fallback locally if backend server is offline
     }
+
+    setVisitorsList((prev) => [
+      {
+        id: `vis-${Date.now()}`,
+        name: customer,
+        email: isLoggedIn ? userEmail : 'guest@beanscene.com',
+        action: `Placed Order #${orderId} ($${modalTotalPrice.toFixed(2)} • ${paymentMethod})`,
+        device: 'Web App',
+        location: orderFulfillment,
+        time: new Date().toLocaleTimeString(),
+      },
+      ...prev,
+    ]);
+    axios
+      .post(`${API_BASE_URL}/api/visitors`, {
+        type: 'order',
+        name: customer,
+        email: isLoggedIn ? userEmail : 'guest@beanscene.com',
+        action: `Placed Order #${orderId} ($${modalTotalPrice.toFixed(2)} • ${paymentMethod})`,
+        location: orderFulfillment,
+      })
+      .catch(() => {});
 
     setConfirmedOrder(newOrder);
     setOrderHistory((prev) => [newOrder, ...prev]);
@@ -975,13 +1302,17 @@ function App() {
     if (cart.length === 0) return;
     setPlacingOrder(true);
     const orderId = `BSC-${Math.floor(1000 + Math.random() * 9000)}`;
+    const customerLabel = isLoggedIn ? userName : 'Guest';
+    const customerEmail = isLoggedIn ? userEmail : 'guest@beanscene.com';
 
     try {
       await axios.post(`${API_BASE_URL}/api/orders`, {
         items: cart,
         total: cartTotal,
-        user: isLoggedIn ? userName : 'Guest',
-        email: isLoggedIn ? userEmail : 'guest@beanscene.com',
+        user: customerLabel,
+        email: customerEmail,
+        fulfillment: orderFulfillment,
+        paymentMethod: paymentMethod,
       });
     } catch {
       // Continue locally even if backend server is offline
@@ -1003,10 +1334,34 @@ function App() {
       items: [...cart],
       total: cartTotal,
       pointsEarned: earnedPts,
-      customer: isLoggedIn ? userName : 'Guest',
+      customer: customerLabel,
+      fulfillment: orderFulfillment,
+      paymentMethod: paymentMethod,
       placedAt: new Date().toISOString(),
       status: 'Received',
     };
+
+    setVisitorsList((prev) => [
+      {
+        id: `vis-${Date.now()}`,
+        name: customerLabel,
+        email: customerEmail,
+        action: `Checkout Order #${orderId} ($${cartTotal.toFixed(2)} • ${paymentMethod})`,
+        device: 'Web App',
+        location: orderFulfillment,
+        time: new Date().toLocaleTimeString(),
+      },
+      ...prev,
+    ]);
+    axios
+      .post(`${API_BASE_URL}/api/visitors`, {
+        type: 'order',
+        name: customerLabel,
+        email: customerEmail,
+        action: `Checkout Order #${orderId} ($${cartTotal.toFixed(2)} • ${paymentMethod})`,
+        location: orderFulfillment,
+      })
+      .catch(() => {});
 
     setConfirmedOrder(orderRecord);
     setOrderHistory((prev) => [orderRecord, ...prev]);
@@ -1080,6 +1435,8 @@ function App() {
           <hr/>
           <p style="font-size:13px;"><strong>Order ID:</strong> #${order.id}<br/>
           <strong>Customer:</strong> ${order.customer || order.user || 'Guest'}<br/>
+          <strong>Fulfillment:</strong> ${order.fulfillment || '🏪 In-Café Pickup'}<br/>
+          <strong>Payment:</strong> ${order.paymentMethod || '📱 UPI / QR Pay'}<br/>
           <strong>Status:</strong> ${order.status || 'Received'}</p>
           <hr/>
           ${itemsHtml}
@@ -1096,19 +1453,31 @@ function App() {
     win.document.close();
   };
 
-  // Open Barista / Admin Hub and sync backend orders & reservations
+  // Open Barista / Admin Hub and sync backend orders, reservations & live visitors
   const openAdminHub = async () => {
     setShowAdminModal(true);
     try {
-      const [ordRes, resvRes] = await Promise.allSettled([
+      const [ordRes, resvRes, visRes] = await Promise.allSettled([
         axios.get(`${API_BASE_URL}/api/orders`),
         axios.get(`${API_BASE_URL}/api/reservations`),
+        axios.get(`${API_BASE_URL}/api/visitors`),
       ]);
       if (ordRes.status === 'fulfilled' && Array.isArray(ordRes.value.data) && ordRes.value.data.length > 0) {
         setOrderHistory(ordRes.value.data);
       }
       if (resvRes.status === 'fulfilled' && Array.isArray(resvRes.value.data) && resvRes.value.data.length > 0) {
         setReservationsList(resvRes.value.data);
+      }
+      if (visRes.status === 'fulfilled' && visRes.value.data) {
+        if (Array.isArray(visRes.value.data.visitors) && visRes.value.data.visitors.length > 0) {
+          setVisitorsList(visRes.value.data.visitors);
+        }
+        if (Array.isArray(visRes.value.data.users) && visRes.value.data.users.length > 0) {
+          setUsersList(visRes.value.data.users);
+        }
+        if (Array.isArray(visRes.value.data.subscribers) && visRes.value.data.subscribers.length > 0) {
+          setSubscribersList(visRes.value.data.subscribers);
+        }
       }
     } catch {
       // Keep local state if backend is offline
@@ -1244,6 +1613,21 @@ function App() {
             >
               ⚡ Barista Hub
             </button>
+
+            {orderHistory.length > 0 && (
+              <button
+                type="button"
+                className="nav-book-btn"
+                onClick={() => {
+                  setConfirmedOrder(orderHistory[0]);
+                  setShowOrderConfirmation(true);
+                }}
+                title="View live 4-stage preparation tracker for your latest order"
+                style={{ borderColor: 'rgba(74, 222, 128, 0.45)', color: '#4ade80' }}
+              >
+                📦 Track #{orderHistory[0].id}
+              </button>
+            )}
 
             <button
               className="cart-btn"
@@ -1908,6 +2292,26 @@ function App() {
           ))}
         </div>
 
+        {/* Dietary & Nutrition Quick-Filter Chips */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.75rem' }}>
+          {[
+            { key: 'all', label: '✨ All Macros' },
+            { key: 'bestseller', label: '🔥 Best Sellers Only' },
+            { key: 'low-cal', label: '🍃 Light (≤ 140 kcal)' },
+            { key: 'high-caffeine', label: '⚡ High Caffeine (155mg+)' },
+          ].map((df) => (
+            <button
+              key={df.key}
+              type="button"
+              className={`mood-pill-btn ${dietFilter === df.key ? 'active' : ''}`}
+              style={{ padding: '0.35rem 0.9rem', fontSize: '0.78rem' }}
+              onClick={() => setDietFilter(df.key)}
+            >
+              {df.label}
+            </button>
+          ))}
+        </div>
+
         {/* Cards Grid or No Results */}
         {filteredProducts.length === 0 ? (
           <div className="no-results">
@@ -2149,6 +2553,120 @@ function App() {
       >
         🎡 Spin &amp; Win 25% OFF
       </button>
+
+      {/* FLOATING AI BARISTA CONCIERGE BUTTON & CHAT DRAWER */}
+      <button
+        type="button"
+        className="floating-ai-btn"
+        onClick={() => setShowAiChat((prev) => !prev)}
+      >
+        🤖 {showAiChat ? 'Close AI Barista' : 'Ask AI Barista'}
+      </button>
+
+      {showAiChat && (
+        <div className="ai-chat-window">
+          <div className="ai-chat-header">
+            <div>
+              <strong style={{ color: '#fff', fontSize: '0.92rem', display: 'block' }}>🤖 Bean Scene AI Barista</strong>
+              <span style={{ color: '#4ade80', fontSize: '0.74rem', fontWeight: 600 }}>● Online • Instant Coffee Sommelier</span>
+            </div>
+            <button
+              type="button"
+              className="modal-close"
+              style={{ width: 28, height: 28, fontSize: '0.8rem' }}
+              onClick={() => setShowAiChat(false)}
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="ai-chat-messages">
+            {aiMessages.map((m, idx) => (
+              <div key={idx} className={`ai-msg-bubble ${m.sender}`}>
+                <div>{m.text}</div>
+                {Array.isArray(m.products) && m.products.length > 0 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginTop: '0.55rem' }}>
+                    {m.products.map((prod) => (
+                      <div
+                        key={prod.id}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          padding: '0.4rem 0.6rem',
+                          background: 'rgba(0,0,0,0.28)',
+                          borderRadius: 10,
+                          border: '1px solid rgba(255,255,255,0.08)',
+                        }}
+                      >
+                        <div style={{ fontSize: '0.78rem' }}>
+                          <strong style={{ color: '#fff', display: 'block' }}>{prod.name}</strong>
+                          <span style={{ color: 'var(--warm)' }}>
+                            ${prod.price.toFixed(2)} • {prod.calories} kcal • {prod.caffeine}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          className="order-btn"
+                          style={{ padding: '0.26rem 0.65rem', fontSize: '0.74rem', whiteSpace: 'nowrap' }}
+                          onClick={() => handleQuickAdd(prod)}
+                        >
+                          + Add
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="ai-quick-chips">
+            {[
+              { label: '🔥 Best Sellers', q: 'Best Sellers' },
+              { label: '🍃 Under 120 kcal', q: 'Low calorie drinks' },
+              { label: '⚡ Max Caffeine', q: 'Highest caffeine' },
+              { label: '🌱 Oat / Matcha', q: 'Oat milk & Matcha' },
+              { label: '🎟️ 25% Promo', q: 'Unlock promo code' },
+              { label: '📦 Track Order', q: 'Track my order' },
+            ].map((chip) => (
+              <button
+                key={chip.label}
+                type="button"
+                className="ai-chip-btn"
+                onClick={() => handleAiAsk(chip.q)}
+              >
+                {chip.label}
+              </button>
+            ))}
+          </div>
+
+          <form
+            className="ai-chat-input-row"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleAiAsk(aiInput);
+            }}
+          >
+            <input
+              type="text"
+              className="modal-input"
+              style={{ padding: '0.5rem 0.8rem', fontSize: '0.82rem', flex: 1 }}
+              placeholder="Ask for low-cal, strong, pastry, promo..."
+              value={aiInput}
+              onChange={(e) => setAiInput(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="btn-primary"
+              style={{ padding: '0.5rem 0.95rem', fontSize: '0.82rem' }}
+            >
+              Send
+            </button>
+          </form>
+        </div>
+      )}
 
       {/* SPIN THE WHEEL MODAL */}
       {showSpinModal && (
@@ -2423,17 +2941,48 @@ function App() {
                 </div>
               </div>
 
-              {/* Customer / Table Number */}
+              {/* Customer / Table Number & Fulfillment Mode */}
+              <div className="form-row">
+                <div className="form-group flex-1">
+                  <label className="form-label">Your Name / Table Number</label>
+                  <input
+                    type="text"
+                    className="modal-input"
+                    placeholder="e.g. Table 4 or Alex"
+                    value={orderCustomer}
+                    onChange={(e) => setOrderCustomer(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group flex-1">
+                  <label className="form-label">Service Mode</label>
+                  <select
+                    className="modal-input"
+                    value={orderFulfillment}
+                    onChange={(e) => setOrderFulfillment(e.target.value)}
+                  >
+                    <option value="🏪 In-Café Pickup">🏪 In-Café Pickup</option>
+                    <option value="🪑 Dine-In Table">🪑 Dine-In Table</option>
+                    <option value="🛵 Express Delivery">🛵 Express Delivery</option>
+                  </select>
+                </div>
+              </div>
+
               <div className="form-group">
-                <label className="form-label">Your Name / Table Number</label>
-                <input
-                  type="text"
-                  className="modal-input"
-                  placeholder="e.g. Table 4 or Alex"
-                  value={orderCustomer}
-                  onChange={(e) => setOrderCustomer(e.target.value)}
-                  required
-                />
+                <label className="form-label">Payment Method</label>
+                <div className="pill-group">
+                  {['📱 UPI / QR Pay', '💳 Card', '💵 Pay at Counter'].map((pm) => (
+                    <button
+                      key={pm}
+                      type="button"
+                      className={`mood-pill-btn ${paymentMethod === pm ? 'active' : ''}`}
+                      style={{ padding: '0.38rem 0.85rem', fontSize: '0.8rem' }}
+                      onClick={() => setPaymentMethod(pm)}
+                    >
+                      {pm}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Modal Footer */}
@@ -2492,7 +3041,9 @@ function App() {
               {confirmedOrder.items.map((it, idx) => (
                 <p key={idx}>{it.quantity || 1}× {it.name}</p>
               ))}
-              <p className="confirm-customer">Customer / Table: {confirmedOrder.customer || 'Guest'}</p>
+              <p className="confirm-customer">
+                Customer: {confirmedOrder.customer || 'Guest'} • {confirmedOrder.fulfillment || '🏪 In-Café Pickup'} • {confirmedOrder.paymentMethod || '📱 UPI / QR Pay'}
+              </p>
               <div className="confirm-divider"></div>
               <div className="confirm-total-row">
                 <span>Amount Paid</span>
@@ -2614,6 +3165,32 @@ function App() {
             </div>
 
             <div className="cart-drawer-footer">
+              {/* Fulfillment & Payment Selector in Cart */}
+              <div className="form-row" style={{ marginBottom: '0.65rem', gap: '0.5rem' }}>
+                <select
+                  className="modal-input"
+                  style={{ padding: '0.45rem 0.65rem', fontSize: '0.8rem', flex: 1 }}
+                  value={orderFulfillment}
+                  onChange={(e) => setOrderFulfillment(e.target.value)}
+                  aria-label="Fulfillment Type"
+                >
+                  <option value="🏪 In-Café Pickup">🏪 In-Café Pickup</option>
+                  <option value="🪑 Dine-In Table">🪑 Dine-In Table</option>
+                  <option value="🛵 Express Delivery">🛵 Express Delivery</option>
+                </select>
+                <select
+                  className="modal-input"
+                  style={{ padding: '0.45rem 0.65rem', fontSize: '0.8rem', flex: 1 }}
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  aria-label="Payment Method"
+                >
+                  <option value="📱 UPI / QR Pay">📱 UPI / QR Pay</option>
+                  <option value="💳 Card">💳 Card</option>
+                  <option value="💵 Pay at Counter">💵 Pay at Counter</option>
+                </select>
+              </div>
+
               {/* Promo Code Input */}
               <div className="cart-promo-row">
                 <input
@@ -2910,6 +3487,13 @@ function App() {
               >
                 🪑 Table Passes ({reservationsList.length})
               </button>
+              <button
+                type="button"
+                className={`mood-pill-btn ${adminTab === 'users' ? 'active' : ''}`}
+                onClick={() => setAdminTab('users')}
+              >
+                👥 Live Users ({visitorsList.length})
+              </button>
               <Link
                 to="/admin"
                 className="mood-pill-btn"
@@ -3075,6 +3659,142 @@ function App() {
                     </div>
                   ))
                 )}
+              </div>
+            )}
+
+            {adminTab === 'users' && (
+              <div style={{ maxHeight: '55vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {/* Live Production Metrics Summary */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
+                  <div className="order-summary-box" style={{ marginBottom: 0, textAlign: 'center' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>🟢 Active Sessions</span>
+                    <h4 style={{ fontSize: '1.35rem', color: '#4ade80', marginTop: '0.2rem' }}>{visitorsList.length}</h4>
+                  </div>
+                  <div className="order-summary-box" style={{ marginBottom: 0, textAlign: 'center' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>👤 Registered Users</span>
+                    <h4 style={{ fontSize: '1.35rem', color: 'var(--accent)', marginTop: '0.2rem' }}>{usersList.length}</h4>
+                  </div>
+                  <div className="order-summary-box" style={{ marginBottom: 0, textAlign: 'center' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>📩 Subscribers</span>
+                    <h4 style={{ fontSize: '1.35rem', color: 'var(--warm)', marginTop: '0.2rem' }}>{subscribersList.length}</h4>
+                  </div>
+                  <div className="order-summary-box" style={{ marginBottom: 0, textAlign: 'center' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>💰 Live Revenue</span>
+                    <h4 style={{ fontSize: '1.35rem', color: '#38bdf8', marginTop: '0.2rem' }}>
+                      ${orderHistory.reduce((acc, o) => acc + Number(o.total || 0), 0).toFixed(2)}
+                    </h4>
+                  </div>
+                </div>
+
+                {/* Signed-In & Registered Users */}
+                <div className="order-summary-box" style={{ marginBottom: 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+                    <h4 style={{ color: '#fff', fontSize: '0.92rem', margin: 0 }}>👤 Signed-In &amp; Registered Accounts</h4>
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      style={{ padding: '0.28rem 0.75rem', fontSize: '0.75rem' }}
+                      onClick={() => {
+                        const rows = [
+                          ['Type', 'Name', 'Email', 'Action/Role', 'Location/Device'],
+                          ...usersList.map((u) => ['Registered User', u.name, u.email, u.role || 'customer', u.lastActive || 'Active']),
+                          ...subscribersList.map((s) => ['Newsletter Subscriber', s.split('@')[0], s, 'FIRST10 Promo', 'Subscribed']),
+                          ...visitorsList.map((v) => ['Visitor Session', v.name, v.email, v.action, `${v.device || ''} (${v.location || 'Live'})`]),
+                        ];
+                        const csvContent = rows.map((r) => r.map((cell) => `"${String(cell || '').replace(/"/g, '""')}"`).join(',')).join('\n');
+                        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'bean-scene-live-users-report.csv';
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        showToast('Downloaded Live Users & Activity CSV report! 📥');
+                      }}
+                    >
+                      📥 Export CSV Report
+                    </button>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                    {usersList.map((u, i) => (
+                      <div
+                        key={u.email || i}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          fontSize: '0.84rem',
+                          padding: '0.4rem 0.65rem',
+                          background: 'rgba(255,255,255,0.04)',
+                          borderRadius: 8,
+                        }}
+                      >
+                        <div>
+                          <strong style={{ color: '#fff' }}>{u.name}</strong>{' '}
+                          <span style={{ color: 'var(--text-muted)' }}>({u.email})</span>
+                        </div>
+                        <span style={{ color: '#4ade80', fontSize: '0.76rem', fontWeight: 600 }}>
+                          {u.role === 'admin' ? '⚡ Admin' : '🟢 Active'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Newsletter Subscribers */}
+                <div className="order-summary-box" style={{ marginBottom: 0 }}>
+                  <h4 style={{ color: '#fff', fontSize: '0.92rem', marginBottom: '0.5rem' }}>📩 Newsletter Subscribers</h4>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
+                    {subscribersList.map((sub, idx) => (
+                      <span
+                        key={sub || idx}
+                        style={{
+                          background: 'rgba(192,132,252,0.14)',
+                          border: '1px solid rgba(192,132,252,0.35)',
+                          color: '#e9d5ff',
+                          padding: '0.25rem 0.65rem',
+                          borderRadius: 999,
+                          fontSize: '0.78rem',
+                        }}
+                      >
+                        ✉️ {sub}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Live Visitor & Activity Feed */}
+                <div className="order-summary-box" style={{ marginBottom: 0 }}>
+                  <h4 style={{ color: '#fff', fontSize: '0.92rem', marginBottom: '0.6rem' }}>🌐 Live Visitor &amp; Activity Log</h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {visitorsList.map((v, idx) => (
+                      <div
+                        key={v.id || idx}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          padding: '0.5rem 0.7rem',
+                          background: 'rgba(255,255,255,0.03)',
+                          borderRadius: 10,
+                          border: '1px solid var(--border)',
+                          fontSize: '0.82rem',
+                        }}
+                      >
+                        <div>
+                          <strong style={{ color: 'var(--warm)' }}>{v.name}</strong>{' '}
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.76rem' }}>({v.email})</span>
+                          <div style={{ color: '#e2e8f0', fontSize: '0.8rem', marginTop: '0.15rem' }}>
+                            {v.action} • <span style={{ color: 'var(--accent)' }}>{v.device}</span>
+                          </div>
+                        </div>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.74rem', whiteSpace: 'nowrap' }}>
+                          {v.location || 'Live'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </div>
