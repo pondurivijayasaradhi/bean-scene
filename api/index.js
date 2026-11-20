@@ -1,3 +1,5 @@
+import { getDbEngineInfo } from './_db.js';
+
 function setCorsHeaders(res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -18,6 +20,7 @@ export default function handler(req, res) {
   return res.status(200).json({
     status: 'ok',
     service: 'Bean Scene Coffee & Bakery API',
+    database: getDbEngineInfo(),
     endpoints: [
       '/api/products',
       '/api/subscribe',

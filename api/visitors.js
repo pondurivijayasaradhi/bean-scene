@@ -1,3 +1,5 @@
+import { readDb, writeDb, getDbEngineInfo } from './_db.js';
+
 function setCorsHeaders(res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -8,41 +10,15 @@ function setCorsHeaders(res) {
   );
 }
 
-let visitors = [
-  {
-    id: 'vis-1',
-    name: 'Vijaya Saradhi',
-    email: 'vijayasaradhiponduri@gmail.com',
-    action: 'Active Session • Menu & Cup Studio',
-    device: 'Chrome • Desktop',
-    location: 'India (IN)',
-    time: new Date().toISOString(),
-  },
-];
-
-let registeredUsers = [
-  {
-    name: 'Admin',
-    email: 'admin@beanscene.com',
-    role: 'admin',
-    lastActive: new Date().toISOString(),
-  },
-  {
-    name: 'Vijaya Saradhi',
-    email: 'vijayasaradhiponduri@gmail.com',
-    role: 'customer',
-    lastActive: new Date().toISOString(),
-  },
-];
-
-let subscribers = ['vijayasaradhiponduri@gmail.com', 'hello@beanscene.com'];
-
-export default function handler(req, res) {
+export default async function handler(req, res) {
   setCorsHeaders(res);
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
+
+  const db = await readDb();
+  const dbEngine = getDbEngineInfo();
 
   const country = req.headers['x-vercel-ip-country'] || 'Global';
   const city = req.headers['x-vercel-ip-city'] ? decodeURIComponent(req.headers['x-vercel-ip-city']) : '';
@@ -51,9 +27,10 @@ export default function handler(req, res) {
   if (req.method === 'GET') {
     return res.status(200).json({
       status: 'ok',
-      visitors,
-      users: registeredUsers,
-      subscribers,
+      dbEngine,
+      visitors: db.visitors,
+      users: db.users.map(({ name, email, role, lastActive }) => ({ name, email, role, lastActive })),
+      subscribers: db.subscribers,
     });
   }
 
@@ -62,13 +39,13 @@ export default function handler(req, res) {
     const now = new Date().toISOString();
 
     if (body.type === 'subscribe' && body.email) {
-      if (!subscribers.includes(body.email)) {
-        subscribers.unshift(body.email);
+      if (!db.subscribers.includes(body.email)) {
+        db.subscribers.unshift(body.email);
       }
     }
 
     if ((body.type === 'login' || body.type === 'register') && body.email) {
-      const existingIdx = registeredUsers.findIndex((u) => u.email === body.email);
+      const existingIdx = db.users.findIndex((u) => u.email === body.email);
       const userObj = {
         name: body.name || body.email.split('@')[0],
         email: body.email,
@@ -76,9 +53,9 @@ export default function handler(req, res) {
         lastActive: now,
       };
       if (existingIdx >= 0) {
-        registeredUsers[existingIdx] = userObj;
+        db.users[existingIdx] = { ...db.users[existingIdx], ...userObj };
       } else {
-        registeredUsers.unshift(userObj);
+        db.users.unshift(userObj);
       }
     }
 
@@ -92,17 +69,24 @@ export default function handler(req, res) {
       time: now,
     };
 
-    visitors = [entry, ...visitors.slice(0, 49)];
+    db.visitors = [entry, ...(db.visitors || []).slice(0, 49)];
+    await writeDb(db);
 
     return res.status(200).json({
       status: 'recorded',
+      dbEngine,
       visitor: entry,
-      visitors,
-      users: registeredUsers,
-      subscribers,
+      visitors: db.visitors,
+      users: db.users.map(({ name, email, role, lastActive }) => ({ name, email, role, lastActive })),
+      subscribers: db.subscribers,
     });
   }
 
-  return res.status(200).json({ status: 'ok', visitors, users: registeredUsers, subscribers });
+  return res.status(200).json({
+    status: 'ok',
+    dbEngine,
+    visitors: db.visitors,
+    users: db.users.map(({ name, email, role, lastActive }) => ({ name, email, role, lastActive })),
+    subscribers: db.subscribers,
+  });
 }
-

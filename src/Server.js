@@ -16,7 +16,18 @@ let users = [
 
 let orders = [];
 let reservations = [];
-let subscribers = [];
+let subscribers = ['vijayasaradhiponduri@gmail.com', 'hello@beanscene.com'];
+let visitors = [
+  {
+    id: 'vis-1',
+    name: 'Vijaya Saradhi',
+    email: 'vijayasaradhiponduri@gmail.com',
+    action: 'Active Session • Menu & Cup Studio',
+    device: 'Chrome • Desktop',
+    location: 'Live Web App',
+    time: new Date().toISOString(),
+  },
+];
 
 let products = [
   // Hot Coffee
@@ -25,7 +36,7 @@ let products = [
     name: 'Cappuccino',
     description: 'Rich espresso with steamed milk foam',
     price: 4.5,
-    image: '/cappuccino.jpg',
+    image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80',
     category: 'coffee',
     rating: 4.9,
     reviews: 218,
@@ -39,7 +50,7 @@ let products = [
     name: 'Latte',
     description: 'Smooth espresso with steamed milk',
     price: 4.8,
-    image: '/latte.jpg',
+    image: 'https://images.unsplash.com/photo-1561882468-9110e03e0f78?auto=format&fit=crop&w=600&q=80',
     category: 'coffee',
     rating: 4.8,
     reviews: 195,
@@ -53,7 +64,7 @@ let products = [
     name: 'Americano',
     description: 'Espresso with hot water',
     price: 3.5,
-    image: '/americano.jpg',
+    image: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=600&q=80',
     category: 'coffee',
     rating: 4.7,
     reviews: 143,
@@ -125,7 +136,7 @@ let products = [
     name: 'Iced Coffee',
     description: 'Chilled coffee over ice',
     price: 4.2,
-    image: '/iced_coffee.jpg',
+    image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80',
     category: 'iced',
     rating: 4.8,
     reviews: 176,
@@ -197,7 +208,7 @@ let products = [
     name: 'Croissant',
     description: 'Buttery, flaky French pastry',
     price: 3.9,
-    image: '/croissant.jpg',
+    image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80',
     category: 'bakery',
     rating: 4.6,
     reviews: 112,
@@ -211,7 +222,7 @@ let products = [
     name: 'Blueberry Muffin',
     description: 'Freshly baked with real blueberries',
     price: 3.5,
-    image: '/blueberry_muffin.jpg',
+    image: 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&w=600&q=80',
     category: 'bakery',
     rating: 4.7,
     reviews: 98,
@@ -307,7 +318,10 @@ app.post('/api/products', (req, res) => {
     name,
     description: description || 'Handcrafted Bean Scene specialty',
     price: Number(price),
-    image: image || imageUrl || '/cappuccino.jpg',
+    image:
+      image ||
+      imageUrl ||
+      'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80',
     category: category || 'coffee',
     rating: 4.9,
     reviews: 1,
@@ -396,7 +410,7 @@ app.post('/api/login', (req, res) => {
 
 // Place Order
 app.post('/api/orders', (req, res) => {
-  const { id, items, total, user, email } = req.body;
+  const { id, items, total, user, email, fulfillment, paymentMethod } = req.body;
 
   if (!items || items.length === 0) {
     return res.status(400).json({ error: 'Cart is empty' });
@@ -407,7 +421,10 @@ app.post('/api/orders', (req, res) => {
     items,
     total,
     user: user || 'Guest',
+    customer: user || 'Guest',
     email: email || 'guest@beanscene.com',
+    fulfillment: fulfillment || '🏪 In-Café Pickup',
+    paymentMethod: paymentMethod || '📱 UPI / QR Pay',
     status: 'Received',
     placedAt: new Date().toISOString(),
   };
@@ -462,6 +479,37 @@ app.post('/api/reservations', (req, res) => {
 
   reservations.unshift(booking);
   res.status(201).json(booking);
+});
+
+// Live Visitors & Users Activity Tracker
+app.get('/api/visitors', (req, res) => {
+  res.json({
+    status: 'ok',
+    visitors,
+    users: users.map((u) => ({ name: u.name, email: u.email, role: u.role })),
+    subscribers,
+  });
+});
+
+app.post('/api/visitors', (req, res) => {
+  const body = req.body || {};
+  const entry = {
+    id: `vis-${Date.now()}`,
+    name: body.name || 'Guest Visitor',
+    email: body.email || 'Anonymous Session',
+    action: body.action || 'Viewing Bean Scene Live App',
+    device: body.device || 'Web Browser',
+    location: body.location || 'Live Web',
+    time: new Date().toISOString(),
+  };
+  visitors = [entry, ...visitors.slice(0, 49)];
+  res.json({
+    status: 'recorded',
+    visitor: entry,
+    visitors,
+    users: users.map((u) => ({ name: u.name, email: u.email, role: u.role })),
+    subscribers,
+  });
 });
 
 const PORT = 8080;

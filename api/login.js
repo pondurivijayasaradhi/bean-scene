@@ -1,3 +1,5 @@
+import { readDb, writeDb } from './_db.js';
+
 function setCorsHeaders(res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -8,16 +10,14 @@ function setCorsHeaders(res) {
   );
 }
 
-let users = [
-  { email: 'admin@beanscene.com', password: 'admin123', name: 'Admin', role: 'admin' },
-];
-
-export default function handler(req, res) {
+export default async function handler(req, res) {
   setCorsHeaders(res);
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
+
+  const db = await readDb();
 
   if (req.method === 'GET') {
     return res.status(200).json({
@@ -35,9 +35,22 @@ export default function handler(req, res) {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    const existing = users.find((u) => u.email === email && u.password === password);
+    const existing = db.users.find((u) => u.email === email);
     const name = existing ? existing.name : email.split('@')[0];
     const role = existing ? existing.role : 'customer';
+
+    if (existing) {
+      existing.lastActive = new Date().toISOString();
+    } else {
+      db.users.unshift({
+        name,
+        email,
+        password,
+        role,
+        lastActive: new Date().toISOString(),
+      });
+    }
+    await writeDb(db);
 
     return res.status(200).json({
       message: 'Login successful',

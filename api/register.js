@@ -1,3 +1,5 @@
+import { readDb, writeDb } from './_db.js';
+
 function setCorsHeaders(res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -8,22 +10,21 @@ function setCorsHeaders(res) {
   );
 }
 
-let users = [
-  { email: 'admin@beanscene.com', password: 'admin123', name: 'Admin', role: 'admin' },
-];
-
-export default function handler(req, res) {
+export default async function handler(req, res) {
   setCorsHeaders(res);
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
+  const db = await readDb();
+
   if (req.method === 'GET') {
     return res.status(200).json({
       status: 'ok',
       endpoint: '/api/register',
       message: 'Bean Scene Registration API is live!',
+      usersCount: db.users.length,
     });
   }
 
@@ -36,9 +37,16 @@ export default function handler(req, res) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
-    const existingUser = users.find((user) => user.email === email);
+    const existingUser = db.users.find((user) => user.email === email);
     if (!existingUser) {
-      users.push({ name, email, password, role: 'customer' });
+      db.users.unshift({
+        name,
+        email,
+        password,
+        role: 'customer',
+        lastActive: new Date().toISOString(),
+      });
+      await writeDb(db);
     }
 
     return res.status(200).json({

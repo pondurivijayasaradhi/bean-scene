@@ -1,3 +1,5 @@
+import { readDb, writeDb } from './_db.js';
+
 function setCorsHeaders(res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -8,14 +10,14 @@ function setCorsHeaders(res) {
   );
 }
 
-let subscribers = ['hello@beanscene.com'];
-
-export default function handler(req, res) {
+export default async function handler(req, res) {
   setCorsHeaders(res);
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
+
+  const db = await readDb();
 
   if (req.method === 'GET') {
     return res.status(200).json({
@@ -23,15 +25,17 @@ export default function handler(req, res) {
       endpoint: '/api/subscribe',
       message: 'Bean Scene Newsletter Subscription API is live!',
       promoCode: 'FIRST10',
-      subscribersCount: subscribers.length,
+      subscribersCount: db.subscribers.length,
+      subscribers: db.subscribers,
     });
   }
 
   if (req.method === 'POST') {
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {};
     const { email } = body;
-    if (email && !subscribers.includes(email)) {
-      subscribers.push(email);
+    if (email && !db.subscribers.includes(email)) {
+      db.subscribers.unshift(email);
+      await writeDb(db);
     }
     return res.status(200).json({
       message: 'Subscribed successfully!',
