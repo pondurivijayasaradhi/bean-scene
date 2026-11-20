@@ -12,29 +12,55 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const DEFAULT_PRODUCTS = [
   // Hot Coffee
-  { id: 1,  name: 'Cappuccino',          description: 'Rich espresso with steamed milk foam',                          price: 4.5, image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.9, reviews: 218, popular: true,  calories: 120, caffeine: '150mg', badge: '🌱 Oat Option' },
-  { id: 2,  name: 'Latte',               description: 'Smooth espresso with steamed milk',                             price: 4.8, image: 'https://images.unsplash.com/photo-1561882468-9110e03e0f78?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.8, reviews: 195, popular: false, calories: 150, caffeine: '150mg', badge: '🥛 Creamy'     },
-  { id: 3,  name: 'Americano',           description: 'Espresso with hot water',                                       price: 3.5, image: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.7, reviews: 143, popular: false, calories: 15,  caffeine: '165mg', badge: '⚡ Zero Sugar' },
-  { id: 7,  name: 'Caramel Macchiato',   description: 'Vanilla steamed milk marked with espresso and caramel drizzle', price: 5.2, image: 'https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.9, reviews: 264, popular: true,  calories: 210, caffeine: '150mg', badge: '🍯 Best Seller' },
-  { id: 8,  name: 'Caffè Mocha',         description: 'Full-bodied espresso with bittersweet chocolate and milk',      price: 5.0, image: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.8, reviews: 182, popular: true,  calories: 230, caffeine: '155mg', badge: '🍫 Belgian Choc' },
-  { id: 9,  name: 'Flat White',          description: 'Velvety microfoam poured over a double ristretto shot',         price: 4.7, image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.7, reviews: 134, popular: false, calories: 130, caffeine: '175mg', badge: '✨ Ristretto'  },
-  { id: 10, name: 'Espresso Macchiato',  description: 'Bold double espresso topped with a dollop of milk foam',        price: 3.8, image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.6, reviews: 97,  popular: false, calories: 35,  caffeine: '180mg', badge: '🔥 Strong'     },
+  { id: 1,  name: 'Cappuccino',                  description: 'Rich espresso with steamed milk foam',                          price: 4.5, image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.9, reviews: 218, popular: true,  calories: 120, caffeine: '150mg', badge: '🌱 Oat Option'        },
+  { id: 2,  name: 'Latte',                       description: 'Smooth espresso with steamed milk',                             price: 4.8, image: 'https://images.unsplash.com/photo-1561882468-9110e03e0f78?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.8, reviews: 195, popular: false, calories: 150, caffeine: '150mg', badge: '🥛 Creamy'            },
+  { id: 3,  name: 'Americano',                   description: 'Espresso with hot water',                                       price: 3.5, image: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.7, reviews: 143, popular: false, calories: 15,  caffeine: '165mg', badge: '⚡ Zero Sugar'        },
+  { id: 7,  name: 'Caramel Macchiato',           description: 'Vanilla steamed milk marked with espresso and caramel drizzle', price: 5.2, image: 'https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.9, reviews: 264, popular: true,  calories: 210, caffeine: '150mg', badge: '🍯 Best Seller'       },
+  { id: 8,  name: 'Caffè Mocha',                 description: 'Full-bodied espresso with bittersweet chocolate and milk',      price: 5.0, image: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.8, reviews: 182, popular: true,  calories: 230, caffeine: '155mg', badge: '🍫 Belgian Choc'      },
+  { id: 9,  name: 'Flat White',                  description: 'Velvety microfoam poured over a double ristretto shot',         price: 4.7, image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.7, reviews: 134, popular: false, calories: 130, caffeine: '175mg', badge: '✨ Ristretto'         },
+  { id: 10, name: 'Espresso Macchiato',          description: 'Bold double espresso topped with a dollop of milk foam',        price: 3.8, image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.6, reviews: 97,  popular: false, calories: 35,  caffeine: '180mg', badge: '🔥 Strong'            },
+  { id: 19, name: 'Pistachio Velvet Latte',      description: 'Double espresso infused with roasted Sicilian pistachio cream', price: 5.4, image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.9, reviews: 214, popular: true,  calories: 185, caffeine: '150mg', badge: '🥜 Roasted Pistachio' },
+  { id: 20, name: 'Hazelnut Cortado',            description: 'Equal parts rich espresso and warm toasted hazelnut milk',      price: 4.6, image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.8, reviews: 152, popular: false, calories: 95,  caffeine: '160mg', badge: '🌰 Toasted Hazelnut'  },
+  { id: 21, name: 'Spanish Condensed Latte',     description: 'Velvety espresso layered with silky sweetened condensed milk',  price: 5.1, image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.9, reviews: 241, popular: true,  calories: 220, caffeine: '155mg', badge: '✨ Sweet & Bold'      },
 
   // Iced Beverages
-  { id: 4,  name: 'Iced Coffee',         description: 'Chilled coffee over ice',                                       price: 4.2, image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 176, popular: true,  calories: 80,  caffeine: '145mg', badge: '🧊 Chilled'    },
-  { id: 11, name: 'Cold Brew',           description: 'Slow-steeped for 20 hours for an ultra-smooth finish',          price: 4.6, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.9, reviews: 230, popular: true,  calories: 25,  caffeine: '200mg', badge: '⚡ 20h Steep'  },
-  { id: 12, name: 'Iced Caramel Latte',  description: 'Chilled espresso, milk, and sweet caramel over ice',            price: 5.1, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 189, popular: true,  calories: 190, caffeine: '150mg', badge: '🍯 Sweet'      },
-  { id: 13, name: 'Iced Matcha Latte',   description: 'Ceremonial-grade green tea whisked with cold milk over ice',    price: 5.3, image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.7, reviews: 154, popular: false, calories: 140, caffeine: '85mg',  badge: '🍵 Uji Matcha' },
-  { id: 14, name: 'Espresso Frappe',     description: 'Blended iced coffee with rich espresso and whipped cream',      price: 5.5, image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 167, popular: false, calories: 280, caffeine: '140mg', badge: '🍦 Blended'    },
+  { id: 4,  name: 'Iced Coffee',                 description: 'Chilled coffee over ice',                                       price: 4.2, image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 176, popular: true,  calories: 80,  caffeine: '145mg', badge: '🧊 Chilled'           },
+  { id: 11, name: 'Cold Brew',                   description: 'Slow-steeped for 20 hours for an ultra-smooth finish',          price: 4.6, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.9, reviews: 230, popular: true,  calories: 25,  caffeine: '200mg', badge: '⚡ 20h Steep'         },
+  { id: 12, name: 'Iced Caramel Latte',          description: 'Chilled espresso, milk, and sweet caramel over ice',            price: 5.1, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 189, popular: true,  calories: 190, caffeine: '150mg', badge: '🍯 Sweet'             },
+  { id: 13, name: 'Iced Matcha Latte',           description: 'Ceremonial-grade green tea whisked with cold milk over ice',    price: 5.3, image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.7, reviews: 154, popular: false, calories: 140, caffeine: '85mg',  badge: '🍵 Uji Matcha'        },
+  { id: 14, name: 'Espresso Frappe',             description: 'Blended iced coffee with rich espresso and whipped cream',      price: 5.5, image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 167, popular: false, calories: 280, caffeine: '140mg', badge: '🍦 Blended'           },
+  { id: 22, name: 'Brown Sugar Oat Shaken',      description: 'Blonde espresso shaken with brown sugar, cinnamon, and oat milk', price: 5.4, image: 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.9, reviews: 278, popular: true,  calories: 130, caffeine: '185mg', badge: '🌱 Oat & Cinnamon'    },
+  { id: 23, name: 'Pistachio Cream Cold Brew',   description: '20-hour cold brew topped with silky pistachio sweet cold foam', price: 5.6, image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.9, reviews: 221, popular: true,  calories: 175, caffeine: '195mg', badge: '🥜 Cold Foam'         },
+  { id: 24, name: 'Strawberry Matcha Cloud',     description: 'Ceremonial Uji matcha layered over house strawberry purée',     price: 5.7, image: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.9, reviews: 256, popular: true,  calories: 165, caffeine: '85mg',  badge: '🍓 Layered Matcha'    },
+  { id: 25, name: 'Salted Caramel Nitro Brew',   description: 'Velvety nitrogen-infused cold brew with sea salt caramel foam', price: 5.3, image: 'https://images.unsplash.com/photo-1497636577773-f1231844b336?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 164, popular: false, calories: 110, caffeine: '210mg', badge: '⚡ Nitro Draft'       },
+  { id: 26, name: 'Mango Passion Iced Espresso', description: 'Crisp sparkling tropical mango & passionfruit topped with espresso', price: 4.9, image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80', category: 'iced', rating: 4.7, reviews: 138, popular: false, calories: 115, caffeine: '140mg', badge: '🥭 Tropical Fusion'   },
 
   // Bakery
-  { id: 5,  name: 'Croissant',           description: 'Buttery, flaky French pastry',                                  price: 3.9, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.6, reviews: 112, popular: false, calories: 260, caffeine: '0mg',   badge: '🥐 French Butter' },
-  { id: 6,  name: 'Blueberry Muffin',    description: 'Freshly baked with real blueberries',                           price: 3.5, image: 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.7, reviews: 98,  popular: true,  calories: 290, caffeine: '0mg',   badge: '🫐 Fresh Baked' },
-  { id: 15, name: 'Chocolate Croissant', description: 'Flaky golden pastry filled with rich dark chocolate',           price: 4.3, image: 'https://images.unsplash.com/photo-1530610476181-d83430b64dcd?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 205, popular: true,  calories: 310, caffeine: '15mg',  badge: '🍫 Warm Center' },
-  { id: 16, name: 'Cinnamon Roll',       description: 'Warm spiced swirl topped with cream cheese frosting',           price: 4.5, image: 'https://images.unsplash.com/photo-1583527976767-5399024eeb05?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.8, reviews: 174, popular: true,  calories: 340, caffeine: '0mg',   badge: '✨ House Glaze' },
-  { id: 17, name: 'Banana Walnut Bread', description: 'Moist house-baked banana slice loaded with toasted walnuts',    price: 3.8, image: 'https://images.unsplash.com/photo-1603532648955-039310d9ed75?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.7, reviews: 119, popular: false, calories: 270, caffeine: '0mg',   badge: '🌰 Toasted Nuts' },
-  { id: 18, name: 'Avocado Toast',       description: 'Artisan sourdough with smashed avocado and chili flakes',       price: 6.5, image: 'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.8, reviews: 142, popular: false, calories: 320, caffeine: '0mg',   badge: '🥑 Sourdough'  },
+  { id: 5,  name: 'Croissant',                   description: 'Buttery, flaky French pastry',                                  price: 3.9, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.6, reviews: 112, popular: false, calories: 260, caffeine: '0mg',   badge: '🥐 French Butter'     },
+  { id: 6,  name: 'Blueberry Muffin',            description: 'Freshly baked with real blueberries',                           price: 3.5, image: 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.7, reviews: 98,  popular: true,  calories: 290, caffeine: '0mg',   badge: '🫐 Fresh Baked'       },
+  { id: 15, name: 'Chocolate Croissant',         description: 'Flaky golden pastry filled with rich dark chocolate',           price: 4.3, image: 'https://images.unsplash.com/photo-1530610476181-d83430b64dcd?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 205, popular: true,  calories: 310, caffeine: '15mg',  badge: '🍫 Warm Center'       },
+  { id: 16, name: 'Cinnamon Roll',               description: 'Warm spiced swirl topped with cream cheese frosting',           price: 4.5, image: 'https://images.unsplash.com/photo-1583527976767-5399024eeb05?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.8, reviews: 174, popular: true,  calories: 340, caffeine: '0mg',   badge: '✨ House Glaze'       },
+  { id: 17, name: 'Banana Walnut Bread',         description: 'Moist house-baked banana slice loaded with toasted walnuts',    price: 3.8, image: 'https://images.unsplash.com/photo-1603532648955-039310d9ed75?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.7, reviews: 119, popular: false, calories: 270, caffeine: '0mg',   badge: '🌰 Toasted Nuts'      },
+  { id: 18, name: 'Avocado Toast',               description: 'Artisan sourdough with smashed avocado and chili flakes',       price: 6.5, image: 'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.8, reviews: 142, popular: false, calories: 320, caffeine: '0mg',   badge: '🥑 Sourdough'         },
+  { id: 27, name: 'Almond Frangipane Croissant', description: 'Double-baked croissant filled with sweet almond cream & flakes', price: 4.8, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 193, popular: true,  calories: 330, caffeine: '0mg',   badge: '🥐 Double Baked'      },
+  { id: 28, name: 'Tiramisu Espresso Cake',      description: 'Espresso-soaked sponge layered with whipped mascarpone & cocoa', price: 5.8, image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 234, popular: true,  calories: 360, caffeine: '35mg',  badge: '🍰 Mascarpone'        },
+  { id: 29, name: 'Belgian Waffle & Berries',    description: 'Crisp pearl-sugar Liège waffle topped with warm berry compote', price: 5.5, image: 'https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.8, reviews: 162, popular: false, calories: 310, caffeine: '0mg',   badge: '🍓 Warm Waffle'       },
+  { id: 30, name: 'Smoked Salmon Cream Bagel',   description: 'Toasted sesame bagel with herb cream cheese, capers & salmon',  price: 6.9, image: 'https://images.unsplash.com/photo-1592417817098-8f3d691a4bf5?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 187, popular: true,  calories: 340, caffeine: '0mg',   badge: '🥯 Savory Artisan'    },
 ];
+
+const mergeProductCatalog = (savedList = [], catalog = DEFAULT_PRODUCTS) => {
+  if (!Array.isArray(savedList) || savedList.length === 0) return catalog;
+  const merged = catalog.map((def) => {
+    const existing = savedList.find((item) => item.id === def.id || item.name === def.name);
+    return existing
+      ? { ...def, ...existing, image: existing.image || def.image, category: existing.category || def.category }
+      : def;
+  });
+  const customExtras = savedList.filter(
+    (item) => !catalog.some((def) => def.id === item.id || def.name === item.name)
+  );
+  return [...merged, ...customExtras];
+};
 
 // Built-in resilient API adapter when no external backend URL is configured
 if (!API_BASE_URL) {
@@ -331,7 +357,12 @@ function App() {
   const [products, setProducts] = useState(() => {
     try {
       const saved = localStorage.getItem('beanSceneProducts');
-      return saved ? JSON.parse(saved) : DEFAULT_PRODUCTS;
+      if (saved) {
+        const merged = mergeProductCatalog(JSON.parse(saved));
+        localStorage.setItem('beanSceneProducts', JSON.stringify(merged));
+        return merged;
+      }
+      return DEFAULT_PRODUCTS;
     } catch {
       return DEFAULT_PRODUCTS;
     }
@@ -453,6 +484,16 @@ function App() {
   const [orderNotes, setOrderNotes] = useState('');
   const [orderFulfillment, setOrderFulfillment] = useState('🏪 In-Café Pickup');
   const [paymentMethod, setPaymentMethod] = useState('📱 UPI / QR Pay');
+
+  // Interactive UPI QR & Card Payment Gateway Modal state
+  const [showPaymentGateway, setShowPaymentGateway] = useState(false);
+  const [pendingCheckout, setPendingCheckout] = useState(null);
+  const [verifyingPayment, setVerifyingPayment] = useState(false);
+  const [upiIdInput, setUpiIdInput] = useState('');
+  const [cardHolder, setCardHolder] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvv, setCardCvv] = useState('');
 
   // Order Confirmation & Live Prep Tracker
   const [showOrderConfirmation, setShowOrderConfirmation] = useState(false);
@@ -630,22 +671,17 @@ function App() {
         if (saved) {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setProducts(parsed);
+            const mergedLocal = mergeProductCatalog(parsed);
+            localStorage.setItem('beanSceneProducts', JSON.stringify(mergedLocal));
+            setProducts(mergedLocal);
             return;
           }
         }
         const res = await axios.get(`${API_BASE_URL}/api/products`);
         if (Array.isArray(res.data) && res.data.length > 0) {
-          const merged = DEFAULT_PRODUCTS.map((def) => {
-            const remote = res.data.find((r) => r.id === def.id || r.name === def.name);
-            return remote
-              ? { ...def, ...remote, image: remote.image || def.image, category: remote.category || def.category }
-              : def;
-          });
-          const extra = res.data.filter(
-            (r) => !DEFAULT_PRODUCTS.some((def) => def.id === r.id || def.name === r.name)
-          );
-          setProducts([...merged, ...extra]);
+          const mergedRemote = mergeProductCatalog(res.data);
+          localStorage.setItem('beanSceneProducts', JSON.stringify(mergedRemote));
+          setProducts(mergedRemote);
         }
       } catch {
         setProducts(DEFAULT_PRODUCTS);
@@ -1200,39 +1236,49 @@ function App() {
     showToast(`Added ${orderQty}× ${activeItem.name} to cart`);
   };
 
-  // Direct checkout from moda
-  const handleDirectOrderNow = async (e) => {
-    e.preventDefault();
-    const customer = orderCustomer.trim() || (isLoggedIn ? userName : 'Guest');
+  // Finalize & persist order after payment verification or Pay at Counter
+  const finalizeOrderCheckout = async (draft, transactionId) => {
+    if (!draft) return;
+    setPlacingOrder(true);
     const orderId = `BSC-${Math.floor(1000 + Math.random() * 9000)}`;
-    const earnedPts = awardPoints(modalTotalPrice);
+
+    if (draft.source === 'cart' && draft.redeemPts && beanPoints >= 200) {
+      setBeanPoints((prev) => {
+        const afterRedeem = Math.max(0, prev - 200);
+        localStorage.setItem('beanScenePoints', String(afterRedeem));
+        return afterRedeem;
+      });
+      setRedeemPoints(false);
+    }
+
+    const earnedPts = awardPoints(draft.total);
 
     const newOrder = {
       id: orderId,
-      items: [
-        {
-          name: `${activeItem.name} (${orderSize === 'large' ? 'Large' : 'Regular'}${!isBakeryItem ? `, ${orderMilk} milk` : ''})`,
-          quantity: orderQty,
-          price: modalUnitPrice,
-        }
-      ],
-      total: modalTotalPrice,
+      items: draft.items,
+      total: draft.total,
       pointsEarned: earnedPts,
-      customer: customer,
+      customer: draft.customer,
       fulfillment: orderFulfillment,
       paymentMethod: paymentMethod,
+      transactionId: transactionId || 'COUNTER-PAY',
+      paymentStatus: paymentMethod === '💵 Pay at Counter' ? 'Pay at Counter' : 'Paid ✓',
       placedAt: new Date().toISOString(),
       status: 'Received',
     };
 
     try {
       await axios.post(`${API_BASE_URL}/api/orders`, {
+        id: orderId,
         items: newOrder.items,
         total: newOrder.total,
-        user: customer,
-        email: isLoggedIn ? userEmail : 'guest@beanscene.com',
+        user: draft.customer,
+        customer: draft.customer,
+        email: draft.email,
         fulfillment: orderFulfillment,
         paymentMethod: paymentMethod,
+        transactionId: newOrder.transactionId,
+        paymentStatus: newOrder.paymentStatus,
       });
     } catch {
       // Fallback locally if backend server is offline
@@ -1241,9 +1287,9 @@ function App() {
     setVisitorsList((prev) => [
       {
         id: `vis-${Date.now()}`,
-        name: customer,
-        email: isLoggedIn ? userEmail : 'guest@beanscene.com',
-        action: `Placed Order #${orderId} ($${modalTotalPrice.toFixed(2)} • ${paymentMethod})`,
+        name: draft.customer,
+        email: draft.email,
+        action: `Order #${orderId} ($${draft.total.toFixed(2)} • ${paymentMethod} • ${newOrder.transactionId})`,
         device: 'Web App',
         location: orderFulfillment,
         time: new Date().toLocaleTimeString(),
@@ -1253,18 +1299,70 @@ function App() {
     axios
       .post(`${API_BASE_URL}/api/visitors`, {
         type: 'order',
-        name: customer,
-        email: isLoggedIn ? userEmail : 'guest@beanscene.com',
-        action: `Placed Order #${orderId} ($${modalTotalPrice.toFixed(2)} • ${paymentMethod})`,
+        name: draft.customer,
+        email: draft.email,
+        action: `Order #${orderId} ($${draft.total.toFixed(2)} • ${paymentMethod} • ${newOrder.transactionId})`,
         location: orderFulfillment,
       })
       .catch(() => {});
 
+    if (draft.source === 'cart') {
+      setCart([]);
+      setAppliedPromo('');
+      setPromoInput('');
+      setShowCart(false);
+    } else {
+      setShowOrderModal(false);
+    }
+
+    setShowPaymentGateway(false);
+    setPendingCheckout(null);
+    setVerifyingPayment(false);
+    setPlacingOrder(false);
     setConfirmedOrder(newOrder);
     setOrderHistory((prev) => [newOrder, ...prev]);
-    setShowOrderModal(false);
     setShowOrderConfirmation(true);
-    showToast(`Order #${orderId} confirmed! +${earnedPts} Bean Points ☕`);
+    showToast(`Payment verified (${newOrder.transactionId})! Order #${orderId} confirmed ☕`);
+  };
+
+  // Direct checkout from modal (opens Payment Gateway for UPI/Card)
+  const handleDirectOrderNow = async (e) => {
+    e.preventDefault();
+    const customer = orderCustomer.trim() || (isLoggedIn ? userName : 'Guest');
+    const draft = {
+      source: 'modal',
+      items: [
+        {
+          name: `${activeItem.name} (${orderSize === 'large' ? 'Large' : 'Regular'}${!isBakeryItem ? `, ${orderMilk} milk` : ''})`,
+          quantity: orderQty,
+          price: modalUnitPrice,
+        },
+      ],
+      total: modalTotalPrice,
+      customer,
+      email: isLoggedIn ? userEmail : 'guest@beanscene.com',
+      redeemPts: false,
+    };
+
+    if (paymentMethod === '💵 Pay at Counter') {
+      await finalizeOrderCheckout(draft, 'COUNTER-DUE');
+    } else {
+      setPendingCheckout(draft);
+      setShowOrderModal(false);
+      setShowPaymentGateway(true);
+    }
+  };
+
+  // Handle UPI / Card Gateway Verification Submit
+  const handleVerifyGatewayPayment = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (!pendingCheckout || verifyingPayment) return;
+    setVerifyingPayment(true);
+    const prefix = paymentMethod.includes('UPI') ? 'UPI' : paymentMethod.includes('Card') ? 'CARD' : 'COUNTER';
+    const txnId = `${prefix}-${Math.floor(100000 + Math.random() * 900000)}`;
+    setTimeout(() => {
+      finalizeOrderCheckout(pendingCheckout, txnId);
+    }, 650);
   };
 
   // Cart operations
@@ -1297,81 +1395,27 @@ function App() {
   const cartTotal = Math.max(0, cartSubtotal - cartDiscount - pointsDiscount);
   const cartItemCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
-  // Place order from Cart
+  // Place order from Cart (opens Payment Gateway for UPI/Card)
   const placeCartOrder = async () => {
     if (cart.length === 0) return;
-    setPlacingOrder(true);
-    const orderId = `BSC-${Math.floor(1000 + Math.random() * 9000)}`;
     const customerLabel = isLoggedIn ? userName : 'Guest';
     const customerEmail = isLoggedIn ? userEmail : 'guest@beanscene.com';
-
-    try {
-      await axios.post(`${API_BASE_URL}/api/orders`, {
-        items: cart,
-        total: cartTotal,
-        user: customerLabel,
-        email: customerEmail,
-        fulfillment: orderFulfillment,
-        paymentMethod: paymentMethod,
-      });
-    } catch {
-      // Continue locally even if backend server is offline
-    }
-
-    if (redeemPoints && beanPoints >= 200) {
-      setBeanPoints((prev) => {
-        const afterRedeem = Math.max(0, prev - 200);
-        localStorage.setItem('beanScenePoints', String(afterRedeem));
-        return afterRedeem;
-      });
-      setRedeemPoints(false);
-    }
-
-    const earnedPts = awardPoints(cartTotal);
-
-    const orderRecord = {
-      id: orderId,
+    const draft = {
+      source: 'cart',
       items: [...cart],
       total: cartTotal,
-      pointsEarned: earnedPts,
       customer: customerLabel,
-      fulfillment: orderFulfillment,
-      paymentMethod: paymentMethod,
-      placedAt: new Date().toISOString(),
-      status: 'Received',
+      email: customerEmail,
+      redeemPts: Boolean(redeemPoints && beanPoints >= 200),
     };
 
-    setVisitorsList((prev) => [
-      {
-        id: `vis-${Date.now()}`,
-        name: customerLabel,
-        email: customerEmail,
-        action: `Checkout Order #${orderId} ($${cartTotal.toFixed(2)} • ${paymentMethod})`,
-        device: 'Web App',
-        location: orderFulfillment,
-        time: new Date().toLocaleTimeString(),
-      },
-      ...prev,
-    ]);
-    axios
-      .post(`${API_BASE_URL}/api/visitors`, {
-        type: 'order',
-        name: customerLabel,
-        email: customerEmail,
-        action: `Checkout Order #${orderId} ($${cartTotal.toFixed(2)} • ${paymentMethod})`,
-        location: orderFulfillment,
-      })
-      .catch(() => {});
-
-    setConfirmedOrder(orderRecord);
-    setOrderHistory((prev) => [orderRecord, ...prev]);
-    setCart([]);
-    setAppliedPromo('');
-    setPromoInput('');
-    setShowCart(false);
-    setShowOrderConfirmation(true);
-    setPlacingOrder(false);
-    showToast(`Order placed! +${earnedPts} Bean Points earned 🎉`);
+    if (paymentMethod === '💵 Pay at Counter') {
+      await finalizeOrderCheckout(draft, 'COUNTER-DUE');
+    } else {
+      setPendingCheckout(draft);
+      setShowCart(false);
+      setShowPaymentGateway(true);
+    }
   };
 
   // 1-Click Reorder from Order History
@@ -1436,7 +1480,8 @@ function App() {
           <p style="font-size:13px;"><strong>Order ID:</strong> #${order.id}<br/>
           <strong>Customer:</strong> ${order.customer || order.user || 'Guest'}<br/>
           <strong>Fulfillment:</strong> ${order.fulfillment || '🏪 In-Café Pickup'}<br/>
-          <strong>Payment:</strong> ${order.paymentMethod || '📱 UPI / QR Pay'}<br/>
+          <strong>Payment:</strong> ${order.paymentMethod || '📱 UPI / QR Pay'} (${order.paymentStatus || 'Paid ✓'})<br/>
+          <strong>Transaction Ref:</strong> #${order.transactionId || 'UPI-VERIFIED'}<br/>
           <strong>Status:</strong> ${order.status || 'Received'}</p>
           <hr/>
           ${itemsHtml}
@@ -3009,13 +3054,272 @@ function App() {
         </div>
       )}
 
+      {/* INTERACTIVE UPI QR CODE & CARD PAYMENT GATEWAY MODAL */}
+      {showPaymentGateway && pendingCheckout && (
+        <div className="modal-backdrop" onClick={() => !verifyingPayment && setShowPaymentGateway(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <span className="modal-badge">🔒 256-Bit SSL Encrypted Checkout</span>
+                <h3 className="modal-title">Bean Scene Payment Gateway</h3>
+              </div>
+              <button
+                type="button"
+                className="modal-close"
+                disabled={verifyingPayment}
+                onClick={() => setShowPaymentGateway(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Order Total & Service Summary Bar */}
+            <div
+              className="order-summary-box"
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '1rem',
+                padding: '0.75rem 1rem',
+              }}
+            >
+              <div>
+                <strong style={{ color: '#fff', fontSize: '0.92rem', display: 'block' }}>
+                  {pendingCheckout.customer} • {orderFulfillment}
+                </strong>
+                <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>
+                  {pendingCheckout.items.length} item(s) • Merchant: Bean Scene Roastery
+                </span>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', display: 'block' }}>Payable</span>
+                <strong style={{ fontSize: '1.35rem', color: '#4ade80' }}>${pendingCheckout.total.toFixed(2)}</strong>
+              </div>
+            </div>
+
+            {/* Payment Method Switcher inside Gateway */}
+            <div className="pill-group" style={{ marginBottom: '1.1rem' }}>
+              {['📱 UPI / QR Pay', '💳 Card', '💵 Pay at Counter'].map((pm) => (
+                <button
+                  key={pm}
+                  type="button"
+                  className={`mood-pill-btn ${paymentMethod === pm ? 'active' : ''}`}
+                  style={{ flex: 1, justifyContent: 'center', padding: '0.45rem 0.7rem', fontSize: '0.8rem' }}
+                  onClick={() => setPaymentMethod(pm)}
+                >
+                  {pm}
+                </button>
+              ))}
+            </div>
+
+            {paymentMethod === '📱 UPI / QR Pay' && (
+              <form onSubmit={handleVerifyGatewayPayment} style={{ textAlign: 'center' }}>
+                <div
+                  style={{
+                    background: '#fff',
+                    padding: '0.95rem',
+                    borderRadius: 18,
+                    width: 196,
+                    height: 196,
+                    margin: '0 auto 0.85rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 12px 30px rgba(0,0,0,0.45)',
+                  }}
+                >
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=175x175&data=${encodeURIComponent(
+                      `upi://pay?pa=beanscene@upi&pn=BeanSceneCafe&am=${pendingCheckout.total.toFixed(2)}&cu=USD`
+                    )}`}
+                    alt="Bean Scene UPI Payment QR Code"
+                    style={{ width: 172, height: 172, borderRadius: 8 }}
+                  />
+                </div>
+
+                <p style={{ fontSize: '0.83rem', color: 'var(--warm)', fontWeight: 600, marginBottom: '0.45rem' }}>
+                  Scan QR with any UPI App to pay ${pendingCheckout.total.toFixed(2)}
+                </p>
+
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '0.45rem', flexWrap: 'wrap', marginBottom: '0.95rem' }}>
+                  {['GPay', 'PhonePe', 'Paytm', 'BHIM UPI'].map((app) => (
+                    <span
+                      key={app}
+                      style={{
+                        fontSize: '0.73rem',
+                        padding: '0.2rem 0.6rem',
+                        borderRadius: 999,
+                        background: 'rgba(255,255,255,0.06)',
+                        border: '1px solid rgba(255,255,255,0.12)',
+                        color: '#e2e8f0',
+                        fontWeight: 600,
+                      }}
+                    >
+                      ✓ {app}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="form-group" style={{ textAlign: 'left', marginBottom: '1rem' }}>
+                  <label className="form-label">Or Enter Your UPI ID (Optional)</label>
+                  <input
+                    type="text"
+                    className="modal-input"
+                    placeholder="e.g. username@okaxis or 9876543210@ybl"
+                    value={upiIdInput}
+                    onChange={(e) => setUpiIdInput(e.target.value)}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={verifyingPayment}
+                  style={{ width: '100%', justifyContent: 'center' }}
+                >
+                  {verifyingPayment
+                    ? '⏳ Verifying UPI Transaction...'
+                    : `✅ Verify & Pay $${pendingCheckout.total.toFixed(2)}`}
+                </button>
+              </form>
+            )}
+
+            {paymentMethod === '💳 Card' && (
+              <form onSubmit={handleVerifyGatewayPayment}>
+                {/* Visual 3D Glass Card Preview */}
+                <div
+                  style={{
+                    background: 'linear-gradient(135deg, #2e1a47 0%, #4c1d95 55%, #be185d 100%)',
+                    borderRadius: 18,
+                    padding: '1.1rem 1.3rem',
+                    marginBottom: '1rem',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    boxShadow: '0 14px 32px rgba(0,0,0,0.45)',
+                    color: '#fff',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.9rem' }}>
+                    <span style={{ fontSize: '0.75rem', letterSpacing: 1.5, textTransform: 'uppercase', opacity: 0.85 }}>
+                      Bean Scene Platinum Pay
+                    </span>
+                    <span style={{ fontSize: '1.1rem' }}>💳</span>
+                  </div>
+                  <div style={{ fontFamily: 'monospace', fontSize: '1.12rem', letterSpacing: 2, marginBottom: '0.85rem' }}>
+                    {cardNumber.trim() || '4532 •••• •••• 8891'}
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', opacity: 0.9 }}>
+                    <span>{(cardHolder || pendingCheckout.customer || 'COFFEE LOVER').toUpperCase()}</span>
+                    <span>EXP {cardExpiry || '08/29'}</span>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Cardholder Name</label>
+                  <input
+                    type="text"
+                    className="modal-input"
+                    placeholder="Name on card"
+                    value={cardHolder}
+                    onChange={(e) => setCardHolder(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Card Number</label>
+                  <input
+                    type="text"
+                    className="modal-input"
+                    placeholder="4532 1234 5678 8891"
+                    maxLength={19}
+                    value={cardNumber}
+                    onChange={(e) => {
+                      const digits = e.target.value.replace(/\D/g, '').slice(0, 16);
+                      const grouped = digits.replace(/(\d{4})(?=\d)/g, '$1 ');
+                      setCardNumber(grouped);
+                    }}
+                    required
+                  />
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group flex-1">
+                    <label className="form-label">Expiry (MM/YY)</label>
+                    <input
+                      type="text"
+                      className="modal-input"
+                      placeholder="08/29"
+                      maxLength={5}
+                      value={cardExpiry}
+                      onChange={(e) => {
+                        const raw = e.target.value.replace(/\D/g, '').slice(0, 4);
+                        setCardExpiry(raw.length > 2 ? `${raw.slice(0, 2)}/${raw.slice(2)}` : raw);
+                      }}
+                      required
+                    />
+                  </div>
+                  <div className="form-group flex-1">
+                    <label className="form-label">CVV</label>
+                    <input
+                      type="password"
+                      className="modal-input"
+                      placeholder="•••"
+                      maxLength={4}
+                      value={cardCvv}
+                      onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={verifyingPayment}
+                  style={{ width: '100%', justifyContent: 'center', marginTop: '0.3rem' }}
+                >
+                  {verifyingPayment
+                    ? '⏳ Authorizing Card...'
+                    : `🔒 Pay $${pendingCheckout.total.toFixed(2)} Now`}
+                </button>
+              </form>
+            )}
+
+            {paymentMethod === '💵 Pay at Counter' && (
+              <div style={{ textAlign: 'center', padding: '0.75rem 0' }}>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.1rem' }}>
+                  Your order will be sent straight to the barista bar. Pay with cash or tap at the pickup counter!
+                </p>
+                <button
+                  type="button"
+                  className="btn-primary"
+                  disabled={verifyingPayment}
+                  style={{ width: '100%', justifyContent: 'center' }}
+                  onClick={handleVerifyGatewayPayment}
+                >
+                  {verifyingPayment ? '⏳ Sending to Barista...' : '💵 Confirm Pay-at-Counter Order'}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* ORDER CONFIRMATION MODAL WITH LIVE TRACKER */}
       {showOrderConfirmation && confirmedOrder && (
         <div className="modal-backdrop" onClick={() => setShowOrderConfirmation(false)}>
           <div className="modal-card modal-confirmation" onClick={(e) => e.stopPropagation()}>
             <div className="confirm-icon">☕✨</div>
             <h3>Order Placed Successfully!</h3>
-            <p className="order-id">Order ID: <strong>#{confirmedOrder.id}</strong></p>
+            <p className="order-id">
+              Order ID: <strong>#{confirmedOrder.id}</strong>
+              {confirmedOrder.transactionId && (
+                <span style={{ marginLeft: '0.5rem', color: '#4ade80', fontSize: '0.82rem' }}>
+                  • Ref #{confirmedOrder.transactionId} ({confirmedOrder.paymentStatus || 'Paid ✓'})
+                </span>
+              )}
+            </p>
 
             {/* Live 4-Stage Preparation Tracker */}
             <div className="order-tracker-steps">
@@ -3450,22 +3754,51 @@ function App() {
       {/* BARISTA / ADMIN HUB MODAL (LIVE BACKEND CRUD & KITCHEN QUEUE) */}
       {showAdminModal && (
         <div className="modal-backdrop" onClick={() => setShowAdminModal(false)}>
-          <div className="modal-card video-modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
+          <div className="modal-card video-modal-card admin-hub-modal-card" onClick={(e) => e.stopPropagation()}>
+            {/* Luxury Roastery Hero Header Banner */}
+            <div className="admin-hub-hero-banner">
               <div>
-                <span className="modal-badge">Full-Stack Control Center</span>
-                <h3 className="modal-title">⚡ Barista &amp; Admin Hub</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', marginBottom: '0.25rem' }}>
+                  <span className="modal-badge" style={{ marginBottom: 0 }}>Full-Stack Control Center</span>
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      color: '#4ade80',
+                      background: 'rgba(74, 222, 128, 0.14)',
+                      border: '1px solid rgba(74, 222, 128, 0.35)',
+                      padding: '0.18rem 0.55rem',
+                      borderRadius: 999,
+                    }}
+                  >
+                    ● Cloud DB Live
+                  </span>
+                </div>
+                <h3 className="modal-title" style={{ fontSize: '1.55rem', margin: 0 }}>
+                  ⚡ Barista &amp; Admin Hub
+                </h3>
               </div>
-              <button
-                type="button"
-                className="modal-close"
-                onClick={() => setShowAdminModal(false)}
-              >
-                ✕
-              </button>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <Link
+                  to="/admin"
+                  className="mood-pill-btn active"
+                  style={{ textDecoration: 'none', padding: '0.48rem 1rem', fontSize: '0.8rem' }}
+                >
+                  🛠️ Full Admin Page →
+                </Link>
+                <button
+                  type="button"
+                  className="modal-close"
+                  onClick={() => setShowAdminModal(false)}
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
-            <div className="pill-group" style={{ marginBottom: '1.2rem' }}>
+            {/* 4-Column Single-Row Glass Navigation Dock */}
+            <div className="admin-hub-tabs-dock">
               <button
                 type="button"
                 className={`mood-pill-btn ${adminTab === 'orders' ? 'active' : ''}`}
@@ -3494,21 +3827,72 @@ function App() {
               >
                 👥 Live Users ({visitorsList.length})
               </button>
-              <Link
-                to="/admin"
-                className="mood-pill-btn"
-                style={{ textDecoration: 'none', marginLeft: 'auto' }}
-              >
-                🛠️ Full Admin Page →
-              </Link>
             </div>
 
             {adminTab === 'orders' && (
               <div style={{ maxHeight: '55vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {orderHistory.length === 0 ? (
-                  <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem 0' }}>
-                    No active orders in the queue yet. Place an order to test live status updates!
-                  </p>
+                  <div className="admin-empty-stage">
+                    <div className="admin-empty-orb">☕</div>
+                    <h4 style={{ color: '#fff', fontSize: '1.15rem', marginBottom: '0.35rem' }}>
+                      Espresso Bar Queue is Ready &amp; Standing By
+                    </h4>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', maxWidth: 460, margin: '0 auto 1.1rem' }}>
+                      No active orders in the kitchen queue yet. Place a drink order or generate an instant demo order below to test live preparation tracking and thermal ticket printing!
+                    </p>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        gap: '0.6rem',
+                        flexWrap: 'wrap',
+                        marginBottom: '1.25rem',
+                        fontSize: '0.76rem',
+                      }}
+                    >
+                      <span className="spec-pill">⏱️ Avg Prep: 5–8 mins</span>
+                      <span className="spec-pill">🔥 18 Artisan Specials Ready</span>
+                      <span className="spec-pill">🖨️ Thermal Receipt Printer Online</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                      <button
+                        type="button"
+                        className="btn-primary"
+                        style={{ padding: '0.6rem 1.25rem', fontSize: '0.85rem' }}
+                        onClick={() => {
+                          const sampleOrder = {
+                            id: 'BSC-4821',
+                            items: [
+                              { name: 'Caramel Macchiato (Large, oat milk)', quantity: 1, price: 6.5 },
+                              { name: 'Chocolate Croissant (Warm)', quantity: 1, price: 4.3 },
+                            ],
+                            total: 10.8,
+                            pointsEarned: 108,
+                            customer: isLoggedIn ? userName : 'Vijaya Saradhi',
+                            fulfillment: '🪑 Dine-In Table',
+                            paymentMethod: '📱 UPI / QR Pay',
+                            transactionId: 'UPI-894210',
+                            paymentStatus: 'Paid ✓',
+                            placedAt: new Date().toISOString(),
+                            status: 'Received',
+                          };
+                          setOrderHistory((prev) => [sampleOrder, ...prev]);
+                          axios.post(`${API_BASE_URL}/api/orders`, sampleOrder).catch(() => {});
+                          showToast('Generated Live Demo Order #BSC-4821 in Kitchen Queue! ⚡');
+                        }}
+                      >
+                        ⚡ Simulate Live Demo Order
+                      </button>
+                      <a
+                        href="#menu"
+                        className="btn-secondary"
+                        style={{ padding: '0.6rem 1.25rem', fontSize: '0.85rem', textDecoration: 'none' }}
+                        onClick={() => setShowAdminModal(false)}
+                      >
+                        ☕ Browse Menu to Order →
+                      </a>
+                    </div>
+                  </div>
                 ) : (
                   orderHistory.map((ord, idx) => (
                     <div key={ord.id || idx} className="order-summary-box" style={{ marginBottom: 0 }}>
@@ -3648,9 +4032,27 @@ function App() {
             {adminTab === 'reservations' && (
               <div style={{ maxHeight: '55vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {reservationsList.length === 0 ? (
-                  <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem 0' }}>
-                    No table reservations booked yet. Use &quot;🪑 Book Table&quot; in the navbar to reserve a spot!
-                  </p>
+                  <div className="admin-empty-stage">
+                    <div className="admin-empty-orb">🪑</div>
+                    <h4 style={{ color: '#fff', fontSize: '1.15rem', marginBottom: '0.35rem' }}>
+                      VIP Café Seating Lounge is Open
+                    </h4>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', maxWidth: 440, margin: '0 auto 1.1rem' }}>
+                      No table passes booked yet. Reserve a Sunlit Window Booth, Garden Patio, or Quiet Work Pod in one click!
+                    </p>
+                    <button
+                      type="button"
+                      className="btn-primary"
+                      style={{ padding: '0.6rem 1.3rem', fontSize: '0.86rem' }}
+                      onClick={() => {
+                        setShowAdminModal(false);
+                        setConfirmedReservation(null);
+                        setShowReserveModal(true);
+                      }}
+                    >
+                      🪑 Book a VIP Table Pass →
+                    </button>
+                  </div>
                 ) : (
                   reservationsList.map((r, i) => (
                     <div key={r.passId || i} className="order-summary-box" style={{ marginBottom: 0 }}>

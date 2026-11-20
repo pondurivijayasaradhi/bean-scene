@@ -9,25 +9,56 @@ const API_BASE_URL =
     : '';
 
 const INITIAL_PRODUCTS = [
-  { id: 1,  name: 'Cappuccino',          description: 'Rich espresso with steamed milk foam',                          price: 4.5, image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: true,  featured: true  },
-  { id: 2,  name: 'Latte',               description: 'Smooth espresso with steamed milk',                             price: 4.8, image: 'https://images.unsplash.com/photo-1561882468-9110e03e0f78?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: false, featured: false },
-  { id: 3,  name: 'Americano',           description: 'Espresso with hot water',                                       price: 3.5, image: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: false, featured: false },
-  { id: 7,  name: 'Caramel Macchiato',   description: 'Vanilla steamed milk marked with espresso and caramel drizzle', price: 5.2, image: 'https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: true,  featured: true  },
-  { id: 8,  name: 'Caffè Mocha',         description: 'Full-bodied espresso with bittersweet chocolate and milk',      price: 5.0, image: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: true,  featured: true  },
-  { id: 9,  name: 'Flat White',          description: 'Velvety microfoam poured over a double ristretto shot',         price: 4.7, image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: false, featured: false },
-  { id: 10, name: 'Espresso Macchiato',  description: 'Bold double espresso topped with a dollop of milk foam',        price: 3.8, image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: false, featured: false },
-  { id: 4,  name: 'Iced Coffee',         description: 'Chilled coffee over ice',                                       price: 4.2, image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: true,  featured: true  },
-  { id: 11, name: 'Cold Brew',           description: 'Slow-steeped for 20 hours for an ultra-smooth finish',          price: 4.6, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: true,  featured: true  },
-  { id: 12, name: 'Iced Caramel Latte',  description: 'Chilled espresso, milk, and sweet caramel over ice',            price: 5.1, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: true,  featured: true  },
-  { id: 13, name: 'Iced Matcha Latte',   description: 'Ceremonial-grade green tea whisked with cold milk over ice',    price: 5.3, image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: false, featured: false },
-  { id: 14, name: 'Espresso Frappe',     description: 'Blended iced coffee with rich espresso and whipped cream',      price: 5.5, image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: false, featured: false },
-  { id: 5,  name: 'Croissant',           description: 'Buttery, flaky French pastry',                                  price: 3.9, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: false, featured: false },
-  { id: 6,  name: 'Blueberry Muffin',    description: 'Freshly baked with real blueberries',                           price: 3.5, image: 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: true,  featured: true  },
-  { id: 15, name: 'Chocolate Croissant', description: 'Flaky golden pastry filled with rich dark chocolate',           price: 4.3, image: 'https://images.unsplash.com/photo-1530610476181-d83430b64dcd?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: true,  featured: true  },
-  { id: 16, name: 'Cinnamon Roll',       description: 'Warm spiced swirl topped with cream cheese frosting',           price: 4.5, image: 'https://images.unsplash.com/photo-1583527976767-5399024eeb05?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: true,  featured: true  },
-  { id: 17, name: 'Banana Walnut Bread', description: 'Moist house-baked banana slice loaded with toasted walnuts',    price: 3.8, image: 'https://images.unsplash.com/photo-1603532648955-039310d9ed75?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: false, featured: false },
-  { id: 18, name: 'Avocado Toast',       description: 'Artisan sourdough with smashed avocado and chili flakes',       price: 6.5, image: 'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: false, featured: false },
+  // Hot Coffee
+  { id: 1,  name: 'Cappuccino',                  description: 'Rich espresso with steamed milk foam',                          price: 4.5, image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: true,  featured: true  },
+  { id: 2,  name: 'Latte',                       description: 'Smooth espresso with steamed milk',                             price: 4.8, image: 'https://images.unsplash.com/photo-1561882468-9110e03e0f78?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: false, featured: false },
+  { id: 3,  name: 'Americano',                   description: 'Espresso with hot water',                                       price: 3.5, image: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: false, featured: false },
+  { id: 7,  name: 'Caramel Macchiato',           description: 'Vanilla steamed milk marked with espresso and caramel drizzle', price: 5.2, image: 'https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: true,  featured: true  },
+  { id: 8,  name: 'Caffè Mocha',                 description: 'Full-bodied espresso with bittersweet chocolate and milk',      price: 5.0, image: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: true,  featured: true  },
+  { id: 9,  name: 'Flat White',                  description: 'Velvety microfoam poured over a double ristretto shot',         price: 4.7, image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: false, featured: false },
+  { id: 10, name: 'Espresso Macchiato',          description: 'Bold double espresso topped with a dollop of milk foam',        price: 3.8, image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: false, featured: false },
+  { id: 19, name: 'Pistachio Velvet Latte',      description: 'Double espresso infused with roasted Sicilian pistachio cream', price: 5.4, image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: true,  featured: true  },
+  { id: 20, name: 'Hazelnut Cortado',            description: 'Equal parts rich espresso and warm toasted hazelnut milk',      price: 4.6, image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: false, featured: false },
+  { id: 21, name: 'Spanish Condensed Latte',     description: 'Velvety espresso layered with silky sweetened condensed milk',  price: 5.1, image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80', category: 'coffee', popular: true,  featured: true  },
+
+  // Iced Beverages
+  { id: 4,  name: 'Iced Coffee',                 description: 'Chilled coffee over ice',                                       price: 4.2, image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: true,  featured: true  },
+  { id: 11, name: 'Cold Brew',                   description: 'Slow-steeped for 20 hours for an ultra-smooth finish',          price: 4.6, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: true,  featured: true  },
+  { id: 12, name: 'Iced Caramel Latte',          description: 'Chilled espresso, milk, and sweet caramel over ice',            price: 5.1, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: true,  featured: true  },
+  { id: 13, name: 'Iced Matcha Latte',           description: 'Ceremonial-grade green tea whisked with cold milk over ice',    price: 5.3, image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: false, featured: false },
+  { id: 14, name: 'Espresso Frappe',             description: 'Blended iced coffee with rich espresso and whipped cream',      price: 5.5, image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: false, featured: false },
+  { id: 22, name: 'Brown Sugar Oat Shaken',      description: 'Blonde espresso shaken with brown sugar, cinnamon, and oat milk', price: 5.4, image: 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: true,  featured: true  },
+  { id: 23, name: 'Pistachio Cream Cold Brew',   description: '20-hour cold brew topped with silky pistachio sweet cold foam', price: 5.6, image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: true,  featured: true  },
+  { id: 24, name: 'Strawberry Matcha Cloud',     description: 'Ceremonial Uji matcha layered over house strawberry purée',     price: 5.7, image: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: true,  featured: true  },
+  { id: 25, name: 'Salted Caramel Nitro Brew',   description: 'Velvety nitrogen-infused cold brew with sea salt caramel foam', price: 5.3, image: 'https://images.unsplash.com/photo-1497636577773-f1231844b336?auto=format&fit=crop&w=600&q=80', category: 'iced',   popular: false, featured: false },
+  { id: 26, name: 'Mango Passion Iced Espresso', description: 'Crisp sparkling tropical mango & passionfruit topped with espresso', price: 4.9, image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80', category: 'iced', popular: false, featured: false },
+
+  // Bakery
+  { id: 5,  name: 'Croissant',                   description: 'Buttery, flaky French pastry',                                  price: 3.9, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: false, featured: false },
+  { id: 6,  name: 'Blueberry Muffin',            description: 'Freshly baked with real blueberries',                           price: 3.5, image: 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: true,  featured: true  },
+  { id: 15, name: 'Chocolate Croissant',         description: 'Flaky golden pastry filled with rich dark chocolate',           price: 4.3, image: 'https://images.unsplash.com/photo-1530610476181-d83430b64dcd?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: true,  featured: true  },
+  { id: 16, name: 'Cinnamon Roll',               description: 'Warm spiced swirl topped with cream cheese frosting',           price: 4.5, image: 'https://images.unsplash.com/photo-1583527976767-5399024eeb05?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: true,  featured: true  },
+  { id: 17, name: 'Banana Walnut Bread',         description: 'Moist house-baked banana slice loaded with toasted walnuts',    price: 3.8, image: 'https://images.unsplash.com/photo-1603532648955-039310d9ed75?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: false, featured: false },
+  { id: 18, name: 'Avocado Toast',               description: 'Artisan sourdough with smashed avocado and chili flakes',       price: 6.5, image: 'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: false, featured: false },
+  { id: 27, name: 'Almond Frangipane Croissant', description: 'Double-baked croissant filled with sweet almond cream & flakes', price: 4.8, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: true,  featured: true  },
+  { id: 28, name: 'Tiramisu Espresso Cake',      description: 'Espresso-soaked sponge layered with whipped mascarpone & cocoa', price: 5.8, image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: true,  featured: true  },
+  { id: 29, name: 'Belgian Waffle & Berries',    description: 'Crisp pearl-sugar Liège waffle topped with warm berry compote', price: 5.5, image: 'https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: false, featured: false },
+  { id: 30, name: 'Smoked Salmon Cream Bagel',   description: 'Toasted sesame bagel with herb cream cheese, capers & salmon',  price: 6.9, image: 'https://images.unsplash.com/photo-1592417817098-8f3d691a4bf5?auto=format&fit=crop&w=600&q=80', category: 'bakery', popular: true,  featured: true  },
 ];
+
+const mergeAdminCatalog = (savedList = [], catalog = INITIAL_PRODUCTS) => {
+  if (!Array.isArray(savedList) || savedList.length === 0) return catalog;
+  const merged = catalog.map((def) => {
+    const existing = savedList.find((item) => item.id === def.id || item.name === def.name);
+    return existing
+      ? { ...def, ...existing, image: existing.image || def.image, category: existing.category || def.category }
+      : def;
+  });
+  const customExtras = savedList.filter(
+    (item) => !catalog.some((def) => def.id === item.id || def.name === item.name)
+  );
+  return [...merged, ...customExtras];
+};
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('products');
@@ -35,7 +66,12 @@ function AdminDashboard() {
   const [products, setProducts] = useState(() => {
     try {
       const saved = localStorage.getItem('beanSceneProducts');
-      return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+      if (saved) {
+        const merged = mergeAdminCatalog(JSON.parse(saved));
+        localStorage.setItem('beanSceneProducts', JSON.stringify(merged));
+        return merged;
+      }
+      return INITIAL_PRODUCTS;
     } catch {
       return INITIAL_PRODUCTS;
     }
@@ -118,7 +154,13 @@ function AdminDashboard() {
         if (prodRes.status === 'fulfilled' && Array.isArray(prodRes.value.data) && prodRes.value.data.length > 0) {
           const saved = localStorage.getItem('beanSceneProducts');
           if (!saved) {
-            saveProductsLocally(prodRes.value.data);
+            saveProductsLocally(mergeAdminCatalog(prodRes.value.data));
+          } else {
+            try {
+              saveProductsLocally(mergeAdminCatalog(JSON.parse(saved)));
+            } catch {
+              saveProductsLocally(INITIAL_PRODUCTS);
+            }
           }
         }
         if (ordRes.status === 'fulfilled' && Array.isArray(ordRes.value.data) && ordRes.value.data.length > 0) {
@@ -239,6 +281,52 @@ function AdminDashboard() {
     setTimeout(() => setMessage(''), 2500);
   };
 
+  const handleSimulateOrder = () => {
+    const sampleOrder = {
+      id: 'BSC-4821',
+      items: [
+        { name: 'Caramel Macchiato (Large, oat milk)', quantity: 1, price: 6.5 },
+        { name: 'Chocolate Croissant (Warm)', quantity: 1, price: 4.3 },
+      ],
+      total: 10.8,
+      pointsEarned: 108,
+      customer: 'Vijaya Saradhi',
+      fulfillment: '🪑 Dine-In Table',
+      paymentMethod: '📱 UPI / QR Pay',
+      transactionId: 'UPI-894210',
+      paymentStatus: 'Paid ✓',
+      placedAt: new Date().toISOString(),
+      status: 'Received',
+    };
+    const next = [sampleOrder, ...orders];
+    setOrders(next);
+    localStorage.setItem('beanSceneOrders', JSON.stringify(next));
+    axios.post(`${API_BASE_URL}/api/orders`, sampleOrder).catch(() => {});
+    setMessage('⚡ Generated Live Demo Order #BSC-4821 in Kitchen Queue!');
+    setTimeout(() => setMessage(''), 3000);
+  };
+
+  const handleExportCsv = () => {
+    const rows = [
+      ['Category', 'Name', 'Email', 'Role / Action', 'Status / Location'],
+      ...users.map((u) => ['Registered User', u.name, u.email, u.role || 'customer', u.lastActive || 'Active']),
+      ...subscribers.map((s) => ['Newsletter Subscriber', s.split('@')[0], s, 'FIRST10 Promo', 'Subscribed']),
+      ...visitors.map((v) => ['Visitor Session', v.name, v.email, v.action, `${v.device || ''} (${v.location || 'Live'})`]),
+    ];
+    const csvContent = rows
+      .map((r) => r.map((cell) => `"${String(cell || '').replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bean-scene-admin-analytics.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    setMessage('📥 Exported Full Users, Subscribers & Traffic CSV Report!');
+    setTimeout(() => setMessage(''), 3000);
+  };
+
   const totalRevenue = orders.reduce((acc, o) => acc + Number(o.total || 0), 0);
   const filteredProducts = products.filter(
     (p) =>
@@ -247,81 +335,123 @@ function AdminDashboard() {
   );
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0d0c11', color: '#f5f0ff', padding: '2.5rem 5%' }}>
-      <div style={{ maxWidth: 1180, margin: '0 auto' }}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '1rem',
-            marginBottom: '1.75rem',
-          }}
-        >
+    <div className="admin-page-shell">
+      <div className="admin-page-container">
+        {/* Luxury Roastery Executive Hero Banner */}
+        <div className="admin-exec-hero">
           <div>
-            <span className="modal-badge">⚡ Bean Scene Operations &amp; Analytics</span>
-            <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: '#fff', margin: '0.2rem 0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
+              <span className="modal-badge" style={{ marginBottom: 0 }}>⚡ Bean Scene Operations &amp; Analytics</span>
+              <span
+                style={{
+                  fontSize: '0.74rem',
+                  fontWeight: 700,
+                  color: '#4ade80',
+                  background: 'rgba(74, 222, 128, 0.14)',
+                  border: '1px solid rgba(74, 222, 128, 0.35)',
+                  padding: '0.2rem 0.65rem',
+                  borderRadius: 999,
+                }}
+              >
+                ● Cloud DB &amp; Analytics Live
+              </span>
+            </div>
+            <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#fff', margin: '0.15rem 0 0.35rem', letterSpacing: '-0.5px' }}>
               Full-Stack Admin Command Center
             </h1>
-            <p style={{ color: 'var(--text-muted)', margin: 0 }}>
-              Manage live menu products, kitchen order queue, table reservations, and real-time users
+            <p style={{ color: '#d8cfe8', margin: 0, fontSize: '0.95rem' }}>
+              Manage live menu products, kitchen order queue, table reservations, and real-time production users
             </p>
           </div>
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '0.7rem', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              onClick={handleExportCsv}
+              className="btn-secondary"
+              style={{ padding: '0.7rem 1.2rem', fontSize: '0.86rem' }}
+            >
+              📥 Export CSV Report
+            </button>
             <button
               type="button"
               onClick={handleResetMenu}
               className="btn-secondary"
-              style={{ padding: '0.7rem 1.2rem', fontSize: '0.88rem' }}
+              style={{ padding: '0.7rem 1.2rem', fontSize: '0.86rem' }}
             >
               🔄 Reset Default Menu
             </button>
             <Link
               to="/"
               className="btn-primary"
-              style={{ textDecoration: 'none', padding: '0.75rem 1.5rem', fontSize: '0.95rem' }}
+              style={{ textDecoration: 'none', padding: '0.75rem 1.45rem', fontSize: '0.92rem' }}
             >
               ← Back to Live Website
             </Link>
           </div>
         </div>
 
-        {/* Live KPI Summary Cards */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '1rem',
-            marginBottom: '2rem',
-          }}
-        >
-          <div className="order-summary-box" style={{ marginBottom: 0 }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>💰 Total Live Revenue</span>
-            <h3 style={{ fontSize: '1.65rem', color: '#4ade80', margin: '0.3rem 0 0' }}>${totalRevenue.toFixed(2)}</h3>
+        {/* 5 Glowing Glass Executive KPI Cards */}
+        <div className="admin-kpi-grid">
+          <div className="admin-kpi-card" style={{ borderTop: '3px solid #4ade80' }}>
+            <div className="admin-kpi-top">
+              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Total Live Revenue</span>
+              <span className="admin-kpi-icon" style={{ color: '#4ade80', background: 'rgba(74, 222, 128, 0.12)' }}>💰</span>
+            </div>
+            <div className="admin-kpi-value" style={{ color: '#4ade80' }}>${totalRevenue.toFixed(2)}</div>
+            <div className="admin-kpi-sub">
+              <span style={{ color: '#4ade80' }}>●</span> UPI QR &amp; Card Gateway Active
+            </div>
           </div>
-          <div className="order-summary-box" style={{ marginBottom: 0 }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>☕ Total Orders</span>
-            <h3 style={{ fontSize: '1.65rem', color: 'var(--warm)', margin: '0.3rem 0 0' }}>{orders.length}</h3>
+
+          <div className="admin-kpi-card" style={{ borderTop: '3px solid #f5d0a9' }}>
+            <div className="admin-kpi-top">
+              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Total Orders</span>
+              <span className="admin-kpi-icon" style={{ color: '#f5d0a9', background: 'rgba(245, 208, 169, 0.12)' }}>☕</span>
+            </div>
+            <div className="admin-kpi-value" style={{ color: 'var(--warm)' }}>{orders.length}</div>
+            <div className="admin-kpi-sub">
+              <span style={{ color: 'var(--warm)' }}>●</span> 4-Stage Kitchen Prep Queue
+            </div>
           </div>
-          <div className="order-summary-box" style={{ marginBottom: 0 }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>🥐 Active Menu Items</span>
-            <h3 style={{ fontSize: '1.65rem', color: '#fff', margin: '0.3rem 0 0' }}>{products.length}</h3>
+
+          <div className="admin-kpi-card" style={{ borderTop: '3px solid #c084fc' }}>
+            <div className="admin-kpi-top">
+              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Active Menu Items</span>
+              <span className="admin-kpi-icon" style={{ color: '#c084fc', background: 'rgba(192, 132, 252, 0.12)' }}>🥐</span>
+            </div>
+            <div className="admin-kpi-value" style={{ color: '#fff' }}>{products.length}</div>
+            <div className="admin-kpi-sub">
+              <span style={{ color: '#c084fc' }}>●</span> Coffee, Iced &amp; Artisan Bakery
+            </div>
           </div>
-          <div className="order-summary-box" style={{ marginBottom: 0 }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>🪑 Table Reservations</span>
-            <h3 style={{ fontSize: '1.65rem', color: 'var(--accent)', margin: '0.3rem 0 0' }}>{reservations.length}</h3>
+
+          <div className="admin-kpi-card" style={{ borderTop: '3px solid #f472b6' }}>
+            <div className="admin-kpi-top">
+              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Table Reservations</span>
+              <span className="admin-kpi-icon" style={{ color: '#f472b6', background: 'rgba(244, 114, 182, 0.12)' }}>🪑</span>
+            </div>
+            <div className="admin-kpi-value" style={{ color: '#f472b6' }}>{reservations.length}</div>
+            <div className="admin-kpi-sub">
+              <span style={{ color: '#f472b6' }}>●</span> 4 VIP Café Seating Zones
+            </div>
           </div>
-          <div className="order-summary-box" style={{ marginBottom: 0 }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>👥 Users &amp; Subscribers</span>
-            <h3 style={{ fontSize: '1.65rem', color: '#38bdf8', margin: '0.3rem 0 0' }}>
+
+          <div className="admin-kpi-card" style={{ borderTop: '3px solid #38bdf8' }}>
+            <div className="admin-kpi-top">
+              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Users &amp; Subscribers</span>
+              <span className="admin-kpi-icon" style={{ color: '#38bdf8', background: 'rgba(56, 189, 248, 0.12)' }}>👥</span>
+            </div>
+            <div className="admin-kpi-value" style={{ color: '#38bdf8' }}>
               {users.length + subscribers.length}
-            </h3>
+            </div>
+            <div className="admin-kpi-sub">
+              <span style={{ color: '#38bdf8' }}>●</span> {visitors.length} Active Visitor Sessions
+            </div>
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="pill-group" style={{ marginBottom: '1.75rem' }}>
+        {/* Full-Width 4-Column Frosted Glass Navigation Dock */}
+        <div className="admin-hub-tabs-dock" style={{ marginBottom: '1.75rem', padding: '0.55rem' }}>
           <button
             type="button"
             className={`mood-pill-btn ${activeTab === 'products' ? 'active' : ''}`}
@@ -372,18 +502,9 @@ function AdminDashboard() {
         {activeTab === 'products' && (
           <>
             {/* Form Card */}
-            <div
-              style={{
-                background: '#17141f',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                borderRadius: 24,
-                padding: '2rem',
-                marginBottom: '2.5rem',
-                boxShadow: '0 20px 50px rgba(0,0,0,0.45)',
-              }}
-            >
+            <div className="admin-glass-panel" style={{ marginBottom: '2rem' }}>
               <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--warm)', marginBottom: '1.25rem' }}>
-                {isEditing ? '✏️ Edit Product' : '➕ Add New Product'}
+                {isEditing ? '✏️ Edit Product' : '➕ Add New Specialty Product'}
               </h2>
 
               <form
@@ -488,15 +609,7 @@ function AdminDashboard() {
             </div>
 
             {/* Products Table */}
-            <div
-              style={{
-                background: '#17141f',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                borderRadius: 24,
-                overflow: 'hidden',
-                boxShadow: '0 20px 50px rgba(0,0,0,0.45)',
-              }}
-            >
+            <div className="admin-glass-panel" style={{ padding: 0, overflow: 'hidden' }}>
               <div
                 style={{
                   padding: '1.5rem 2rem',
@@ -509,7 +622,7 @@ function AdminDashboard() {
                 }}
               >
                 <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#fff', margin: 0 }}>
-                  All Products ({filteredProducts.length})
+                  All Menu Products ({filteredProducts.length})
                 </h2>
                 <input
                   type="text"
@@ -625,40 +738,64 @@ function AdminDashboard() {
         )}
 
         {activeTab === 'orders' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
             {orders.length === 0 ? (
-              <div className="order-summary-box" style={{ textAlign: 'center', padding: '2.5rem' }}>
-                No orders placed yet. Place an order on the main menu to track it here!
+              <div className="admin-empty-stage">
+                <div className="admin-empty-orb">☕</div>
+                <h3 style={{ color: '#fff', fontSize: '1.3rem', marginBottom: '0.4rem' }}>
+                  Kitchen Order Queue is Ready
+                </h3>
+                <p style={{ color: 'var(--text-muted)', maxWidth: 480, margin: '0 auto 1.25rem', fontSize: '0.92rem' }}>
+                  No active orders in the queue right now. Simulate a live customer order below or head to the main menu to place an order through the UPI QR &amp; Card Gateway!
+                </p>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '0.8rem', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    style={{ padding: '0.7rem 1.4rem', fontSize: '0.9rem' }}
+                    onClick={handleSimulateOrder}
+                  >
+                    ⚡ Simulate Live Demo Order
+                  </button>
+                  <Link
+                    to="/"
+                    className="btn-secondary"
+                    style={{ padding: '0.7rem 1.4rem', fontSize: '0.9rem', textDecoration: 'none' }}
+                  >
+                    ☕ Go to Live Menu →
+                  </Link>
+                </div>
               </div>
             ) : (
               orders.map((ord, idx) => (
-                <div key={ord.id || idx} className="order-summary-box" style={{ marginBottom: 0 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <div key={ord.id || idx} className="admin-glass-panel">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
                     <div>
-                      <strong style={{ color: '#fff', fontSize: '1.05rem' }}>
+                      <strong style={{ color: '#fff', fontSize: '1.1rem' }}>
                         Order #{ord.id} • {ord.customer || ord.user || 'Guest'}
                       </strong>
-                      <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                      <div style={{ fontSize: '0.84rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
                         {ord.fulfillment || '🏪 In-Café Pickup'} • {ord.paymentMethod || '📱 UPI / QR Pay'}
+                        {ord.transactionId ? ` • Ref #${ord.transactionId}` : ''}
                       </div>
                     </div>
                     <button
                       type="button"
                       className="btn-primary"
-                      style={{ padding: '0.4rem 1rem', fontSize: '0.82rem' }}
+                      style={{ padding: '0.45rem 1.15rem', fontSize: '0.84rem' }}
                       onClick={() => handleCycleOrderStatus(ord.id, ord.status)}
                     >
                       Status: {ord.status || 'Received'} ↻
                     </button>
                   </div>
-                  <div style={{ marginTop: '0.65rem' }}>
+                  <div style={{ marginTop: '0.85rem', paddingTop: '0.85rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                     {(ord.items || []).map((it, i) => (
-                      <p key={i} style={{ fontSize: '0.88rem', margin: '0.2rem 0' }}>
+                      <p key={i} style={{ fontSize: '0.9rem', margin: '0.25rem 0', color: '#e2e8f0' }}>
                         {it.quantity || 1}× {it.name}
                       </p>
                     ))}
                   </div>
-                  <div style={{ marginTop: '0.6rem', fontWeight: 700, color: 'var(--warm)' }}>
+                  <div style={{ marginTop: '0.65rem', fontWeight: 800, fontSize: '1.05rem', color: '#4ade80' }}>
                     Total Paid: ${Number(ord.total || 0).toFixed(2)}
                   </div>
                 </div>
@@ -668,18 +805,31 @@ function AdminDashboard() {
         )}
 
         {activeTab === 'reservations' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
             {reservations.length === 0 ? (
-              <div className="order-summary-box" style={{ textAlign: 'center', padding: '2.5rem' }}>
-                No table reservations booked yet.
+              <div className="admin-empty-stage">
+                <div className="admin-empty-orb">🪑</div>
+                <h3 style={{ color: '#fff', fontSize: '1.3rem', marginBottom: '0.4rem' }}>
+                  VIP Café Seating Lounge is Open
+                </h3>
+                <p style={{ color: 'var(--text-muted)', maxWidth: 460, margin: '0 auto 1.25rem', fontSize: '0.92rem' }}>
+                  No table passes booked yet. Customers can reserve our Sunlit Window Booth, Lush Garden Patio, Quiet Work Pod, or Roastery Lounge from the main navbar.
+                </p>
+                <Link
+                  to="/"
+                  className="btn-primary"
+                  style={{ padding: '0.7rem 1.4rem', fontSize: '0.9rem', textDecoration: 'none' }}
+                >
+                  🪑 Book Table on Live Site →
+                </Link>
               </div>
             ) : (
               reservations.map((r, idx) => (
-                <div key={r.passId || idx} className="order-summary-box" style={{ marginBottom: 0 }}>
-                  <strong style={{ color: 'var(--accent)', fontSize: '1.02rem' }}>
+                <div key={r.passId || idx} className="admin-glass-panel">
+                  <strong style={{ color: 'var(--accent)', fontSize: '1.08rem' }}>
                     Table Pass #{r.passId} — {r.name}
                   </strong>
-                  <p style={{ fontSize: '0.88rem', marginTop: '0.3rem', color: '#e2e8f0' }}>
+                  <p style={{ fontSize: '0.92rem', marginTop: '0.35rem', color: '#e2e8f0' }}>
                     {r.zone} • {r.guests} • Reserved for {r.time}
                   </p>
                 </div>
@@ -689,84 +839,134 @@ function AdminDashboard() {
         )}
 
         {activeTab === 'users' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div className="order-summary-box" style={{ marginBottom: 0 }}>
-              <h3 style={{ color: '#fff', fontSize: '1.05rem', marginBottom: '0.75rem' }}>
-                👤 Registered &amp; Signed-In Users ({users.length})
-              </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                {users.map((u, idx) => (
-                  <div
-                    key={u.email || idx}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      padding: '0.55rem 0.85rem',
-                      background: 'rgba(255,255,255,0.04)',
-                      borderRadius: 10,
-                    }}
-                  >
-                    <div>
-                      <strong style={{ color: '#fff' }}>{u.name}</strong>{' '}
-                      <span style={{ color: 'var(--text-muted)' }}>({u.email})</span>
+          <div className="admin-users-two-col">
+            {/* Left Column: Registered Accounts + Newsletter Subscribers */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.35rem' }}>
+              <div className="admin-glass-panel">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <h3 style={{ color: '#fff', fontSize: '1.12rem', margin: 0 }}>
+                    👤 Registered &amp; Signed-In Users ({users.length})
+                  </h3>
+                  <span className="spec-pill">🔒 Auth Active</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                  {users.map((u, idx) => (
+                    <div key={u.email || idx} className="admin-user-row">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                        <div className="admin-avatar-orb">
+                          {(u.name || 'U').charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <strong style={{ color: '#fff', display: 'block', fontSize: '0.95rem' }}>{u.name}</strong>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>{u.email}</span>
+                        </div>
+                      </div>
+                      <span
+                        style={{
+                          color: u.role === 'admin' ? '#f5d0a9' : '#4ade80',
+                          background: u.role === 'admin' ? 'rgba(245, 208, 169, 0.14)' : 'rgba(74, 222, 128, 0.14)',
+                          border: `1px solid ${u.role === 'admin' ? 'rgba(245, 208, 169, 0.35)' : 'rgba(74, 222, 128, 0.35)'}`,
+                          padding: '0.25rem 0.7rem',
+                          borderRadius: 999,
+                          fontWeight: 700,
+                          fontSize: '0.76rem',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {u.role === 'admin' ? '⚡ Admin' : '🟢 Active Customer'}
+                      </span>
                     </div>
-                    <span style={{ color: '#4ade80', fontWeight: 600, fontSize: '0.82rem' }}>
-                      {u.role === 'admin' ? '⚡ Admin' : '🟢 Active Customer'}
+                  ))}
+                </div>
+              </div>
+
+              <div className="admin-glass-panel">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.9rem' }}>
+                  <h3 style={{ color: '#fff', fontSize: '1.12rem', margin: 0 }}>
+                    📩 Newsletter Subscribers ({subscribers.length})
+                  </h3>
+                  <span className="spec-pill">🎟️ FIRST10 Promo</span>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+                  {subscribers.map((sub, idx) => (
+                    <span
+                      key={sub || idx}
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(192,132,252,0.18), rgba(236,72,153,0.12))',
+                        border: '1px solid rgba(192,132,252,0.4)',
+                        color: '#f3e8ff',
+                        padding: '0.42rem 0.9rem',
+                        borderRadius: 999,
+                        fontSize: '0.84rem',
+                        fontWeight: 600,
+                      }}
+                    >
+                      ✉️ {sub}
                     </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
 
-            <div className="order-summary-box" style={{ marginBottom: 0 }}>
-              <h3 style={{ color: '#fff', fontSize: '1.05rem', marginBottom: '0.75rem' }}>
-                📩 Newsletter Subscribers ({subscribers.length})
-              </h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                {subscribers.map((sub, idx) => (
-                  <span
-                    key={sub || idx}
-                    style={{
-                      background: 'rgba(192,132,252,0.14)',
-                      border: '1px solid rgba(192,132,252,0.35)',
-                      color: '#e9d5ff',
-                      padding: '0.32rem 0.75rem',
-                      borderRadius: 999,
-                      fontSize: '0.82rem',
-                    }}
-                  >
-                    ✉️ {sub}
+            {/* Right Column: Live Visitor & Real-Time Activity Stream */}
+            <div className="admin-glass-panel">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <div>
+                  <h3 style={{ color: '#fff', fontSize: '1.12rem', margin: 0 }}>
+                    🌐 Live Visitor &amp; Activity Stream ({visitors.length})
+                  </h3>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                    Real-time sessions, logins, subscriptions &amp; checkouts
                   </span>
-                ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleExportCsv}
+                  className="btn-secondary"
+                  style={{ padding: '0.38rem 0.85rem', fontSize: '0.78rem' }}
+                >
+                  📥 Download CSV
+                </button>
               </div>
-            </div>
 
-            <div className="order-summary-box" style={{ marginBottom: 0 }}>
-              <h3 style={{ color: '#fff', fontSize: '1.05rem', marginBottom: '0.75rem' }}>
-                🌐 Live Visitor &amp; Activity Log ({visitors.length})
-              </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', maxHeight: '540px', overflowY: 'auto' }}>
                 {visitors.map((v, idx) => (
-                  <div
-                    key={v.id || idx}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      padding: '0.6rem 0.85rem',
-                      background: 'rgba(255,255,255,0.03)',
-                      borderRadius: 10,
-                      border: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  >
-                    <div>
-                      <strong style={{ color: 'var(--warm)' }}>{v.name}</strong>{' '}
-                      <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>({v.email})</span>
-                      <div style={{ color: '#e2e8f0', fontSize: '0.84rem', marginTop: '0.15rem' }}>
-                        {v.action} • <span style={{ color: 'var(--accent)' }}>{v.device}</span>
+                  <div key={v.id || idx} className="admin-user-row">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <div
+                        className="admin-avatar-orb"
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(245, 208, 169, 0.25), rgba(192, 132, 252, 0.3))',
+                          border: '1px solid rgba(245, 208, 169, 0.45)',
+                          color: 'var(--warm)',
+                        }}
+                      >
+                        {(v.name || 'G').charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <div>
+                          <strong style={{ color: 'var(--warm)', fontSize: '0.92rem' }}>{v.name}</strong>{' '}
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>({v.email})</span>
+                        </div>
+                        <div style={{ color: '#e2e8f0', fontSize: '0.83rem', marginTop: '0.18rem' }}>
+                          {v.action} • <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{v.device}</span>
+                        </div>
                       </div>
                     </div>
-                    <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{v.location || 'Live'}</span>
+                    <span
+                      style={{
+                        color: '#38bdf8',
+                        background: 'rgba(56, 189, 248, 0.12)',
+                        border: '1px solid rgba(56, 189, 248, 0.3)',
+                        padding: '0.22rem 0.65rem',
+                        borderRadius: 999,
+                        fontSize: '0.74rem',
+                        fontWeight: 600,
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      📍 {v.location || 'Live Web'}
+                    </span>
                   </div>
                 ))}
               </div>
