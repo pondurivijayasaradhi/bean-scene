@@ -50,14 +50,23 @@ const DEFAULT_PRODUCTS = [
 
 const mergeProductCatalog = (savedList = [], catalog = DEFAULT_PRODUCTS) => {
   if (!Array.isArray(savedList) || savedList.length === 0) return catalog;
-  const merged = catalog.map((def) => {
+  let deletedIds = [];
+  try {
+    deletedIds = JSON.parse(localStorage.getItem('beanSceneDeletedProductIds') || '[]');
+  } catch {
+    deletedIds = [];
+  }
+  const activeCatalog = catalog.filter((def) => !deletedIds.includes(def.id));
+  const merged = activeCatalog.map((def) => {
     const existing = savedList.find((item) => item.id === def.id || item.name === def.name);
     return existing
       ? { ...def, ...existing, image: existing.image || def.image, category: existing.category || def.category }
       : def;
   });
   const customExtras = savedList.filter(
-    (item) => !catalog.some((def) => def.id === item.id || def.name === item.name)
+    (item) =>
+      !deletedIds.includes(item.id) &&
+      !catalog.some((def) => def.id === item.id || def.name === item.name)
   );
   return [...merged, ...customExtras];
 };
@@ -81,10 +90,17 @@ if (!API_BASE_URL) {
 
     if (url.includes('/api/products')) {
       if (method === 'get') {
-        responseData = DEFAULT_PRODUCTS;
+        try {
+          const savedProds = JSON.parse(localStorage.getItem('beanSceneProducts') || 'null');
+          responseData = Array.isArray(savedProds) && savedProds.length > 0
+            ? mergeProductCatalog(savedProds)
+            : mergeProductCatalog(DEFAULT_PRODUCTS);
+        } catch {
+          responseData = DEFAULT_PRODUCTS;
+        }
       } else if (method === 'post') {
         status = 201;
-        responseData = { id: Date.now(), ...body };
+        responseData = { id: body.id || Date.now(), ...body };
       } else {
         responseData = { ...body };
       }
@@ -456,10 +472,10 @@ function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       setHeroWordIdx((i) => (i + 1) % HERO_WORDS.length);
-      setReelIdx((i) => (i + 1) % DEFAULT_PRODUCTS.length);
+      setReelIdx((i) => (i + 1) % Math.max(1, products.length));
     }, 5500);
     return () => clearInterval(interval);
-  }, []);
+  }, [products.length]);
 
   // Cart & Ordering (Persisted)
   const [cart, setCart] = useState(() => {
@@ -1137,7 +1153,6 @@ function App() {
     setIsLoggedIn(false);
     setUserName('');
     setUserEmail('');
-    setOrderHistory([]);
     localStorage.removeItem('beanSceneUser');
     showToast('Logged out successfully');
   };
@@ -1591,6 +1606,14 @@ function App() {
 
   // Delete Menu Item from Barista Hub
   const handleDeleteProduct = async (id, name) => {
+    try {
+      const prevDeleted = JSON.parse(localStorage.getItem('beanSceneDeletedProductIds') || '[]');
+      if (!prevDeleted.includes(id)) {
+        localStorage.setItem('beanSceneDeletedProductIds', JSON.stringify([...prevDeleted, id]));
+      }
+    } catch {
+      // Ignore storage errors
+    }
     setProducts((prev) => {
       const next = prev.filter((p) => p.id !== id);
       localStorage.setItem('beanSceneProducts', JSON.stringify(next));
@@ -1602,6 +1625,14 @@ function App() {
       // Removed locally
     }
     showToast(`Removed "${name}" from menu`);
+  };
+
+  // Reset Menu to all 30 Default Specialties
+  const handleRestoreDefaultProducts = () => {
+    localStorage.removeItem('beanSceneDeletedProductIds');
+    localStorage.setItem('beanSceneProducts', JSON.stringify(DEFAULT_PRODUCTS));
+    setProducts(DEFAULT_PRODUCTS);
+    showToast(`Restored all ${DEFAULT_PRODUCTS.length} default menu items! 🔄`);
   };
 
   return (
@@ -2362,7 +2393,16 @@ function App() {
           <div className="no-results">
             <span>😔</span>
             <p>No items match your current filter</p>
-            <button className="btn-secondary" onClick={() => { setSearchQuery(''); setActiveCategory('all'); }}>Clear Filters</button>
+            <button
+              className="btn-secondary"
+              onClick={() => {
+                setSearchQuery('');
+                setActiveCategory('all');
+                setDietFilter('all');
+              }}
+            >
+              Clear All Filters
+            </button>
           </div>
         ) : (
           <div className="menu-grid">
@@ -3851,7 +3891,7 @@ function App() {
                       }}
                     >
                       <span className="spec-pill">⏱️ Avg Prep: 5–8 mins</span>
-                      <span className="spec-pill">🔥 18 Artisan Specials Ready</span>
+                      <span className="spec-pill">🔥 {products.length} Artisan Specials Ready</span>
                       <span className="spec-pill">🖨️ Thermal Receipt Printer Online</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -3860,25 +3900,26 @@ function App() {
                         className="btn-primary"
                         style={{ padding: '0.6rem 1.25rem', fontSize: '0.85rem' }}
                         onClick={() => {
+                          const demoCode = Math.floor(1000 + Math.random() * 9000);
                           const sampleOrder = {
-                            id: 'BSC-4821',
+                            id: `BSC-${demoCode}`,
                             items: [
-                              { name: 'Caramel Macchiato (Large, oat milk)', quantity: 1, price: 6.5 },
-                              { name: 'Chocolate Croissant (Warm)', quantity: 1, price: 4.3 },
+                              { name: 'Pistachio Velvet Latte (Large, oat milk)', quantity: 1, price: 6.2 },
+                              { name: 'Almond Frangipane Croissant (Warm)', quantity: 1, price: 4.8 },
                             ],
-                            total: 10.8,
-                            pointsEarned: 108,
+                            total: 11.0,
+                            pointsEarned: 110,
                             customer: isLoggedIn ? userName : 'Vijaya Saradhi',
                             fulfillment: '🪑 Dine-In Table',
                             paymentMethod: '📱 UPI / QR Pay',
-                            transactionId: 'UPI-894210',
+                            transactionId: `UPI-${Math.floor(100000 + Math.random() * 900000)}`,
                             paymentStatus: 'Paid ✓',
                             placedAt: new Date().toISOString(),
                             status: 'Received',
                           };
                           setOrderHistory((prev) => [sampleOrder, ...prev]);
                           axios.post(`${API_BASE_URL}/api/orders`, sampleOrder).catch(() => {});
-                          showToast('Generated Live Demo Order #BSC-4821 in Kitchen Queue! ⚡');
+                          showToast(`Generated Live Demo Order #${sampleOrder.id} in Kitchen Queue! ⚡`);
                         }}
                       >
                         ⚡ Simulate Live Demo Order
@@ -3929,7 +3970,17 @@ function App() {
             {adminTab === 'menu' && (
               <div>
                 <form onSubmit={handleCreateProduct} className="order-summary-box" style={{ marginBottom: '1rem' }}>
-                  <h4 style={{ color: '#fff', marginBottom: '0.65rem', fontSize: '0.95rem' }}>+ Add New Specialty to Menu</h4>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
+                    <h4 style={{ color: '#fff', margin: 0, fontSize: '0.95rem' }}>+ Add New Specialty to Menu</h4>
+                    <button
+                      type="button"
+                      onClick={handleRestoreDefaultProducts}
+                      className="btn-secondary"
+                      style={{ padding: '0.28rem 0.75rem', fontSize: '0.75rem' }}
+                    >
+                      🔄 Restore All 30 Defaults
+                    </button>
+                  </div>
                   <div className="form-row">
                     <div className="form-group flex-1">
                       <input

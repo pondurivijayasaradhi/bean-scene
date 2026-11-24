@@ -31,7 +31,19 @@ export default async function handler(req, res) {
   const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {};
 
   if (req.method === 'POST') {
-    const { id, items, total, user, customer, email, fulfillment, paymentMethod } = body;
+    const {
+      id,
+      items,
+      total,
+      user,
+      customer,
+      email,
+      fulfillment,
+      paymentMethod,
+      transactionId,
+      paymentStatus,
+      pointsEarned,
+    } = body;
 
     if (!items || items.length === 0) {
       return res.status(400).json({ error: 'Cart is empty' });
@@ -46,6 +58,9 @@ export default async function handler(req, res) {
       email: email || 'guest@beanscene.com',
       fulfillment: fulfillment || '🏪 In-Café Pickup',
       paymentMethod: paymentMethod || '📱 UPI / QR Pay',
+      transactionId: transactionId || 'UPI-VERIFIED',
+      paymentStatus: paymentStatus || 'Paid ✓',
+      pointsEarned: pointsEarned || Math.max(10, Math.round(Number(total || 0) * 10)),
       status: 'Received',
       placedAt: new Date().toISOString(),
     };
