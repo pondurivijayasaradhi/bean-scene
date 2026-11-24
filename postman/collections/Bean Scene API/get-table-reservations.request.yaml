@@ -1,0 +1,19 @@
+$kind: http-request
+name: Get Table Reservations
+method: GET
+url: '{{base_url}}/api/reservations'
+order: 10000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 200', () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test('Returns reservations array with at least one booking', () => {
+        const list = pm.response.json();
+        pm.expect(list).to.be.an('array');
+        pm.expect(list.length).to.be.at.least(1);
+        pm.expect(list[0]).to.have.property('passId');
+      });

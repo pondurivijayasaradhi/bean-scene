@@ -1,0 +1,27 @@
+$kind: http-request
+name: Subscribe Newsletter
+method: POST
+url: '{{base_url}}/api/subscribe'
+order: 13000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "{{test_user_email}}"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 200', () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test('Subscription returns FIRST10 promoCode', () => {
+        const body = pm.response.json();
+        pm.expect(body).to.have.property('message', 'Subscribed successfully!');
+        pm.expect(body).to.have.property('promoCode', 'FIRST10');
+      });

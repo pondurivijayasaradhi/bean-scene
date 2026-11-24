@@ -1,0 +1,44 @@
+$kind: http-request
+name: Place Kitchen Order
+method: POST
+url: '{{base_url}}/api/orders'
+order: 6000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "customer": "Lakshmi Prasanna",
+      "email": "{{test_user_email}}",
+      "items": [
+        { "name": "Pistachio Velvet Latte", "quantity": 1, "price": 5.4 },
+        { "name": "Chocolate Croissant", "quantity": 1, "price": 4.3 }
+      ],
+      "total": 9.7,
+      "fulfillment": "🪑 Dine-In Table",
+      "pickupSlot": "⚡ ASAP (Ready in 5–8 mins)",
+      "paymentMethod": "📱 UPI / QR Pay",
+      "paymentStatus": "Paid ✓",
+      "currency": "USD"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 200', () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test('Order is created with Received status and items array', () => {
+        const body = pm.response.json();
+        pm.expect(body).to.have.property('message', 'Order placed successfully!');
+        pm.expect(body).to.have.property('order').that.is.an('object');
+        pm.expect(body.order).to.have.property('id');
+        pm.expect(body.order.status).to.eql('Received');
+        pm.expect(body.order.items).to.be.an('array').with.lengthOf(2);
+        const orderIdStr = String(body.order.id);
+        pm.environment.set('created_order_id', orderIdStr);
+        pm.collectionVariables.set('created_order_id', orderIdStr);
+      });

@@ -1,0 +1,17 @@
+$kind: http-request
+name: Delete Product
+method: DELETE
+url: '{{base_url}}/api/products/{{created_product_id}}'
+order: 5000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 200', () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test('Deletion confirmation message is returned', () => {
+        const res = pm.response.json();
+        pm.expect(res).to.have.property('message').that.includes('deleted');
+      });

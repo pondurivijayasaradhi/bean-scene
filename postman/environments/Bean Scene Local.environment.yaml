@@ -1,0 +1,22 @@
+name: Bean Scene Local
+values:
+  - key: base_url
+    value: 'http://localhost:5000'
+    enabled: true
+    type: default
+    description: Local Bean Scene backend server
+  - key: created_product_id
+    value: '1'
+    enabled: true
+    type: default
+    description: Created product ID for update and delete requests
+  - key: created_order_id
+    value: 'BSC-1001'
+    enabled: true
+    type: default
+    description: Created order ID for status updates
+  - key: test_user_email
+    value: 'postman.tester@beanscene.com'
+    enabled: true
+    type: default
+    description: Test customer email address

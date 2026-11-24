@@ -1,0 +1,33 @@
+$kind: http-request
+name: Create Table Reservation
+method: POST
+url: '{{base_url}}/api/reservations'
+order: 9000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Lakshmi Prasanna",
+      "zone": "☀️ Sunlit Window Booth",
+      "tableId": "T1",
+      "guests": "2 Guests",
+      "time": "10:30 AM"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 201 Created', () => {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test('Reservation includes VIP passId, tableId, zone, and guests', () => {
+        const booking = pm.response.json();
+        pm.expect(booking).to.be.an('object');
+        pm.expect(booking).to.have.property('passId').that.is.a('string');
+        pm.expect(booking.tableId).to.eql('T1');
+        pm.expect(booking.guests).to.eql('2 Guests');
+      });

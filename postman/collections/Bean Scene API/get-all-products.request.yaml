@@ -1,0 +1,23 @@
+$kind: http-request
+name: Get All Products
+method: GET
+url: '{{base_url}}/api/products'
+order: 2000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 200', () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test('Returns non-empty products array with required contract fields', () => {
+        const products = pm.response.json();
+        pm.expect(products).to.be.an('array');
+        pm.expect(products.length).to.be.at.least(1);
+        const first = products[0];
+        pm.expect(first).to.have.property('id');
+        pm.expect(first).to.have.property('name').that.is.a('string');
+        pm.expect(first).to.have.property('price').that.is.a('number');
+        pm.expect(first).to.have.property('category').that.is.a('string');
+      });

@@ -1,0 +1,18 @@
+$kind: http-request
+name: Get API Health
+method: GET
+url: '{{base_url}}/api/health'
+order: 1000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 200', () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test('Health payload reports status ok and endpoint inventory', () => {
+        const body = pm.response.json();
+        pm.expect(body).to.be.an('object');
+        pm.expect(body.status).to.eql('ok');
+      });

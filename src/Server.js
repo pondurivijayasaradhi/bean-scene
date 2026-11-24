@@ -677,6 +677,31 @@ app.get('/api/visitors', (req, res) => {
   });
 });
 
+app.get(['/', '/api', '/api/health'], (req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'Bean Scene Coffee & Bakery API',
+    counts: {
+      products: products.length,
+      users: users.length,
+      orders: orders.length,
+      reservations: reservations.length,
+      subscribers: subscribers.length,
+      visitors: visitors.length,
+    },
+    endpoints: [
+      '/api/health',
+      '/api/products',
+      '/api/subscribe',
+      '/api/orders',
+      '/api/reservations',
+      '/api/register',
+      '/api/login',
+      '/api/visitors',
+    ],
+  });
+});
+
 app.post('/api/visitors', (req, res) => {
   const body = req.body || {};
   const entry = {
@@ -698,7 +723,7 @@ app.post('/api/visitors', (req, res) => {
   });
 });
 
-const PORT = 8080;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`);
 });

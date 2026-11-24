@@ -1,0 +1,34 @@
+$kind: http-request
+name: Record Visitor Session
+method: POST
+url: '{{base_url}}/api/visitors'
+order: 14000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Lakshmi Prasanna",
+      "email": "{{test_user_email}}",
+      "action": "Automated Postman API Collection Test Run",
+      "device": "Postman CLI Runner",
+      "location": "Local Test Environment"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 200', () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test('Visitor event is recorded and returns visitors, users, and subscribers arrays', () => {
+        const body = pm.response.json();
+        pm.expect(body).to.have.property('status', 'recorded');
+        pm.expect(body).to.have.property('visitor').that.is.an('object');
+        pm.expect(body).to.have.property('visitors').that.is.an('array');
+        pm.expect(body).to.have.property('users').that.is.an('array');
+        pm.expect(body).to.have.property('subscribers').that.is.an('array');
+      });

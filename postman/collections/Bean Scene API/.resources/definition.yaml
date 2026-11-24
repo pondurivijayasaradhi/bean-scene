@@ -1,0 +1,18 @@
+$kind: collection
+name: Bean Scene API
+description: Complete HTTP API collection and contract assertions for the Bean Scene Coffee & Bakery platform (/api/health, /api/products, /api/orders, /api/reservations, /api/register, /api/login, /api/subscribe, /api/visitors).
+auth:
+  type: noauth
+variables:
+  - key: base_url
+    value: 'http://localhost:5000'
+    description: Base URL for the Bean Scene API server
+  - key: created_product_id
+    value: '1'
+    description: Product ID captured from POST /api/products
+  - key: created_order_id
+    value: 'BSC-1001'
+    description: Order ID captured from POST /api/orders
+  - key: test_user_email
+    value: 'postman.tester@beanscene.com'
+    description: Test user email for registration and login flows

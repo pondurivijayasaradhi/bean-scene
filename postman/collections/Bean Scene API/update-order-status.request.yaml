@@ -1,0 +1,28 @@
+$kind: http-request
+name: Update Order Status
+method: PATCH
+url: '{{base_url}}/api/orders/{{created_order_id}}'
+order: 8000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "id": "{{created_order_id}}",
+      "status": "Brewing"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 200', () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test('Order status transitions to Brewing', () => {
+        const order = pm.response.json();
+        pm.expect(order).to.be.an('object');
+        pm.expect(order.status).to.eql('Brewing');
+      });

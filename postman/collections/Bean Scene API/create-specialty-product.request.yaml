@@ -1,0 +1,41 @@
+$kind: http-request
+name: Create Specialty Product
+method: POST
+url: '{{base_url}}/api/products'
+order: 3000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Rose Cardamom Reserve Latte",
+      "description": "Double espresso infused with organic rose petals and crushed green cardamom",
+      "price": 5.45,
+      "category": "coffee",
+      "image": "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80",
+      "popular": true,
+      "calories": 160,
+      "caffeine": "155mg",
+      "badge": "🌹 Floral Reserve"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 201 Created', () => {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test('Created product echoes name, numeric price, category, and id', () => {
+        const product = pm.response.json();
+        pm.expect(product).to.be.an('object');
+        pm.expect(product).to.have.property('id');
+        pm.expect(product.name).to.eql('Rose Cardamom Reserve Latte');
+        pm.expect(product.price).to.eql(5.45);
+        pm.expect(product.category).to.eql('coffee');
+        const idStr = String(product.id);
+        pm.environment.set('created_product_id', idStr);
+        pm.collectionVariables.set('created_product_id', idStr);
+      });

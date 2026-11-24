@@ -1,0 +1,20 @@
+$kind: http-request
+name: Get Kitchen Orders
+method: GET
+url: '{{base_url}}/api/orders'
+order: 7000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 200', () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test('Returns orders array containing placed order', () => {
+        const orders = pm.response.json();
+        pm.expect(orders).to.be.an('array');
+        pm.expect(orders.length).to.be.at.least(1);
+        pm.expect(orders[0]).to.have.property('id');
+        pm.expect(orders[0]).to.have.property('items').that.is.an('array');
+      });
