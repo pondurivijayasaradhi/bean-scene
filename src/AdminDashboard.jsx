@@ -43,7 +43,7 @@ const INITIAL_PRODUCTS = [
   { id: 27, name: 'Almond Frangipane Croissant', description: 'Double-baked croissant filled with sweet almond cream & flakes', price: 4.8, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 193, popular: true,  featured: true,  calories: 330, caffeine: '0mg',   badge: '🥐 Double Baked'      },
   { id: 28, name: 'Tiramisu Espresso Cake',      description: 'Espresso-soaked sponge layered with whipped mascarpone & cocoa', price: 5.8, image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 234, popular: true,  featured: true,  calories: 360, caffeine: '35mg',  badge: '🍰 Mascarpone'        },
   { id: 29, name: 'Belgian Waffle & Berries',    description: 'Crisp pearl-sugar Liège waffle topped with warm berry compote', price: 5.5, image: 'https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.8, reviews: 162, popular: false, featured: false, calories: 310, caffeine: '0mg',   badge: '🍓 Warm Waffle'       },
-  { id: 30, name: 'Smoked Salmon Cream Bagel',   description: 'Toasted sesame bagel with herb cream cheese, capers & salmon',  price: 6.9, image: 'https://images.unsplash.com/photo-1592417817098-8f3d691a4bf5?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 187, popular: true,  featured: true,  calories: 340, caffeine: '0mg',   badge: '🥯 Savory Artisan'    },
+  { id: 30, name: 'Smoked Salmon Cream Bagel',   description: 'Toasted sesame bagel with herb cream cheese, capers & salmon',  price: 6.9, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 187, popular: true,  featured: true,  calories: 340, caffeine: '0mg',   badge: '🥯 Savory Artisan'    },
 ];
 
 const mergeAdminCatalog = (savedList = [], catalog = INITIAL_PRODUCTS) => {
@@ -57,8 +57,12 @@ const mergeAdminCatalog = (savedList = [], catalog = INITIAL_PRODUCTS) => {
   const activeCatalog = catalog.filter((def) => !deletedIds.includes(def.id));
   const merged = activeCatalog.map((def) => {
     const existing = savedList.find((item) => item.id === def.id || item.name === def.name);
+    const validImage =
+      existing?.image && !existing.image.includes('photo-1592417817098-8f3d691a4bf5')
+        ? existing.image
+        : def.image;
     return existing
-      ? { ...def, ...existing, image: existing.image || def.image, category: existing.category || def.category }
+      ? { ...def, ...existing, image: validImage, category: existing.category || def.category }
       : def;
   });
   const customExtras = savedList.filter(
@@ -1119,5 +1123,7 @@ function AdminDashboard() {
     </div>
   );
 }
+
+AdminDashboard.displayName = 'BeanSceneAdminDashboard';
 
 export default AdminDashboard;

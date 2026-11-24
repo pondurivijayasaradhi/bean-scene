@@ -446,7 +446,7 @@ let products = [
     name: 'Smoked Salmon Cream Bagel',
     description: 'Toasted sesame bagel with herb cream cheese, capers & salmon',
     price: 6.9,
-    image: 'https://images.unsplash.com/photo-1592417817098-8f3d691a4bf5?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80',
     category: 'bakery',
     rating: 4.9,
     reviews: 187,

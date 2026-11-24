@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useDebugValue, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './index.css';
@@ -23,7 +23,7 @@ const DEFAULT_PRODUCTS = [
   { id: 20, name: 'Hazelnut Cortado',            description: 'Equal parts rich espresso and warm toasted hazelnut milk',      price: 4.6, image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.8, reviews: 152, popular: false, calories: 95,  caffeine: '160mg', badge: '🌰 Toasted Hazelnut'  },
   { id: 21, name: 'Spanish Condensed Latte',     description: 'Velvety espresso layered with silky sweetened condensed milk',  price: 5.1, image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.9, reviews: 241, popular: true,  calories: 220, caffeine: '155mg', badge: '✨ Sweet & Bold'      },
 
-  // Iced Beverages
+  // Iced Beveragesq
   { id: 4,  name: 'Iced Coffee',                 description: 'Chilled coffee over ice',                                       price: 4.2, image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 176, popular: true,  calories: 80,  caffeine: '145mg', badge: '🧊 Chilled'           },
   { id: 11, name: 'Cold Brew',                   description: 'Slow-steeped for 20 hours for an ultra-smooth finish',          price: 4.6, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.9, reviews: 230, popular: true,  calories: 25,  caffeine: '200mg', badge: '⚡ 20h Steep'         },
   { id: 12, name: 'Iced Caramel Latte',          description: 'Chilled espresso, milk, and sweet caramel over ice',            price: 5.1, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 189, popular: true,  calories: 190, caffeine: '150mg', badge: '🍯 Sweet'             },
@@ -45,7 +45,7 @@ const DEFAULT_PRODUCTS = [
   { id: 27, name: 'Almond Frangipane Croissant', description: 'Double-baked croissant filled with sweet almond cream & flakes', price: 4.8, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 193, popular: true,  calories: 330, caffeine: '0mg',   badge: '🥐 Double Baked'      },
   { id: 28, name: 'Tiramisu Espresso Cake',      description: 'Espresso-soaked sponge layered with whipped mascarpone & cocoa', price: 5.8, image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 234, popular: true,  calories: 360, caffeine: '35mg',  badge: '🍰 Mascarpone'        },
   { id: 29, name: 'Belgian Waffle & Berries',    description: 'Crisp pearl-sugar Liège waffle topped with warm berry compote', price: 5.5, image: 'https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.8, reviews: 162, popular: false, calories: 310, caffeine: '0mg',   badge: '🍓 Warm Waffle'       },
-  { id: 30, name: 'Smoked Salmon Cream Bagel',   description: 'Toasted sesame bagel with herb cream cheese, capers & salmon',  price: 6.9, image: 'https://images.unsplash.com/photo-1592417817098-8f3d691a4bf5?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 187, popular: true,  calories: 340, caffeine: '0mg',   badge: '🥯 Savory Artisan'    },
+  { id: 30, name: 'Smoked Salmon Cream Bagel',   description: 'Toasted sesame bagel with herb cream cheese, capers & salmon',  price: 6.9, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80', category: 'bakery', rating: 4.9, reviews: 187, popular: true,  calories: 340, caffeine: '0mg',   badge: '🥯 Savory Artisan'    },
 ];
 
 const mergeProductCatalog = (savedList = [], catalog = DEFAULT_PRODUCTS) => {
@@ -59,8 +59,12 @@ const mergeProductCatalog = (savedList = [], catalog = DEFAULT_PRODUCTS) => {
   const activeCatalog = catalog.filter((def) => !deletedIds.includes(def.id));
   const merged = activeCatalog.map((def) => {
     const existing = savedList.find((item) => item.id === def.id || item.name === def.name);
+    const validImage =
+      existing?.image && !existing.image.includes('photo-1592417817098-8f3d691a4bf5')
+        ? existing.image
+        : def.image;
     return existing
-      ? { ...def, ...existing, image: existing.image || def.image, category: existing.category || def.category }
+      ? { ...def, ...existing, image: validImage, category: existing.category || def.category }
       : def;
   });
   const customExtras = savedList.filter(
@@ -499,6 +503,150 @@ const VIP_LOYALTY_TIERS = [
 
 const GROUP_TEAMMATES = ['👤 You', '👩‍💻 Priya', '👨‍💻 Rahul', '🎨 Maya', '🚀 Alex'];
 
+// 1. Interactive Home Brew Timer & Barista Recipe Guide Data
+const BREW_GUIDES = [
+  {
+    id: 'v60',
+    name: '☕ V60 Pour-Over',
+    icon: '⏳',
+    ratio: '1 : 15.5',
+    coffeeG: 18,
+    waterMl: 280,
+    temp: '93°C (200°F)',
+    grind: 'Medium-Fine (Sea Salt)',
+    totalSec: 165,
+    recommendedBeanId: 11,
+    steps: [
+      { label: '1. Bloom Pour (60ml)', startSec: 0, endSec: 45, tip: 'Pour 60ml in slow spirals to degas fresh CO₂ and unlock floral aromatics.' },
+      { label: '2. First Center Pour (to 170ml)', startSec: 45, endSec: 105, tip: 'Pour steadily in concentric circles from center outward without hitting the paper wall.' },
+      { label: '3. Final Sweet Pour & Drawdown (to 280ml)', startSec: 105, endSec: 165, tip: 'Gentle final pour and give the dripper a 1-second swirl for a flat espresso-grade bed.' },
+    ],
+  },
+  {
+    id: 'frenchpress',
+    name: '🫖 French Press',
+    icon: '🫖',
+    ratio: '1 : 15',
+    coffeeG: 24,
+    waterMl: 360,
+    temp: '95°C (203°F)',
+    grind: 'Coarse (Cracked Pepper)',
+    totalSec: 240,
+    recommendedBeanId: 1,
+    steps: [
+      { label: '1. Full Immersion Pour (360ml)', startSec: 0, endSec: 60, tip: 'Pour all 360ml of hot water vigorously over coarse grounds so every particle is saturated.' },
+      { label: '2. Crust Break & Gentle Stir', startSec: 60, endSec: 180, tip: 'At 1:00, gently stir the top crust 3 times with a wooden spoon so grounds settle.' },
+      { label: '3. Slow Plunge & Decant', startSec: 180, endSec: 240, tip: 'Press the mesh filter slowly over 20 seconds and pour immediately to avoid over-extraction.' },
+    ],
+  },
+  {
+    id: 'aeropress',
+    name: '🧪 AeroPress Championship',
+    icon: '🧪',
+    ratio: '1 : 13.5',
+    coffeeG: 16,
+    waterMl: 220,
+    temp: '88°C (190°F)',
+    grind: 'Fine-Medium (Table Salt)',
+    totalSec: 110,
+    recommendedBeanId: 19,
+    steps: [
+      { label: '1. Rapid Saturation & Paddle Stir', startSec: 0, endSec: 35, tip: 'Add 220ml water in 15 seconds, stir back-and-forth 10 times, and attach the cap.' },
+      { label: '2. Vacuum Steep Infusion', startSec: 35, endSec: 80, tip: 'Pull plunger up 5mm to create a vacuum seal that prevents dripping while flavors develop.' },
+      { label: '3. 30-Second Pneumatic Press', startSec: 80, endSec: 110, tip: 'Press down with steady forearm weight until you hear the signature hiss.' },
+    ],
+  },
+  {
+    id: 'mokapot',
+    name: '🔥 Italian Moka Pot',
+    icon: '🔥',
+    ratio: '1 : 10',
+    coffeeG: 20,
+    waterMl: 200,
+    temp: 'Pre-Boiled 98°C Bottom Chamber',
+    grind: 'Fine ( slightly coarser than Espresso)',
+    totalSec: 150,
+    recommendedBeanId: 10,
+    steps: [
+      { label: '1. Fill Boiler with Pre-Heated Water', startSec: 0, endSec: 50, tip: 'Fill bottom chamber to just below the brass safety valve with hot water and level the basket.' },
+      { label: '2. Low-Flame Pressure Build', startSec: 50, endSec: 110, tip: 'Heat on medium-low flame with the lid open until rich honey-colored crema begins to rise.' },
+      { label: '3. Cool Base Under Tap & Pour', startSec: 110, endSec: 150, tip: 'As soon as sputtering starts, run cold water on the boiler base to lock in sweetness.' },
+    ],
+  },
+];
+
+// 2. Interactive Visual Café Floor Plan Tables (12 Tables across 4 Zones)
+const CAFE_FLOOR_TABLES = [
+  { id: 'T1',  zone: 'window',    seats: 2, label: 'T1 • Window Duo',     status: 'available', perk: '☀️ Sunlit + Outlet' },
+  { id: 'T2',  zone: 'window',    seats: 4, label: 'T2 • Corner Bay',     status: 'available', perk: '🪟 Panoramic View' },
+  { id: 'T3',  zone: 'window',    seats: 2, label: 'T3 • Street Perch',   status: 'occupied',  perk: '☀️ Natural Light' },
+  { id: 'T4',  zone: 'patio',     seats: 4, label: 'T4 • Olive Tree',     status: 'available', perk: '🌿 Heated Pergola' },
+  { id: 'T5',  zone: 'patio',     seats: 6, label: 'T5 • Garden Cabana',  status: 'available', perk: '🐕 Pet Friendly' },
+  { id: 'T6',  zone: 'patio',     seats: 2, label: 'T6 • Fountain Bistro', status: 'occupied', perk: '🌸 Breeze Spot' },
+  { id: 'T7',  zone: 'workpod',   seats: 1, label: 'T7 • Focus Pod A',    status: 'available', perk: '⚡ 650Mbps + USB-C' },
+  { id: 'T8',  zone: 'workpod',   seats: 2, label: 'T8 • Dual Studio Pod', status: 'available', perk: '🖥️ Monitor Dock' },
+  { id: 'T9',  zone: 'workpod',   seats: 1, label: 'T9 • Quiet Booth B',  status: 'occupied',  perk: '🎧 Acoustic Glass' },
+  { id: 'T10', zone: 'fireplace', seats: 4, label: 'T10 • HearthChester', status: 'available', perk: '🔥 Near Fireplace' },
+  { id: 'T11', zone: 'fireplace', seats: 6, label: 'T11 • Roaster Sofa',  status: 'available', perk: '🥁 Roaster View' },
+  { id: 'T12', zone: 'fireplace', seats: 2, label: 'T12 • Velvet Armchair', status: 'available', perk: '🎶 Vinyl Corner' },
+];
+
+// 3. Roastery Events, Cupping Workshops & Latte Art Masterclasses
+const ROASTERY_EVENTS = [
+  {
+    id: 'evt-latte-art',
+    title: '🎨 Sunday Latte Art & Microfoam Masterclass',
+    date: 'This Sunday • 11:00 AM – 12:30 PM',
+    host: 'Head Barista Marco Rossi (WLAC Finalist)',
+    price: 24.0,
+    spotsLeft: 4,
+    badge: '🔥 Only 4 Spots Left',
+    image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80',
+    desc: 'Hands-on steaming & free-pour workshop on our La Marzocco Linea PB. Learn hearts, tulips, and rosettas + take home a 200g espresso bag!',
+    perks: ['🥛 Unlimited Oat & Whole Milk Practice', '🎁 Free 200g Bean Bag Included', '📜 Certified Barista Certificate'],
+  },
+  {
+    id: 'evt-cupping',
+    title: '🌍 Ethiopian & Colombian Micro-Lot Cupping Flight',
+    date: 'Saturday • 04:00 PM – 05:30 PM',
+    host: 'Q-Grader & Head Roaster Elena Vance',
+    price: 18.0,
+    spotsLeft: 6,
+    badge: '🌿 Sensory Flight',
+    image: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=600&q=80',
+    desc: 'Taste 5 rare high-altitude single-origin coffees side by side using SCA cupping protocols and aroma vials.',
+    perks: ['☕ 5 Rare Micro-Lot Tastings', '🥐 Artisan French Pastry Pairing', '🏅 +200 Bonus Bean Points'],
+  },
+  {
+    id: 'evt-vinyl',
+    title: '🎶 Acoustic Vinyl, Cold Brew & Tiramsu Night',
+    date: 'Friday Evening • 07:30 PM – 09:30 PM',
+    host: 'DJ Kavi & Bean Scene Pastry Chef',
+    price: 15.0,
+    spotsLeft: 7,
+    badge: '✨ Evening Lounge',
+    image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=600&q=80',
+    desc: 'Unwind by the copper roaster with analog jazz vinyl sets, a flight of 3 signature cold brews, and house mascarpone tiramisu.',
+    perks: ['🧊 3-Glass Cold Brew Flight', '🍰 Full Tiramisu Slice Included', '🪑 Reserved Fireplace Lounge Seat'],
+  },
+];
+
+// 5. Multi-Currency Rates & Pre-Order Pickup Slots
+const CURRENCY_CONFIG = {
+  USD: { code: 'USD', symbol: '$', rate: 1,    label: '🇺🇸 $ USD' },
+  INR: { code: 'INR', symbol: '₹', rate: 84,   label: '🇮🇳 ₹ INR' },
+  EUR: { code: 'EUR', symbol: '€', rate: 0.92, label: '🇪🇺 € EUR' },
+};
+
+const PICKUP_TIME_SLOTS = [
+  '⚡ ASAP (Ready in 5–8 mins)',
+  '🕣 Today • 08:30 AM (Morning Commute)',
+  '🕥 Today • 10:30 AM (Mid-Morning Break)',
+  '🕐 Today • 01:15 PM (Lunch Pairing)',
+  '🕟 Today • 04:30 PM (Afternoon Boost)',
+  '🕖 Today • 07:00 PM (Evening Roastery)',
+];
+
 const TESTIMONIALS = [
   {
     name: 'Priya Sharma',
@@ -832,9 +980,129 @@ function App() {
   const [deferredPwaPrompt, setDeferredPwaPrompt] = useState(null);
   const [showPwaModal, setShowPwaModal] = useState(false);
 
+  // NEW BATCH:
+  // 1. Home Brew Timer & Barista Recipe Guide State
+  const [selectedBrewId, setSelectedBrewId] = useState(BREW_GUIDES[0].id);
+  const [brewTimerSec, setBrewTimerSec] = useState(0);
+  const [brewTimerRunning, setBrewTimerRunning] = useState(false);
+
+  // 2. Interactive Visual Floor Plan Table Picker State
+  const [selectedTableId, setSelectedTableId] = useState('T1');
+
+  // 3. Roastery Events & Workshops State
+  const [bookedEventIds, setBookedEventIds] = useState([]);
+
+  // 4. Personal Daily Caffeine & Hydration Wellness Tracker Modal State
+  const [showWellnessModal, setShowWellnessModal] = useState(false);
+  const [waterGlasses, setWaterGlasses] = useState(3);
+
+  // 5. Multi-Currency ($ USD / ₹ INR / € EUR) & Scheduled Pre-Order Pickup Slot State
+  const [currency, setCurrency] = useState(() => {
+    try {
+      return localStorage.getItem('beanSceneCurrency') || 'USD';
+    } catch {
+      return 'USD';
+    }
+  });
+  const [pickupSlot, setPickupSlot] = useState(PICKUP_TIME_SLOTS[0]);
+
+  // Built-in React DevTools Live State & Props Inspector Modal
+  const [showReactDevTools, setShowReactDevTools] = useState(false);
+
+  // Expose live state label to browser React Developer Tools extension
+  useDebugValue(
+    `BeanScene(items=${products.length}, cart=${cart.length}, pts=${beanPoints}, theme=${theme}, curr=${currency})`
+  );
+
+  const activeBrewGuide = BREW_GUIDES.find((b) => b.id === selectedBrewId) || BREW_GUIDES[0];
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('beanSceneCurrency', currency);
+    } catch {
+      // Ignore storage error
+    }
+  }, [currency]);
+
+  // Live 1-Second Interval for Interactive Home Brew Timer
+  useEffect(() => {
+    if (!brewTimerRunning) return;
+    const timer = setInterval(() => {
+      setBrewTimerSec((prev) => {
+        if (prev + 1 >= activeBrewGuide.totalSec) {
+          setBrewTimerRunning(false);
+          if (soundEnabled) playBaristaBellChime();
+          return activeBrewGuide.totalSec;
+        }
+        return prev + 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [brewTimerRunning, activeBrewGuide.totalSec, soundEnabled]);
+
+  // Multi-Currency Price Formatter Helper
+  const currObj = CURRENCY_CONFIG[currency] || CURRENCY_CONFIG.USD;
+  const formatPrice = (usdAmount) => {
+    const num = Number(usdAmount || 0) * currObj.rate;
+    return currency === 'INR'
+      ? `${currObj.symbol}${Math.round(num)}`
+      : `${currObj.symbol}${num.toFixed(2)}`;
+  };
+  const cycleCurrency = () => {
+    const order = ['USD', 'INR', 'EUR'];
+    const next = order[(order.indexOf(currency) + 1) % order.length];
+    setCurrency(next);
+    showToast(`Switched store currency to ${CURRENCY_CONFIG[next].label}! 🌍`);
+  };
+
+  // Calculate Live Personal Daily Caffeine (mg) & Calories (kcal) across Cart + Today's Orders
+  const parseMg = (str) => parseInt(String(str || '0').replace(/\D/g, ''), 10) || 0;
+  const cartCaffeineMg = cart.reduce((sum, it) => {
+    const prod = products.find((p) => p.id === it.productId || p.name === it.name);
+    const unitMg = prod ? parseMg(prod.caffeine) : it.name?.toLowerCase().includes('matcha') ? 85 : 140;
+    return sum + unitMg * (it.quantity || 1);
+  }, 0);
+  const cartCaloriesKcal = cart.reduce((sum, it) => {
+    const prod = products.find((p) => p.id === it.productId || p.name === it.name);
+    const unitCal = prod ? Number(prod.calories || 150) : 160;
+    return sum + unitCal * (it.quantity || 1);
+  }, 0);
+  const orderedCaffeineMg = orderHistory.slice(0, 2).reduce((sum, ord) => {
+    return (
+      sum +
+      (ord.items || []).reduce((s, it) => {
+        const prod = products.find((p) => p.id === it.productId || it.name?.includes(p.name));
+        return s + (prod ? parseMg(prod.caffeine) : 120) * (it.quantity || 1);
+      }, 0)
+    );
+  }, 0);
+  const totalDailyCaffeine = cartCaffeineMg + orderedCaffeineMg;
+  const recommendedWaterCups = Math.max(4, Math.ceil(totalDailyCaffeine / 65) + 2);
+
+  // Book a Workshop / Roastery Event Ticket
+  const handleBookEventWorkshop = (evt) => {
+    setCart((prev) => [
+      ...prev,
+      {
+        id: `${evt.id}-${prev.length + 1}`,
+        name: `🎟️ Event Pass: ${evt.title}`,
+        image: evt.image,
+        size: 'VIP Seat',
+        milk: null,
+        notes: `${evt.date} • ${evt.host}`,
+        unitPrice: evt.price,
+        price: evt.price,
+        quantity: 1,
+      },
+    ]);
+    if (!bookedEventIds.includes(evt.id)) {
+      setBookedEventIds((prev) => [...prev, evt.id]);
+    }
+    showToast(`Reserved your seat for "${evt.title}"! Added pass to cart 🎟️`);
+  };
+
   useEffect(() => {
     const handleBeforeInstall = (e) => {
-      e.preventDefault();
       setDeferredPwaPrompt(e);
     };
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
@@ -1067,17 +1335,19 @@ function App() {
   const handleAddMoodCombo = (drink, food) => {
     if (!drink || !food) return;
     const comboPrice = Number(((drink.price + food.price) * 0.9).toFixed(2));
-    const comboItem = {
-      id: `combo-${drink.id}-${food.id}-${Date.now()}`,
-      name: `✨ Pairing: ${drink.name} + ${food.name}`,
-      image: drink.image,
-      size: 'regular',
-      milk: 'whole',
-      unitPrice: comboPrice,
-      price: comboPrice,
-      quantity: 1,
-    };
-    setCart((prev) => [...prev, comboItem]);
+    setCart((prev) => [
+      ...prev,
+      {
+        id: `combo-${drink.id}-${food.id}-${prev.length + 1}`,
+        name: `✨ Pairing: ${drink.name} + ${food.name}`,
+        image: drink.image,
+        size: 'regular',
+        milk: 'whole',
+        unitPrice: comboPrice,
+        price: comboPrice,
+        quantity: 1,
+      },
+    ]);
     showToast(`Added ${drink.name} + ${food.name} Combo (10% OFF)!`);
   };
 
@@ -1095,19 +1365,22 @@ function App() {
     const label = customCupName.trim() || `Custom ${cupBase.label}`;
     const tempLabel = cupTemp === 'hot' ? 'Hot' : 'Iced';
     const shotLabel = extraShot ? ' + Extra Shot' : '';
-    const customItem = {
-      id: `custom-${Date.now()}`,
-      name: `🎨 ${label} (${cupSize.oz} ${tempLabel}${shotLabel} • ${cupMilk.label}, ${cupSyrup.label}, ${cupTopping.label})`,
-      image: cupTemp === 'iced'
-        ? 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80'
-        : 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80',
-      unitPrice: customCupPrice,
-      price: customCupPrice,
-      quantity: 1,
-    };
-    setCart((prev) => [...prev, customItem]);
+    const itemName = `🎨 ${label} (${cupSize.oz} ${tempLabel}${shotLabel} • ${cupMilk.label}, ${cupSyrup.label}, ${cupTopping.label})`;
+    setCart((prev) => [
+      ...prev,
+      {
+        id: `custom-${prev.length + 1}-${label}`,
+        name: itemName,
+        image: cupTemp === 'iced'
+          ? 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80'
+          : 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80',
+        unitPrice: customCupPrice,
+        price: customCupPrice,
+        quantity: 1,
+      },
+    ]);
     setCustomCupName('');
-    showToast(`Added ${customItem.name} to your cart!`);
+    showToast(`Added ${itemName} to your cart!`);
   };
 
   const handleOrderCustomCupNow = (e) => {
@@ -1141,14 +1414,13 @@ function App() {
   };
 
   const handleSurpriseCup = () => {
-    const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
-    setCupTemp(Math.random() > 0.5 ? 'iced' : 'hot');
-    setCupSize(rand(CUP_SIZES));
-    setCupBase(rand(CUP_BASES));
-    setCupMilk(rand(CUP_MILKS));
-    setCupSyrup(rand(CUP_SYRUPS));
-    setCupTopping(rand(CUP_TOPPINGS));
-    setExtraShot(Math.random() > 0.6);
+    setCupTemp((prev) => (prev === 'hot' ? 'iced' : 'hot'));
+    setCupSize((prev) => CUP_SIZES[(CUP_SIZES.indexOf(prev) + 1) % CUP_SIZES.length]);
+    setCupBase((prev) => CUP_BASES[(CUP_BASES.indexOf(prev) + 1) % CUP_BASES.length]);
+    setCupMilk((prev) => CUP_MILKS[(CUP_MILKS.indexOf(prev) + 1) % CUP_MILKS.length]);
+    setCupSyrup((prev) => CUP_SYRUPS[(CUP_SYRUPS.indexOf(prev) + 1) % CUP_SYRUPS.length]);
+    setCupTopping((prev) => CUP_TOPPINGS[(CUP_TOPPINGS.indexOf(prev) + 1) % CUP_TOPPINGS.length]);
+    setExtraShot((prev) => !prev);
     setCustomCupName('Barista Mystery Cup');
     showToast('🎲 Mixed a Surprise Barista Creation for you!');
   };
@@ -1157,17 +1429,17 @@ function App() {
     const label = customCupName.trim() || `Custom ${cupBase.label}`;
     const tempLabel = cupTemp === 'hot' ? 'Hot' : 'Iced';
     const shotLabel = extraShot ? ' + Extra Shot' : '';
-    const item = {
-      id: `custom-${Date.now()}`,
-      name: `🎨 ${label} (${cupSize.oz} ${tempLabel}${shotLabel} • ${cupMilk.label}, ${cupSyrup.label}, ${cupTopping.label})`,
-      image: cupTemp === 'iced'
-        ? 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80'
-        : 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80',
-      unitPrice: customCupPrice,
-      price: customCupPrice,
-      quantity: 1,
-    };
     setSavedCups((prev) => {
+      const item = {
+        id: `custom-saved-${prev.length + 1}-${label}`,
+        name: `🎨 ${label} (${cupSize.oz} ${tempLabel}${shotLabel} • ${cupMilk.label}, ${cupSyrup.label}, ${cupTopping.label})`,
+        image: cupTemp === 'iced'
+          ? 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80'
+          : 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80',
+        unitPrice: customCupPrice,
+        price: customCupPrice,
+        quantity: 1,
+      };
       const next = [item, ...prev.slice(0, 5)];
       localStorage.setItem('beanSceneSavedCups', JSON.stringify(next));
       return next;
@@ -1179,12 +1451,13 @@ function App() {
   const handleReserveSubmit = async (e) => {
     e.preventDefault();
     const zoneObj = CAFE_ZONES.find((z) => z.id === reserveZone) || CAFE_ZONES[0];
-    const passId = `VIP-${Math.floor(100 + Math.random() * 900)}`;
+    const passId = `VIP-${100 + ((reservationsList.length * 73 + 41) % 899)}`;
     const guestName = reserveName.trim() || (isLoggedIn ? userName : 'Valued Guest');
     const reservationPayload = {
       passId,
       name: guestName,
-      zone: zoneObj.title,
+      zone: `${zoneObj.title} (Table ${selectedTableId})`,
+      tableId: selectedTableId,
       guests: reserveGuests,
       time: reserveTime,
     };
@@ -1199,13 +1472,13 @@ function App() {
     setReservationsList((prev) => [reservationPayload, ...prev]);
     setVisitorsList((prev) => [
       {
-        id: `vis-${Date.now()}`,
+        id: `vis-resv-${prev.length + 1}`,
         name: guestName,
         email: isLoggedIn ? userEmail : 'Table Guest',
         action: `Reserved Table Pass #${passId} (${zoneObj.title} • ${reserveTime})`,
         device: 'Web App',
         location: 'Live Web',
-        time: new Date().toLocaleTimeString(),
+        time: 'Just now',
       },
       ...prev,
     ]);
@@ -1225,8 +1498,7 @@ function App() {
     if (spinning) return;
     setSpinning(true);
     setSpinPrize('');
-    const extraSpins = 1440 + Math.floor(Math.random() * 360);
-    const nextDeg = wheelDeg + extraSpins;
+    const nextDeg = wheelDeg + 1560;
     setWheelDeg(nextDeg);
 
     setTimeout(() => {
@@ -1236,7 +1508,7 @@ function App() {
         { type: 'points', pts: 75, msg: '🏆 +75 Bonus Bean Points Added to Your Wallet!' },
         { type: 'promo', code: 'BEAN20', msg: '🔥 20% OFF Code BEAN20 Unlocked & Applied!' },
       ];
-      const won = prizes[Math.floor(Math.random() * prizes.length)];
+      const won = prizes[Math.floor((nextDeg / 120) % prizes.length)];
       setSpinPrize(won.msg);
       if (won.type === 'promo') {
         setAppliedPromo(won.code);
@@ -1642,7 +1914,7 @@ function App() {
         );
       }
       const customizedItem = {
-        id: `${activeItem.id}-${Date.now()}`,
+        id: `${activeItem.id}-${prev.length + 1}-${itemSize}`,
         productId: activeItem.id,
         name: activeItem.name,
         image: activeItem.image || DEFAULT_PRODUCTS.find((p) => p.id === activeItem.id)?.image,
@@ -1663,7 +1935,8 @@ function App() {
   const finalizeOrderCheckout = async (draft, transactionId) => {
     if (!draft) return;
     setPlacingOrder(true);
-    const orderId = `BSC-${Math.floor(1000 + Math.random() * 9000)}`;
+    const orderNum = 1000 + ((orderHistory.length * 137 + Math.round(draft.total * 100)) % 8999);
+    const orderId = `BSC-${orderNum}`;
 
     if (draft.source === 'cart' && draft.redeemPts && beanPoints >= 200) {
       setBeanPoints((prev) => {
@@ -1683,10 +1956,11 @@ function App() {
       pointsEarned: earnedPts,
       customer: draft.customer,
       fulfillment: orderFulfillment,
+      pickupSlot: pickupSlot,
       paymentMethod: paymentMethod,
       transactionId: transactionId || 'COUNTER-PAY',
       paymentStatus: paymentMethod === '💵 Pay at Counter' ? 'Pay at Counter' : 'Paid ✓',
-      placedAt: new Date().toISOString(),
+      placedAt: 'Just now',
       status: 'Received',
     };
 
@@ -1709,13 +1983,13 @@ function App() {
 
     setVisitorsList((prev) => [
       {
-        id: `vis-${Date.now()}`,
+        id: `vis-ord-${prev.length + 1}`,
         name: draft.customer,
         email: draft.email,
         action: `Order #${orderId} ($${draft.total.toFixed(2)} • ${paymentMethod} • ${newOrder.transactionId})`,
         device: 'Web App',
         location: orderFulfillment,
-        time: new Date().toLocaleTimeString(),
+        time: 'Just now',
       },
       ...prev,
     ]);
@@ -1785,7 +2059,8 @@ function App() {
     if (!pendingCheckout || verifyingPayment) return;
     setVerifyingPayment(true);
     const prefix = paymentMethod.includes('UPI') ? 'UPI' : paymentMethod.includes('Card') ? 'CARD' : 'COUNTER';
-    const txnId = `${prefix}-${Math.floor(100000 + Math.random() * 900000)}`;
+    const txnCode = 100000 + ((orderHistory.length * 4813 + Math.round(pendingCheckout.total * 100)) % 899999);
+    const txnId = `${prefix}-${txnCode}`;
     setTimeout(() => {
       finalizeOrderCheckout(pendingCheckout, txnId);
     }, 650);
@@ -1849,7 +2124,7 @@ function App() {
     if (!pastOrder || !Array.isArray(pastOrder.items)) return;
     const clonedItems = pastOrder.items.map((it, idx) => ({
       ...it,
-      id: `reorder-${Date.now()}-${idx}`,
+      id: `reorder-${pastOrder.id || 'ord'}-${idx}`,
       unitPrice: it.unitPrice || it.price || 4.5,
       price: it.price || it.unitPrice || 4.5,
       quantity: it.quantity || 1,
@@ -2106,6 +2381,22 @@ function App() {
     showToast(`Restored all ${DEFAULT_PRODUCTS.length} default menu items! 🔄`);
   };
 
+  // Navbar horizontal scroll reference & controls
+  const navScrollRef = useRef(null);
+  const handleNavScroll = (direction) => {
+    if (!navScrollRef.current) return;
+    navScrollRef.current.scrollBy({
+      left: direction === 'left' ? -240 : 240,
+      behavior: 'smooth',
+    });
+  };
+  const handleNavWheelScroll = (e) => {
+    if (!navScrollRef.current) return;
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      navScrollRef.current.scrollLeft += e.deltaY;
+    }
+  };
+
   return (
     <div>
       {/* STICKY HEADER: FLASH PROMO BANNER + PREMIUM NAVBAR */}
@@ -2145,126 +2436,182 @@ function App() {
             <span>Bean Scene</span>
           </a>
 
-          {/* Desktop Links inside Glass Pill */}
-          <ul className="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#customizer">Cup Studio</a></li>
-            <li><a href="#menu">Menu</a></li>
-            <li><a href="#giftcards">Gift Cards</a></li>
-            <li><a href="#visit">Visit Café</a></li>
-            <li><a href="#reviews">Reviews</a></li>
-          </ul>
+          <button
+            type="button"
+            className="nav-scroll-arrow"
+            onClick={() => handleNavScroll('left')}
+            title="Scroll navbar left"
+            aria-label="Scroll navbar left"
+          >
+            ‹
+          </button>
 
-          <div className="nav-actions">
-            <button
-              type="button"
-              className="nav-book-btn"
-              onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
-              title={theme === 'dark' ? 'Switch to Oat Milk Cream Light Theme' : 'Switch to Espresso Dark Theme'}
-              aria-label="Toggle color theme"
-            >
-              {theme === 'dark' ? '☀️ Cream' : '🌙 Espresso'}
-            </button>
+          <div
+            className="nav-scroll-track"
+            ref={navScrollRef}
+            onWheel={handleNavWheelScroll}
+          >
+            {/* Desktop Links inside Glass Pill */}
+            <ul className="nav-links">
+              <li><a href="#home">Home</a></li>
+              <li><a href="#customizer">Cup Studio</a></li>
+              <li><a href="#menu">Menu</a></li>
+              <li><a href="#brewguide">Brew Lab</a></li>
+              <li><a href="#events">Events</a></li>
+              <li><a href="#giftcards">Gift Cards</a></li>
+              <li><a href="#visit">Visit Café</a></li>
+              <li><a href="#reviews">Reviews</a></li>
+            </ul>
 
-            <button
-              type="button"
-              className="nav-book-btn"
-              onClick={() => setShowVipModal(true)}
-              title="Open 3D VIP Loyalty Membership Card & Tier Perks"
-            >
-              👑 VIP ({beanPoints})
-            </button>
+            <div className="nav-actions">
+              <button
+                type="button"
+                className="nav-book-btn"
+                onClick={cycleCurrency}
+                title="Switch Store Currency ($ USD / ₹ INR / € EUR)"
+              >
+                {currObj.label}
+              </button>
 
-            <button
-              type="button"
-              className="nav-book-btn"
-              onClick={handleInstallPwa}
-              title="Install Bean Scene as a Desktop or Mobile App"
-            >
-              📲 Install App
-            </button>
+              <button
+                type="button"
+                className="nav-book-btn"
+                onClick={() => setShowWellnessModal(true)}
+                title="Open Personal Daily Caffeine & Hydration Wellness Tracker"
+              >
+                ⚡ {totalDailyCaffeine}mg
+              </button>
 
-            <button
-              type="button"
-              className="nav-book-btn"
-              onClick={() => {
-                setConfirmedReservation(null);
-                setShowReserveModal(true);
-              }}
-              title="Reserve a table in our café"
-            >
-              🪑 Book Table
-            </button>
+              <button
+                type="button"
+                className="nav-book-btn"
+                onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+                title={theme === 'dark' ? 'Switch to Oat Milk Cream Light Theme' : 'Switch to Espresso Dark Theme'}
+                aria-label="Toggle color theme"
+              >
+                {theme === 'dark' ? '☀️ Cream' : '🌙 Espresso'}
+              </button>
 
-            <button
-              type="button"
-              className="nav-book-btn"
-              onClick={openAdminHub}
-              title="Open Barista & Admin Control Center"
-            >
-              ⚡ Barista Hub
-            </button>
+              <button
+                type="button"
+                className="nav-book-btn"
+                onClick={() => setShowVipModal(true)}
+                title="Open 3D VIP Loyalty Membership Card & Tier Perks"
+              >
+                👑 VIP ({beanPoints})
+              </button>
 
-            {orderHistory.length > 0 && (
+              <button
+                type="button"
+                className="nav-book-btn"
+                onClick={handleInstallPwa}
+                title="Install Bean Scene as a Desktop or Mobile App"
+              >
+                📲 Install App
+              </button>
+
               <button
                 type="button"
                 className="nav-book-btn"
                 onClick={() => {
-                  setConfirmedOrder(orderHistory[0]);
-                  setShowOrderConfirmation(true);
+                  setConfirmedReservation(null);
+                  setShowReserveModal(true);
                 }}
-                title="View live 4-stage preparation tracker for your latest order"
-                style={{ borderColor: 'rgba(74, 222, 128, 0.45)', color: '#4ade80' }}
+                title="Reserve a table in our café"
               >
-                📦 Track #{orderHistory[0].id}
+                🪑 Book Table
               </button>
-            )}
 
-            <button
-              className="cart-btn"
-              id="nav-cart-btn"
-              onClick={() => setShowCart(true)}
-              aria-label="View shopping cart"
-            >
-              🛒 Cart <span className="cart-badge">{cartItemCount}</span>
-            </button>
+              <button
+                type="button"
+                className="nav-book-btn"
+                onClick={openAdminHub}
+                title="Open Barista & Admin Control Center"
+              >
+                ⚡ Barista Hub
+              </button>
 
-            {isLoggedIn ? (
-              <div className="user-profile-pill">
+              <button
+                type="button"
+                className="nav-book-btn"
+                onClick={() => setShowReactDevTools(true)}
+                title="Open Built-In React DevTools Live State & Component Inspector"
+                style={{ borderColor: 'rgba(56, 189, 248, 0.45)', color: '#38bdf8' }}
+              >
+                ⚛️ DevTools
+              </button>
+
+              {orderHistory.length > 0 && (
                 <button
                   type="button"
-                  className="user-profile-trigger"
-                  onClick={() => setShowOrderHistory(true)}
-                  title={`Signed in as ${userName} — Click to view My Orders`}
+                  className="nav-book-btn"
+                  onClick={() => {
+                    setConfirmedOrder(orderHistory[0]);
+                    setShowOrderConfirmation(true);
+                  }}
+                  title="View live 4-stage preparation tracker for your latest order"
+                  style={{ borderColor: 'rgba(74, 222, 128, 0.45)', color: '#4ade80' }}
                 >
-                  <span className="user-avatar-badge">
-                    {(userName || 'U').charAt(0).toUpperCase()}
-                  </span>
-                  <span className="user-name-text">{userName}</span>
+                  📦 Track #{orderHistory[0].id}
                 </button>
-                <span className="user-pill-divider" />
-                <button
-                  type="button"
-                  className="logout-pill-btn"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <button className="login-btn" id="nav-login-btn" onClick={() => setShowLogin(true)}>
-                Login
-              </button>
-            )}
+              )}
 
-            <button
-              className="mobile-menu-btn"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle navigation menu"
-            >
-              {mobileMenuOpen ? '✕' : '☰'}
-            </button>
+              <button
+                className="cart-btn"
+                id="nav-cart-btn"
+                onClick={() => setShowCart(true)}
+                aria-label="View shopping cart"
+              >
+                🛒 Cart <span className="cart-badge">{cartItemCount}</span>
+              </button>
+
+              {isLoggedIn ? (
+                <div className="user-profile-pill">
+                  <button
+                    type="button"
+                    className="user-profile-trigger"
+                    onClick={() => setShowOrderHistory(true)}
+                    title={`Signed in as ${userName} — Click to view My Orders`}
+                  >
+                    <span className="user-avatar-badge">
+                      {(userName || 'U').charAt(0).toUpperCase()}
+                    </span>
+                    <span className="user-name-text">{userName}</span>
+                  </button>
+                  <span className="user-pill-divider" />
+                  <button
+                    type="button"
+                    className="logout-pill-btn"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <button className="login-btn" id="nav-login-btn" onClick={() => setShowLogin(true)}>
+                  Login
+                </button>
+              )}
+            </div>
           </div>
+
+          <button
+            type="button"
+            className="nav-scroll-arrow"
+            onClick={() => handleNavScroll('right')}
+            title="Scroll navbar right"
+            aria-label="Scroll navbar right"
+          >
+            ›
+          </button>
+
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
         </nav>
       </header>
 
@@ -2273,6 +2620,8 @@ function App() {
         <a href="#home" onClick={() => setMobileMenuOpen(false)}>Home</a>
         <a href="#customizer" onClick={() => setMobileMenuOpen(false)}>Cup Studio</a>
         <a href="#menu" onClick={() => setMobileMenuOpen(false)}>Menu</a>
+        <a href="#brewguide" onClick={() => setMobileMenuOpen(false)}>Home Brew Lab</a>
+        <a href="#events" onClick={() => setMobileMenuOpen(false)}>Roastery Events</a>
         <a href="#giftcards" onClick={() => setMobileMenuOpen(false)}>Gift Cards &amp; Beans</a>
         <a href="#visit" onClick={() => setMobileMenuOpen(false)}>Visit Café</a>
         <a href="#reviews" onClick={() => setMobileMenuOpen(false)}>Reviews</a>
@@ -2310,18 +2659,8 @@ function App() {
         )}
       </div>
 
-      {/* HERO — BACKGROUND VIDEO + ANIMATED TEXT + STATS */}
+      {/* HERO — BACKGROUND IMAGE + ANIMATED TEXT + STATS */}
       <section className="hero" id="home">
-        <video
-          className="hero-bg-video"
-          autoPlay
-          loop
-          muted
-          playsInline
-        >
-          <source src="https://assets.mixkit.co/videos/preview/mixkit-pouring-milk-into-a-cup-of-coffee-41547-large.mp4" type="video/mp4" />
-          <source src="https://assets.mixkit.co/videos/preview/mixkit-coffee-beans-falling-in-slow-motion-4996-large.mp4" type="video/mp4" />
-        </video>
         <div className="hero-video-overlay" />
 
         <div className="hero-badge">☕ Premium Coffee &amp; Bakery • 🏆 {beanPoints} Bean Points</div>
@@ -2369,15 +2708,15 @@ function App() {
       <section className="video-showcase-section" id="story">
         <div className="video-showcase-card">
           <div className="video-player-stage">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster="/hero-bg.jpg"
-            >
-              <source src="https://assets.mixkit.co/videos/preview/mixkit-pouring-milk-into-a-cup-of-coffee-41547-large.mp4" type="video/mp4" />
-            </video>
+            <img
+              src={products[reelIdx % products.length]?.image || DEFAULT_PRODUCTS[0].image}
+              alt="Bean Scene Espresso Roastery Showcase"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'brightness(0.72)' }}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = getFallbackImage();
+              }}
+            />
             <div className="video-reel-overlay">
               <div className="video-reel-top">
                 <span className="live-reel-pill">
@@ -2983,7 +3322,7 @@ function App() {
                       </button>
                     </div>
                     <div className="card-footer">
-                      <span className="price">${product.price.toFixed(2)}</span>
+                      <span className="price">{formatPrice(product.price)}</span>
                       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         <button
                           type="button"
@@ -2999,7 +3338,7 @@ function App() {
                           type="button"
                           className="order-btn"
                           onClick={() => openOrderModal(product)}
-                          aria-label={`Order ${product.name} for $${product.price.toFixed(2)}`}
+                          aria-label={`Order ${product.name} for ${formatPrice(product.price)}`}
                         >
                           Customize
                         </button>
@@ -3011,6 +3350,259 @@ function App() {
             })}
           </div>
         )}
+      </section>
+
+      {/* 1. INTERACTIVE HOME BREW TIMER & BARISTA RECIPE GUIDE (#brewguide) */}
+      <section className="section" id="brewguide" style={{ paddingTop: 20 }}>
+        <div className="section-header">
+          <span className="modal-badge">Barista Home Brewing Lab</span>
+          <h2>⏱️ Interactive Home Brew Timer &amp; Recipe Guide</h2>
+          <p>Master specialty extraction at home with precision coffee-to-water ratios and a live step-by-step pour timer</p>
+        </div>
+
+        {/* Brew Method Selector Pills */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.65rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+          {BREW_GUIDES.map((bg) => (
+            <button
+              key={bg.id}
+              type="button"
+              className={`mood-pill-btn ${selectedBrewId === bg.id ? 'active' : ''}`}
+              onClick={() => {
+                setSelectedBrewId(bg.id);
+                setBrewTimerRunning(false);
+                setBrewTimerSec(0);
+              }}
+            >
+              {bg.name}
+            </button>
+          ))}
+        </div>
+
+        {(() => {
+          const progressPct = Math.min(100, Math.round((brewTimerSec / activeBrewGuide.totalSec) * 100));
+          const currentStep =
+            activeBrewGuide.steps.find((st) => brewTimerSec >= st.startSec && brewTimerSec < st.endSec) ||
+            activeBrewGuide.steps[activeBrewGuide.steps.length - 1];
+          const fmtSec = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+          const recProduct = products.find((p) => p.id === activeBrewGuide.recommendedBeanId) || products[0];
+
+          return (
+            <div className="brew-lab-grid">
+              {/* Left Column: Live Circular Pour Timer */}
+              <div className="mood-matcher-box brew-timer-stage" style={{ marginBottom: 0 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: '0.75rem' }}>
+                  <span className="modal-badge" style={{ marginBottom: 0 }}>Live Extraction Clock</span>
+                  <span className="spec-pill">Target: {fmtSec(activeBrewGuide.totalSec)}</span>
+                </div>
+
+                <div
+                  className="brew-timer-dial"
+                  style={{
+                    background: `conic-gradient(var(--accent) ${progressPct * 3.6}deg, rgba(255,255,255,0.08) 0deg)`,
+                  }}
+                >
+                  <div className="brew-timer-dial-inner">
+                    <span style={{ fontSize: '1.5rem' }}>{activeBrewGuide.icon}</span>
+                    <div className="brew-timer-digits">{fmtSec(brewTimerSec)}</div>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--warm)', fontWeight: 700 }}>
+                      {brewTimerSec >= activeBrewGuide.totalSec
+                        ? '🎉 Brew Complete!'
+                        : brewTimerRunning
+                        ? '💧 Pouring Live...'
+                        : 'Ready to Brew'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="brew-active-step-banner">
+                  <strong style={{ color: 'var(--warm)', fontSize: '0.9rem', display: 'block', marginBottom: '0.2rem' }}>
+                    {currentStep.label}
+                  </strong>
+                  <p style={{ color: '#e2e8f0', fontSize: '0.8rem', margin: 0 }}>{currentStep.tip}</p>
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.65rem', width: '100%', marginTop: '1rem' }}>
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    style={{ flex: 1.5, justifyContent: 'center', padding: '0.7rem 1.2rem', fontSize: '0.9rem' }}
+                    onClick={() => {
+                      if (brewTimerSec >= activeBrewGuide.totalSec) {
+                        setBrewTimerSec(0);
+                        setBrewTimerRunning(true);
+                      } else {
+                        setBrewTimerRunning((r) => !r);
+                      }
+                    }}
+                  >
+                    {brewTimerRunning
+                      ? '⏸ Pause Timer'
+                      : brewTimerSec >= activeBrewGuide.totalSec
+                      ? '🔄 Restart Pour'
+                      : '▶ Start Live Pour Timer'}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    style={{ flex: 0.7, justifyContent: 'center', padding: '0.7rem 1rem', fontSize: '0.86rem' }}
+                    onClick={() => {
+                      setBrewTimerRunning(false);
+                      setBrewTimerSec(0);
+                    }}
+                  >
+                    ↺ Reset
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Column: Precision Barista Ratios & 3-Stage Steps */}
+              <div className="mood-matcher-box" style={{ marginBottom: 0 }}>
+                <h3 style={{ color: '#fff', fontSize: '1.3rem', marginBottom: '0.35rem' }}>
+                  {activeBrewGuide.name} Master Recipe
+                </h3>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.86rem', marginBottom: '1rem' }}>
+                  Calibrated by Bean Scene Q-Graders for peak sweetness, clarity, and aromatic balance.
+                </p>
+
+                <div className="passport-specs-grid" style={{ marginBottom: '1.1rem' }}>
+                  <div className="passport-spec-box">
+                    <span>⚖️ Golden Ratio</span>
+                    <strong>{activeBrewGuide.ratio} ({activeBrewGuide.coffeeG}g : {activeBrewGuide.waterMl}ml)</strong>
+                  </div>
+                  <div className="passport-spec-box">
+                    <span>🌡️ Water Temp</span>
+                    <strong>{activeBrewGuide.temp}</strong>
+                  </div>
+                  <div className="passport-spec-box">
+                    <span>⚙️ Grind Size</span>
+                    <strong>{activeBrewGuide.grind}</strong>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '1.15rem' }}>
+                  {activeBrewGuide.steps.map((st, idx) => {
+                    const isCurrent = brewTimerSec >= st.startSec && brewTimerSec < st.endSec;
+                    const isDone = brewTimerSec >= st.endSec;
+                    return (
+                      <div
+                        key={idx}
+                        className={`brew-step-row ${isCurrent ? 'active' : ''} ${isDone ? 'done' : ''}`}
+                        onClick={() => setBrewTimerSec(st.startSec)}
+                        title="Click to jump timer to this stage"
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
+                          <strong style={{ color: isCurrent ? 'var(--warm)' : '#fff', fontSize: '0.88rem' }}>
+                            {isDone ? '✓ ' : ''}{st.label}
+                          </strong>
+                          <span className="spec-pill" style={{ fontSize: '0.72rem' }}>
+                            {fmtSec(st.startSec)} – {fmtSec(st.endSec)}
+                          </span>
+                        </div>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.79rem', margin: 0 }}>{st.tip}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {recProduct && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      padding: '0.65rem 0.9rem',
+                      borderRadius: 14,
+                      background: 'rgba(192, 132, 252, 0.1)',
+                      border: '1px solid rgba(192, 132, 252, 0.3)',
+                    }}
+                  >
+                    <div>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--warm)', fontWeight: 700, display: 'block' }}>
+                        🏆 BARISTA PAIRED CUP FOR THIS METHOD
+                      </span>
+                      <strong style={{ color: '#fff', fontSize: '0.9rem' }}>
+                        {recProduct.name} ({formatPrice(recProduct.price)})
+                      </strong>
+                    </div>
+                    <button
+                      type="button"
+                      className="order-btn"
+                      style={{ padding: '0.38rem 0.85rem', fontSize: '0.78rem' }}
+                      onClick={() => handleQuickAdd(recProduct)}
+                    >
+                      + Order Cup
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
+      </section>
+
+      {/* 3. ROASTERY EVENTS, CUPPING WORKSHOPS & LATTE ART MASTERCLASSES (#events) */}
+      <section className="section" id="events" style={{ paddingTop: 20 }}>
+        <div className="section-header">
+          <span className="modal-badge">Community &amp; Coffee Academy</span>
+          <h2>🎓 Roastery Events &amp; Barista Workshops</h2>
+          <p>Reserve your spot for hands-on latte art training, rare single-origin cuppings, and acoustic vinyl nights</p>
+        </div>
+
+        <div className="events-grid">
+          {ROASTERY_EVENTS.map((evt) => {
+            const isBooked = bookedEventIds.includes(evt.id);
+            const remaining = Math.max(1, evt.spotsLeft - (isBooked ? 1 : 0));
+            return (
+              <div key={evt.id} className="menu-card event-workshop-card">
+                <div className="menu-card-img-wrap" style={{ height: 195 }}>
+                  <img src={evt.image} alt={evt.title} className="menu-card-img" />
+                  <span
+                    className="popular-badge"
+                    style={{ background: 'linear-gradient(135deg, #7c3aed, #db2777)' }}
+                  >
+                    {evt.badge}
+                  </span>
+                </div>
+                <div className="menu-card-body">
+                  <span style={{ fontSize: '0.76rem', color: 'var(--warm)', fontWeight: 700, display: 'block', marginBottom: '0.25rem' }}>
+                    📅 {evt.date}
+                  </span>
+                  <h3 style={{ fontSize: '1.15rem', marginBottom: '0.3rem' }}>{evt.title}</h3>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--accent)', fontWeight: 600, display: 'block', marginBottom: '0.6rem' }}>
+                    🎙️ Hosted by {evt.host}
+                  </span>
+                  <p style={{ fontSize: '0.84rem', marginBottom: '0.85rem' }}>{evt.desc}</p>
+
+                  <div className="card-spec-pills" style={{ marginBottom: '1rem' }}>
+                    {evt.perks.map((pk) => (
+                      <span key={pk} className="spec-pill" style={{ fontSize: '0.72rem' }}>
+                        {pk}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="card-footer">
+                    <div>
+                      <span className="price" style={{ display: 'block' }}>{formatPrice(evt.price)}</span>
+                      <span style={{ fontSize: '0.72rem', color: '#4ade80', fontWeight: 700 }}>
+                        🟢 {remaining} seats available
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className={isBooked ? 'btn-secondary' : 'order-btn'}
+                      style={{ padding: '0.5rem 1.05rem', fontSize: '0.82rem' }}
+                      onClick={() => handleBookEventWorkshop(evt)}
+                    >
+                      {isBooked ? '✓ Seat Added (+1 More)' : '🎟️ Book Workshop'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </section>
 
       {/* DIGITAL COFFEE GIFT CARDS & MONTHLY WHOLE-BEAN SUBSCRIPTION BOX (#giftcards) */}
@@ -3453,6 +4045,22 @@ function App() {
           >
             🛠️ Full Admin Dashboard →
           </Link>
+          {' • '}
+          <button
+            type="button"
+            onClick={() => setShowReactDevTools(true)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#38bdf8',
+              cursor: 'pointer',
+              fontWeight: 700,
+              fontSize: '0.88rem',
+              textDecoration: 'underline',
+            }}
+          >
+            ⚛️ React DevTools Inspector
+          </button>
         </p>
       </footer>
 
@@ -3689,19 +4297,65 @@ function App() {
               </div>
             ) : (
               <form onSubmit={handleReserveSubmit}>
-                <p className="modal-desc">Select your favorite seating zone in our café:</p>
+                <p className="modal-desc">1. Select your seating zone or click any live table on the Café Floor Plan below:</p>
                 <div className="zone-grid">
                   {CAFE_ZONES.map((z) => (
                     <button
                       key={z.id}
                       type="button"
                       className={`zone-card-btn ${reserveZone === z.id ? 'active' : ''}`}
-                      onClick={() => setReserveZone(z.id)}
+                      onClick={() => {
+                        setReserveZone(z.id);
+                        const firstAvail = CAFE_FLOOR_TABLES.find((t) => t.zone === z.id && t.status === 'available');
+                        if (firstAvail) setSelectedTableId(firstAvail.id);
+                      }}
                     >
                       <strong>{z.title}</strong>
                       <span>{z.desc}</span>
                     </button>
                   ))}
+                </div>
+
+                {/* 2. Interactive Visual Café Floor Plan & Seat Picker */}
+                <div className="floor-plan-box">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.6rem' }}>
+                    <strong style={{ color: '#fff', fontSize: '0.84rem' }}>
+                      🗺️ Live Roastery Floor Map — Selected: <span style={{ color: 'var(--warm)' }}>Table {selectedTableId}</span>
+                    </strong>
+                    <div style={{ display: 'flex', gap: '0.65rem', fontSize: '0.72rem' }}>
+                      <span style={{ color: '#4ade80' }}>🟢 Available</span>
+                      <span style={{ color: 'var(--accent)' }}>🟣 Selected</span>
+                      <span style={{ color: '#f87171' }}>🔴 Occupied</span>
+                    </div>
+                  </div>
+                  <div className="floor-plan-grid">
+                    {CAFE_FLOOR_TABLES.map((tbl) => {
+                      const isOcc = tbl.status === 'occupied';
+                      const isSel = selectedTableId === tbl.id;
+                      return (
+                        <button
+                          key={tbl.id}
+                          type="button"
+                          disabled={isOcc}
+                          className={`floor-table-node ${isSel ? 'selected' : ''} ${isOcc ? 'occupied' : ''}`}
+                          onClick={() => {
+                            setSelectedTableId(tbl.id);
+                            setReserveZone(tbl.zone);
+                            setReserveGuests(`${tbl.seats} Guest${tbl.seats > 1 ? 's' : ''}`);
+                          }}
+                          title={`${tbl.label} (${tbl.seats} seats • ${tbl.perk})`}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', fontSize: '0.73rem', fontWeight: 800 }}>
+                            <span>{tbl.id}</span>
+                            <span>{isOcc ? '🔴' : isSel ? '✓' : `🪑×${tbl.seats}`}</span>
+                          </div>
+                          <span style={{ fontSize: '0.68rem', color: isSel ? '#fff' : 'var(--text-muted)', display: 'block', marginTop: '0.15rem', textAlign: 'left' }}>
+                            {tbl.perk}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 <div className="form-row">
@@ -3917,6 +4571,20 @@ function App() {
                 </div>
               </div>
 
+              {/* Scheduled Pre-Order Pickup Slot Selector */}
+              <div className="form-group">
+                <label className="form-label">🕒 Scheduled Pickup / Arrival Time Slot</label>
+                <select
+                  className="modal-input"
+                  value={pickupSlot}
+                  onChange={(e) => setPickupSlot(e.target.value)}
+                >
+                  {PICKUP_TIME_SLOTS.map((slot) => (
+                    <option key={slot} value={slot}>{slot}</option>
+                  ))}
+                </select>
+              </div>
+
               <div className="form-group">
                 <label className="form-label">Payment Method</label>
                 <div className="pill-group">
@@ -3938,7 +4606,7 @@ function App() {
               <div className="modal-footer">
                 <div className="modal-total">
                   <span className="total-label">Total Amount</span>
-                  <span className="total-amount">${modalTotalPrice.toFixed(2)}</span>
+                  <span className="total-amount">{formatPrice(modalTotalPrice)}</span>
                 </div>
                 <div className="modal-actions">
                   <button
@@ -4292,12 +4960,12 @@ function App() {
                 <p key={idx}>{it.quantity || 1}× {it.name}</p>
               ))}
               <p className="confirm-customer">
-                Customer: {confirmedOrder.customer || 'Guest'} • {confirmedOrder.fulfillment || '🏪 In-Café Pickup'} • {confirmedOrder.paymentMethod || '📱 UPI / QR Pay'}
+                Customer: {confirmedOrder.customer || 'Guest'} • {confirmedOrder.fulfillment || '🏪 In-Café Pickup'} • {confirmedOrder.pickupSlot || pickupSlot} • {confirmedOrder.paymentMethod || '📱 UPI / QR Pay'}
               </p>
               <div className="confirm-divider"></div>
               <div className="confirm-total-row">
                 <span>Amount Paid</span>
-                <span>${confirmedOrder.total.toFixed(2)}</span>
+                <span>{formatPrice(confirmedOrder.total)}</span>
               </div>
               {confirmedOrder.pointsEarned && (
                 <p style={{ color: '#4ade80', fontSize: '0.82rem', marginTop: '0.4rem', fontWeight: 600 }}>
@@ -4462,10 +5130,10 @@ function App() {
                           </select>
                         </div>
                       )}
-                      <p>Qty: {item.quantity} × ${(item.unitPrice || item.price).toFixed(2)}</p>
+                      <p>Qty: {item.quantity} × {formatPrice(item.unitPrice || item.price)}</p>
                     </div>
                     <span className="cart-item-price">
-                      ${((item.unitPrice || item.price) * item.quantity).toFixed(2)}
+                      {formatPrice((item.unitPrice || item.price) * item.quantity)}
                     </span>
                     <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
                       <button
@@ -4500,7 +5168,7 @@ function App() {
 
             <div className="cart-drawer-footer">
               {/* Fulfillment & Payment Selector in Cart */}
-              <div className="form-row" style={{ marginBottom: '0.65rem', gap: '0.5rem' }}>
+              <div className="form-row" style={{ marginBottom: '0.5rem', gap: '0.5rem' }}>
                 <select
                   className="modal-input"
                   style={{ padding: '0.45rem 0.65rem', fontSize: '0.8rem', flex: 1 }}
@@ -4522,6 +5190,21 @@ function App() {
                   <option value="📱 UPI / QR Pay">📱 UPI / QR Pay</option>
                   <option value="💳 Card">💳 Card</option>
                   <option value="💵 Pay at Counter">💵 Pay at Counter</option>
+                </select>
+              </div>
+
+              {/* Scheduled Pre-Order Pickup Slot Selector in Cart */}
+              <div style={{ marginBottom: '0.65rem' }}>
+                <select
+                  className="modal-input"
+                  style={{ padding: '0.45rem 0.65rem', fontSize: '0.8rem', width: '100%' }}
+                  value={pickupSlot}
+                  onChange={(e) => setPickupSlot(e.target.value)}
+                  aria-label="Scheduled Pickup Time Slot"
+                >
+                  {PICKUP_TIME_SLOTS.map((slot) => (
+                    <option key={slot} value={slot}>🕒 {slot}</option>
+                  ))}
                 </select>
               </div>
 
@@ -4609,8 +5292,8 @@ function App() {
               })()}
 
               <div className="cart-total-row">
-                <span>Total</span>
-                <span className="price">${cartTotal.toFixed(2)}</span>
+                <span>Total ({currObj.code})</span>
+                <span className="price">{formatPrice(cartTotal)}</span>
               </div>
               <button
                 type="button"
@@ -5312,17 +5995,16 @@ function App() {
               </button>
             </div>
 
-            <div className="video-modal-frame">
-              <video
-                controls
-                autoPlay
-                loop
-                playsInline
-                poster="/hero-bg.jpg"
-              >
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-pouring-milk-into-a-cup-of-coffee-41547-large.mp4" type="video/mp4" />
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-coffee-beans-falling-in-slow-motion-4996-large.mp4" type="video/mp4" />
-              </video>
+            <div className="video-modal-frame" style={{ position: 'relative', overflow: 'hidden', borderRadius: 16 }}>
+              <img
+                src={products[reelIdx % products.length]?.image || DEFAULT_PRODUCTS[0].image}
+                alt="Bean Scene Roastery Reel"
+                style={{ width: '100%', height: 340, objectFit: 'cover', display: 'block' }}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = getFallbackImage();
+                }}
+              />
             </div>
 
             {products[reelIdx % products.length] && (
@@ -5613,6 +6295,386 @@ function App() {
         </div>
       )}
 
+      {/* 4. PERSONAL DAILY CAFFEINE & HYDRATION WELLNESS TRACKER MODAL */}
+      {showWellnessModal && (() => {
+        const caffPct = Math.min(100, Math.round((totalDailyCaffeine / 400) * 100));
+        const zoneLabel =
+          totalDailyCaffeine === 0
+            ? '🌱 Zero Caffeine — Ready for Your Morning Cup'
+            : totalDailyCaffeine <= 250
+            ? '⚡ Optimal Focus & Flow Zone (Under 250mg)'
+            : totalDailyCaffeine <= 400
+            ? '🔥 High Energy Zone (Approaching 400mg Daily Limit)'
+            : '⚠️ Above 400mg FDA Recommended Limit — Switch to Low-Caf or Bakery';
+        const zoneColor =
+          totalDailyCaffeine <= 250 ? '#4ade80' : totalDailyCaffeine <= 400 ? '#fbbf24' : '#f87171';
+        const gentlePicks = products.filter(
+          (p) => p.id === 13 || p.id === 24 || p.id === 5 || p.id === 27
+        );
+
+        return (
+          <div className="modal-backdrop" onClick={() => setShowWellnessModal(false)}>
+            <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <div>
+                  <span className="modal-badge">Smart Coffee Wellness</span>
+                  <h3 className="modal-title">📊 Daily Caffeine &amp; Hydration Tracker</h3>
+                </div>
+                <button type="button" className="modal-close" onClick={() => setShowWellnessModal(false)}>
+                  ✕
+                </button>
+              </div>
+
+              <div className="order-summary-box" style={{ marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '0.45rem' }}>
+                  <div>
+                    <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', display: 'block' }}>
+                      TODAY&apos;S CAFFEINE INTAKE (CART + ORDERS)
+                    </span>
+                    <strong style={{ fontSize: '1.75rem', color: zoneColor }}>
+                      {totalDailyCaffeine}mg <span style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>/ 400mg limit</span>
+                    </strong>
+                  </div>
+                  <span className="spec-pill">🔥 {cartCaloriesKcal} kcal in cart</span>
+                </div>
+
+                <div className="loyalty-progress-track" style={{ height: 11, margin: '0.5rem 0' }}>
+                  <div
+                    className="loyalty-progress-fill"
+                    style={{
+                      width: `${caffPct}%`,
+                      background: `linear-gradient(90deg, #4ade80, ${zoneColor})`,
+                    }}
+                  />
+                </div>
+                <span style={{ fontSize: '0.8rem', color: zoneColor, fontWeight: 700, display: 'block' }}>
+                  {zoneLabel}
+                </span>
+              </div>
+
+              {/* Hydration Balance Counter */}
+              <div className="order-summary-box" style={{ marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <div>
+                    <strong style={{ color: '#fff', fontSize: '0.9rem', display: 'block' }}>
+                      💧 Hydration Balance ({waterGlasses} / {recommendedWaterCups} glasses)
+                    </strong>
+                    <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
+                      Barista rule: 1 glass of water per espresso shot for zero jitters
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.4rem' }}>
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      style={{ padding: '0.28rem 0.65rem', fontSize: '0.82rem' }}
+                      onClick={() => setWaterGlasses((w) => Math.max(0, w - 1))}
+                    >
+                      −
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-primary"
+                      style={{ padding: '0.28rem 0.7rem', fontSize: '0.82rem' }}
+                      onClick={() => setWaterGlasses((w) => w + 1)}
+                    >
+                      + 💧
+                    </button>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
+                  {Array.from({ length: Math.max(recommendedWaterCups, waterGlasses) }).map((_, i) => (
+                    <span
+                      key={i}
+                      style={{
+                        fontSize: '1.15rem',
+                        opacity: i < waterGlasses ? 1 : 0.25,
+                      }}
+                    >
+                      💧
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Gentle / Low-Caffeine Smart Recommendations */}
+              <div style={{ marginBottom: '1rem' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--warm)', fontWeight: 700, display: 'block', marginBottom: '0.5rem' }}>
+                  🍵 Low-Caffeine &amp; Zero-Caffeine Pairing Picks
+                </span>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.55rem' }}>
+                  {gentlePicks.map((gp) => (
+                    <div
+                      key={gp.id}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '0.5rem 0.7rem',
+                        borderRadius: 12,
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid var(--border)',
+                      }}
+                    >
+                      <div>
+                        <strong style={{ color: '#fff', fontSize: '0.8rem', display: 'block' }}>{gp.name}</strong>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>
+                          ⚡ {gp.caffeine} • {formatPrice(gp.price)}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className="order-btn"
+                        style={{ padding: '0.25rem 0.6rem', fontSize: '0.74rem' }}
+                        onClick={() => handleQuickAdd(gp)}
+                      >
+                        +
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="btn-primary"
+                style={{ width: '100%', justifyContent: 'center' }}
+                onClick={() => setShowWellnessModal(false)}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* BUILT-IN REACT DEVTOOLS LIVE COMPONENT, STATE & PROPS INSPECTOR MODAL */}
+      {showReactDevTools && (
+        <div className="modal-backdrop" onClick={() => setShowReactDevTools(false)}>
+          <div
+            className="modal-card"
+            style={{ maxWidth: 680 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <div>
+                <span className="modal-badge" style={{ color: '#38bdf8', borderColor: 'rgba(56,189,248,0.4)' }}>
+                  ⚛️ React v19 Developer Tools • Live State Inspector
+                </span>
+                <h3 className="modal-title">⚛️ Bean Scene React DevTools Panel</h3>
+              </div>
+              <button type="button" className="modal-close" onClick={() => setShowReactDevTools(false)}>
+                ✕
+              </button>
+            </div>
+
+            <p className="modal-desc">
+              Inspect your live React Component Tree and edit <code>useState</code> hooks in real time—just like the official React Developer Tools browser extension:
+            </p>
+
+            {/* Component Hierarchy Tree */}
+            <div
+              className="order-summary-box"
+              style={{
+                fontFamily: 'monospace',
+                fontSize: '0.79rem',
+                lineHeight: 1.7,
+                background: 'rgba(10, 14, 26, 0.85)',
+                borderColor: 'rgba(56, 189, 248, 0.35)',
+                marginBottom: '1rem',
+              }}
+            >
+              <div style={{ color: '#38bdf8', fontWeight: 700, marginBottom: '0.3rem' }}>
+                ⚛️ Components Tree (Active Fiber Root)
+              </div>
+              <div style={{ color: '#94a3b8' }}>├─ &lt;StrictMode&gt;</div>
+              <div style={{ color: '#94a3b8', paddingLeft: '1rem' }}>└─ &lt;BrowserRouter&gt;</div>
+              <div style={{ color: '#38bdf8', paddingLeft: '2rem', fontWeight: 700 }}>
+                └─ &lt;App /&gt; <span style={{ color: '#4ade80' }}>● Mounted (30 products, {cartItemCount} cart items)</span>
+              </div>
+              <div style={{ color: '#e2e8f0', paddingLeft: '3rem' }}>
+                ├─ &lt;HeaderNavbar currency=&quot;{currency}&quot; theme=&quot;{theme}&quot; beanPoints={'{'}{beanPoints}{'}'} /&gt;
+              </div>
+              <div style={{ color: '#e2e8f0', paddingLeft: '3rem' }}>
+                ├─ &lt;CupStudio3D base=&quot;{cupBase.key}&quot; milk=&quot;{cupMilk.key}&quot; size=&quot;{cupSize.oz}&quot; /&gt;
+              </div>
+              <div style={{ color: '#e2e8f0', paddingLeft: '3rem' }}>
+                ├─ &lt;MenuGrid items={'{'}{filteredProducts.length}{'}'} category=&quot;{activeCategory}&quot; sortBy=&quot;{sortBy}&quot; /&gt;
+              </div>
+              <div style={{ color: '#e2e8f0', paddingLeft: '3rem' }}>
+                ├─ &lt;HomeBrewLab method=&quot;{selectedBrewId}&quot; timerSec={'{'}{brewTimerSec}{'}'} running={'{'}{String(brewTimerRunning)}{'}'} /&gt;
+              </div>
+              <div style={{ color: '#e2e8f0', paddingLeft: '3rem' }}>
+                └─ &lt;RoasteryEvents workshops={'{'}{ROASTERY_EVENTS.length}{'}'} booked={'{'}{bookedEventIds.length}{'}'} /&gt;
+              </div>
+            </div>
+
+            {/* Interactive Live Hook State Editor */}
+            <div className="order-summary-box" style={{ marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
+                <strong style={{ color: '#fff', fontSize: '0.88rem' }}>
+                  🔧 Live Hooks State Editor (<code>useState</code>)
+                </strong>
+                <span className="spec-pill" style={{ color: '#4ade80' }}>⚡ Hot-State Sync Active</span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(195px, 1fr))', gap: '0.65rem' }}>
+                {/* Bean Points Hook */}
+                <div className="passport-spec-box">
+                  <span>State: beanPoints</span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.3rem' }}>
+                    <strong style={{ color: 'var(--warm)', fontSize: '1rem' }}>{beanPoints} pts</strong>
+                    <div style={{ display: 'flex', gap: '0.3rem' }}>
+                      <button
+                        type="button"
+                        className="order-btn"
+                        style={{ padding: '0.2rem 0.55rem', fontSize: '0.72rem' }}
+                        onClick={() => {
+                          setBeanPoints((p) => {
+                            const next = p + 100;
+                            localStorage.setItem('beanScenePoints', String(next));
+                            return next;
+                          });
+                          showToast('⚛️ React DevTools: Injected +100 Bean Points into state!');
+                        }}
+                      >
+                        +100
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-secondary"
+                        style={{ padding: '0.2rem 0.55rem', fontSize: '0.72rem' }}
+                        onClick={() => {
+                          setBeanPoints(400);
+                          localStorage.setItem('beanScenePoints', '400');
+                          showToast('⚛️ React DevTools: Set beanPoints = 400 (Gold VIP Unlocked)!');
+                        }}
+                      >
+                        Gold VIP
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Theme Hook */}
+                <div className="passport-spec-box">
+                  <span>State: theme</span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.3rem' }}>
+                    <strong style={{ color: '#38bdf8' }}>&quot;{theme}&quot;</strong>
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      style={{ padding: '0.2rem 0.65rem', fontSize: '0.72rem' }}
+                      onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+                    >
+                      Toggle Theme
+                    </button>
+                  </div>
+                </div>
+
+                {/* Currency Hook */}
+                <div className="passport-spec-box">
+                  <span>State: currency</span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.3rem' }}>
+                    <strong style={{ color: '#4ade80' }}>&quot;{currency}&quot; ({currObj.symbol})</strong>
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      style={{ padding: '0.2rem 0.65rem', fontSize: '0.72rem' }}
+                      onClick={cycleCurrency}
+                    >
+                      Cycle Currency
+                    </button>
+                  </div>
+                </div>
+
+                {/* Promo Hook */}
+                <div className="passport-spec-box">
+                  <span>State: appliedPromo</span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.3rem' }}>
+                    <strong style={{ color: '#c084fc' }}>&quot;{appliedPromo || 'NONE'}&quot;</strong>
+                    <button
+                      type="button"
+                      className="order-btn"
+                      style={{ padding: '0.2rem 0.6rem', fontSize: '0.72rem' }}
+                      onClick={() => applyPromoCode('BEAN25')}
+                    >
+                      Apply BEAN25
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Raw State JSON Snapshot */}
+            <div
+              className="order-summary-box"
+              style={{
+                fontFamily: 'monospace',
+                fontSize: '0.74rem',
+                maxHeight: 135,
+                overflowY: 'auto',
+                background: 'rgba(0,0,0,0.35)',
+                marginBottom: '1rem',
+              }}
+            >
+              <div style={{ color: 'var(--warm)', fontWeight: 700, marginBottom: '0.25rem' }}>
+                📦 Serialized Hook Snapshot:
+              </div>
+              <pre style={{ margin: 0, whiteSpace: 'pre-wrap', color: '#cbd5e1' }}>
+                {JSON.stringify(
+                  {
+                    isLoggedIn,
+                    userName: userName || 'Guest',
+                    theme,
+                    currency,
+                    beanPoints,
+                    appliedPromo: appliedPromo || null,
+                    activeCategory,
+                    dietFilter,
+                    cartItems: cartItemCount,
+                    cartTotal: formatPrice(cartTotal),
+                    dailyCaffeineMg: totalDailyCaffeine,
+                    pickupSlot,
+                  },
+                  null,
+                  2
+                )}
+              </pre>
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <button
+                type="button"
+                className="btn-secondary"
+                style={{ flex: 1, justifyContent: 'center' }}
+                onClick={() => {
+                  console.info('⚛️ [Bean Scene React DevTools Snapshot]', {
+                    productsCount: products.length,
+                    cart,
+                    beanPoints,
+                    theme,
+                    currency,
+                    orderHistory,
+                  });
+                  showToast('Logged full React state snapshot to Browser Console (F12)! 🖥️');
+                }}
+              >
+                🖥️ Log State to Console
+              </button>
+              <button
+                type="button"
+                className="btn-primary"
+                style={{ flex: 1, justifyContent: 'center' }}
+                onClick={() => setShowReactDevTools(false)}
+              >
+                Close Inspector
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* TOAST NOTIFICATION */}
       {cartToast && (
         <div className="toast" role="status">
@@ -5622,5 +6684,8 @@ function App() {
     </div>
   );
 }
+
+StarRating.displayName = 'BeanSceneStarRating';
+App.displayName = 'BeanSceneApp';
 
 export default App;

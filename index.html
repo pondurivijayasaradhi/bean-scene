@@ -4,11 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bean Scene | Premium Coffee & Bakery</title>
+    <script>
+      window.addEventListener(
+        'error',
+        function (e) {
+          if (
+            (e.filename && e.filename.indexOf('prompt.js') !== -1) ||
+            (e.message && e.message.indexOf('originalPrompt') !== -1)
+          ) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+          }
+        },
+        true
+      );
+    </script>
     
     <!-- Favicon & PWA Manifest -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#c084fc" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     
@@ -24,9 +40,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Vercel Web Analytics (Live Production Visitor & Pageview Tracking) -->
-    <script defer src="/_vercel/insights/script.js"></script>
   </head>
   <body>
     <div id="root"></div>

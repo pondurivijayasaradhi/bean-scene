@@ -2113,30 +2113,67 @@ footer a {
   position: relative;
   top: 0 !important;
   height: 76px;
-  padding: 0 2.5%;
-  gap: 0.75rem;
+  padding: 0 1.8%;
+  gap: 0.55rem;
   background: rgba(13, 12, 17, 0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.09);
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.45);
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(192, 132, 252, 0.45) transparent;
+  overflow: hidden;
 }
 
-.site-header .navbar::-webkit-scrollbar {
+.nav-scroll-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(192, 132, 252, 0.5) transparent;
+  padding: 0.25rem 0.15rem;
+}
+
+.nav-scroll-track::-webkit-scrollbar {
   height: 4px;
 }
 
-.site-header .navbar::-webkit-scrollbar-track {
+.nav-scroll-track::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.site-header .navbar::-webkit-scrollbar-thumb {
-  background: rgba(192, 132, 252, 0.45);
+.nav-scroll-track::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, rgba(192, 132, 252, 0.55), rgba(245, 208, 169, 0.55));
   border-radius: 999px;
+}
+
+.nav-scroll-arrow {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(245, 208, 169, 0.35);
+  color: var(--warm);
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.nav-scroll-arrow:hover {
+  background: rgba(192, 132, 252, 0.24);
+  border-color: var(--accent);
+  color: #fff;
+  transform: scale(1.06);
 }
 
 .logo {
@@ -2203,18 +2240,7 @@ footer a {
   align-items: center;
   gap: 0.45rem;
   flex-shrink: 0;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  padding: 0.2rem 0;
-}
-
-.nav-actions::-webkit-scrollbar {
-  height: 3px;
-}
-
-.nav-actions::-webkit-scrollbar-thumb {
-  background: rgba(245, 208, 169, 0.4);
-  border-radius: 999px;
+  padding: 0.15rem 0;
 }
 
 .nav-book-btn {
@@ -2977,9 +3003,21 @@ select.modal-input option {
   opacity: 0.08;
 }
 
-[data-theme="light"] .navbar {
-  background: rgba(250, 244, 236, 0.9);
+[data-theme="light"] .navbar,
+[data-theme="light"] .site-header .navbar {
+  background: rgba(250, 244, 236, 0.92);
   border-bottom: 1px solid rgba(54, 34, 20, 0.12);
+}
+
+[data-theme="light"] .nav-scroll-arrow {
+  background: rgba(139, 61, 255, 0.08);
+  border-color: rgba(180, 83, 9, 0.35);
+  color: #92400e;
+}
+
+[data-theme="light"] .nav-scroll-arrow:hover {
+  background: rgba(139, 61, 255, 0.2);
+  color: #231710;
 }
 
 [data-theme="light"] .logo {
@@ -3289,6 +3327,152 @@ select.modal-input option {
   background: rgba(244, 63, 94, 0.28);
   border-color: #f43f5e;
   box-shadow: 0 0 0 6px rgba(244, 63, 94, 0.22);
+}
+
+/* ========== HOME BREW LAB TIMER, EVENTS, FLOOR PLAN & WELLNESS ========== */
+.brew-lab-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .brew-lab-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.brew-timer-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.brew-timer-dial {
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin: 0.6rem auto 1rem;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+  transition: background 0.3s ease;
+}
+
+.brew-timer-dial-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brew-timer-digits {
+  font-size: 2.35rem;
+  font-weight: 900;
+  font-family: monospace;
+  color: #fff;
+  line-height: 1.1;
+  margin: 0.15rem 0;
+}
+
+[data-theme="light"] .brew-timer-digits {
+  color: #231710;
+}
+
+.brew-active-step-banner {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(245, 208, 169, 0.28);
+}
+
+.brew-step-row {
+  padding: 0.7rem 0.95rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.brew-step-row:hover {
+  border-color: rgba(192, 132, 252, 0.4);
+}
+
+.brew-step-row.active {
+  background: rgba(192, 132, 252, 0.12);
+  border-color: var(--accent);
+}
+
+.brew-step-row.done {
+  opacity: 0.75;
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Interactive Café Visual Floor Plan */
+.floor-plan-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(192, 132, 252, 0.28);
+  border-radius: 16px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.floor-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+@media (max-width: 560px) {
+  .floor-plan-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.floor-table-node {
+  padding: 0.5rem 0.65rem;
+  border-radius: 12px;
+  background: rgba(74, 222, 128, 0.07);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.floor-table-node:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: var(--warm);
+}
+
+.floor-table-node.selected {
+  background: linear-gradient(135deg, rgba(192, 132, 252, 0.28), rgba(245, 208, 169, 0.2));
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(192, 132, 252, 0.35);
+}
+
+.floor-table-node.occupied {
+  background: rgba(248, 113, 113, 0.08);
+  border-color: rgba(248, 113, 113, 0.25);
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 
