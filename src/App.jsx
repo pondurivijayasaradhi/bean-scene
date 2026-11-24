@@ -23,7 +23,7 @@ const DEFAULT_PRODUCTS = [
   { id: 20, name: 'Hazelnut Cortado',            description: 'Equal parts rich espresso and warm toasted hazelnut milk',      price: 4.6, image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.8, reviews: 152, popular: false, calories: 95,  caffeine: '160mg', badge: '🌰 Toasted Hazelnut'  },
   { id: 21, name: 'Spanish Condensed Latte',     description: 'Velvety espresso layered with silky sweetened condensed milk',  price: 5.1, image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80', category: 'coffee', rating: 4.9, reviews: 241, popular: true,  calories: 220, caffeine: '155mg', badge: '✨ Sweet & Bold'      },
 
-  // Iced Beveragesq
+  // Iced Beverages
   { id: 4,  name: 'Iced Coffee',                 description: 'Chilled coffee over ice',                                       price: 4.2, image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 176, popular: true,  calories: 80,  caffeine: '145mg', badge: '🧊 Chilled'           },
   { id: 11, name: 'Cold Brew',                   description: 'Slow-steeped for 20 hours for an ultra-smooth finish',          price: 4.6, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.9, reviews: 230, popular: true,  calories: 25,  caffeine: '200mg', badge: '⚡ 20h Steep'         },
   { id: 12, name: 'Iced Caramel Latte',          description: 'Chilled espresso, milk, and sweet caramel over ice',            price: 5.1, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80', category: 'iced',   rating: 4.8, reviews: 189, popular: true,  calories: 190, caffeine: '150mg', badge: '🍯 Sweet'             },
@@ -365,6 +365,7 @@ const CAFE_BRANCHES = [
     wifi: '⚡ 650 Mbps Fiber Wi-Fi • Pass: brew2026',
     features: ['🔥 Live Copper Drum Roaster', '💻 16 Quiet Work Pods', '🌿 Heated Garden Patio', '🔌 USB-C at Every Table'],
     mapQuery: 'Coffee+Roastery+Downtown',
+    image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=85',
   },
   {
     id: 'lakeside',
@@ -376,6 +377,7 @@ const CAFE_BRANCHES = [
     wifi: '⚡ 500 Mbps Mesh Wi-Fi • Pass: latte2026',
     features: ['🌊 Panoramic Sunset Deck', '🥐 On-Site French Bakery Oven', '🎶 Acoustic Vinyl Evenings', '🐕 Pet-Friendly Patio'],
     mapQuery: 'Waterfront+Coffee+Cafe',
+    image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=85',
   },
 ];
 
@@ -1973,9 +1975,11 @@ function App() {
         customer: draft.customer,
         email: draft.email,
         fulfillment: orderFulfillment,
+        pickupSlot: pickupSlot,
         paymentMethod: paymentMethod,
         transactionId: newOrder.transactionId,
         paymentStatus: newOrder.paymentStatus,
+        currency: currency,
       });
     } catch {
       // Fallback locally if backend server is offline
@@ -2381,7 +2385,8 @@ function App() {
     showToast(`Restored all ${DEFAULT_PRODUCTS.length} default menu items! 🔄`);
   };
 
-  // Navbar horizontal scroll reference & controls
+  // Navbar horizontal scroll reference & controls + active nav highlight
+  const [activeNavSection, setActiveNavSection] = useState('home');
   const navScrollRef = useRef(null);
   const handleNavScroll = (direction) => {
     if (!navScrollRef.current) return;
@@ -2396,6 +2401,23 @@ function App() {
       navScrollRef.current.scrollLeft += e.deltaY;
     }
   };
+
+  useEffect(() => {
+    const sectionIds = ['home', 'customizer', 'menu', 'brewguide', 'events', 'giftcards', 'visit', 'reviews'];
+    const handleScrollSpy = () => {
+      const scrollY = window.scrollY + 180;
+      let current = 'home';
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el && el.offsetTop <= scrollY) {
+          current = id;
+        }
+      }
+      setActiveNavSection(current);
+    };
+    window.addEventListener('scroll', handleScrollSpy, { passive: true });
+    return () => window.removeEventListener('scroll', handleScrollSpy);
+  }, []);
 
   return (
     <div>
@@ -2453,14 +2475,26 @@ function App() {
           >
             {/* Desktop Links inside Glass Pill */}
             <ul className="nav-links">
-              <li><a href="#home">Home</a></li>
-              <li><a href="#customizer">Cup Studio</a></li>
-              <li><a href="#menu">Menu</a></li>
-              <li><a href="#brewguide">Brew Lab</a></li>
-              <li><a href="#events">Events</a></li>
-              <li><a href="#giftcards">Gift Cards</a></li>
-              <li><a href="#visit">Visit Café</a></li>
-              <li><a href="#reviews">Reviews</a></li>
+              {[
+                { id: 'home', label: 'Home' },
+                { id: 'customizer', label: 'Cup Studio' },
+                { id: 'menu', label: 'Menu' },
+                { id: 'brewguide', label: 'Brew Lab' },
+                { id: 'events', label: 'Events' },
+                { id: 'giftcards', label: 'Gift Cards' },
+                { id: 'visit', label: 'Visit Café' },
+                { id: 'reviews', label: 'Reviews' },
+              ].map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={`#${item.id}`}
+                    className={activeNavSection === item.id ? 'active' : ''}
+                    onClick={() => setActiveNavSection(item.id)}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
             </ul>
 
             <div className="nav-actions">
@@ -2832,9 +2866,25 @@ function App() {
           </div>
         </div>
 
-        <div className="cup-studio-card">
+        <div
+          className="cup-studio-card"
+          style={{
+            backgroundImage:
+              "linear-gradient(145deg, rgba(20, 14, 34, 0.84) 0%, rgba(13, 10, 22, 0.88) 100%), radial-gradient(circle at 22% 25%, rgba(192, 132, 252, 0.25), transparent 65%), url('https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1500&q=85')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
           {/* Live Layered Glass Visualization */}
-          <div className="cup-preview-stage">
+          <div
+            className="cup-preview-stage"
+            style={{
+              backgroundImage:
+                "linear-gradient(160deg, rgba(16, 12, 26, 0.82) 0%, rgba(11, 8, 18, 0.88) 100%), radial-gradient(circle at 50% 35%, rgba(245, 208, 169, 0.16), transparent 65%), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1000&q=80')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
             <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '0.6rem' }}>
               <button
                 type="button"
@@ -2858,7 +2908,7 @@ function App() {
                 style={{ padding: '0.32rem 0.8rem', fontSize: '0.76rem' }}
                 onClick={() => setExtraShot((s) => !s)}
               >
-                ⚡ +1 Shot (+$0.85)
+                ⚡ +1 Shot (+{formatPrice(0.85)})
               </button>
             </div>
 
@@ -2932,7 +2982,7 @@ function App() {
               <span className="macro-badge">{cupSize.oz} • {cupTemp === 'hot' ? '🔥 Hot' : '🧊 Iced'}</span>
               <span className="macro-badge">⚡ {customCupCaffeine}mg</span>
               <span className="macro-badge">🔥 {customCupCalories} kcal</span>
-              <span className="macro-badge">💲 ${customCupPrice.toFixed(2)}</span>
+              <span className="macro-badge">💲 {formatPrice(customCupPrice)}</span>
             </div>
           </div>
 
@@ -2949,7 +2999,7 @@ function App() {
                     style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
                     onClick={() => setCupBase(b)}
                   >
-                    {b.label} (${b.price.toFixed(2)})
+                    {b.label} ({formatPrice(b.price)})
                   </button>
                 ))}
               </div>
@@ -2966,7 +3016,7 @@ function App() {
                     style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
                     onClick={() => setCupMilk(m)}
                   >
-                    {m.label} {m.price > 0 ? `(+$${m.price.toFixed(2)})` : '(Free)'}
+                    {m.label} {m.price > 0 ? `(+${formatPrice(m.price)})` : '(Free)'}
                   </button>
                 ))}
               </div>
@@ -2983,7 +3033,7 @@ function App() {
                     style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
                     onClick={() => setCupSyrup(s)}
                   >
-                    {s.label} {s.price > 0 ? `(+$${s.price.toFixed(2)})` : ''}
+                    {s.label} {s.price > 0 ? `(+${formatPrice(s.price)})` : ''}
                   </button>
                 ))}
               </div>
@@ -3000,7 +3050,7 @@ function App() {
                     style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
                     onClick={() => setCupTopping(t)}
                   >
-                    {t.label} (+${t.price.toFixed(2)})
+                    {t.label} (+{formatPrice(t.price)})
                   </button>
                 ))}
               </div>
@@ -3038,7 +3088,7 @@ function App() {
                 style={{ padding: '0.75rem 1.35rem', fontSize: '0.9rem' }}
                 onClick={handleOrderCustomCupNow}
               >
-                ⚡ Order Cup (${customCupPrice.toFixed(2)})
+                ⚡ Order Cup ({formatPrice(customCupPrice)})
               </button>
             </div>
           </div>
@@ -3080,13 +3130,13 @@ function App() {
                   }}
                 >
                   <span style={{ fontSize: '0.83rem', color: '#fff', fontWeight: 600 }}>{sc.name}</span>
-                  <strong style={{ fontSize: '0.85rem', color: 'var(--warm)' }}>${sc.price.toFixed(2)}</strong>
+                  <strong style={{ fontSize: '0.85rem', color: 'var(--warm)' }}>{formatPrice(sc.price)}</strong>
                   <button
                     type="button"
                     className="order-btn"
                     style={{ padding: '0.28rem 0.7rem', fontSize: '0.75rem' }}
                     onClick={() => {
-                      setCart((prev) => [...prev, { ...sc, id: `saved-${Date.now()}` }]);
+                      setCart((prev) => [...prev, { ...sc, id: `saved-${prev.length + 1}` }]);
                       showToast(`Added ${sc.name} to cart!`);
                     }}
                   >
@@ -3107,7 +3157,15 @@ function App() {
         </div>
 
         {/* AI BARISTA MOOD MATCHER */}
-        <div className="mood-matcher-box">
+        <div
+          className="mood-matcher-box"
+          style={{
+            backgroundImage:
+              "linear-gradient(145deg, rgba(20, 14, 34, 0.82) 0%, rgba(14, 11, 22, 0.86) 100%), radial-gradient(ellipse at 50% 0%, rgba(192, 132, 252, 0.26) 0%, transparent 65%), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1400&q=85')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
           <div className="mood-matcher-header">
             <div>
               <span className="modal-badge">✨ AI Coffee Sommelier</span>
@@ -3143,7 +3201,7 @@ function App() {
                   />
                   <div>
                     <strong style={{ color: '#fff', display: 'block' }}>{moodDrink.name}</strong>
-                    <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>${moodDrink.price.toFixed(2)}</span>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{formatPrice(moodDrink.price)}</span>
                   </div>
                 </div>
 
@@ -3160,7 +3218,7 @@ function App() {
                   />
                   <div>
                     <strong style={{ color: '#fff', display: 'block' }}>{moodFood.name}</strong>
-                    <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>${moodFood.price.toFixed(2)}</span>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{formatPrice(moodFood.price)}</span>
                   </div>
                 </div>
               </div>
@@ -3168,10 +3226,10 @@ function App() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                 <div>
                   <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textDecoration: 'line-through', marginRight: '0.4rem' }}>
-                    ${(moodDrink.price + moodFood.price).toFixed(2)}
+                    {formatPrice(moodDrink.price + moodFood.price)}
                   </span>
                   <strong style={{ fontSize: '1.35rem', color: 'var(--warm)' }}>
-                    ${((moodDrink.price + moodFood.price) * 0.9).toFixed(2)}
+                    {formatPrice((moodDrink.price + moodFood.price) * 0.9)}
                   </strong>
                 </div>
                 <button
@@ -3615,7 +3673,16 @@ function App() {
 
         <div className="gift-sub-grid">
           {/* Left Card: Interactive Digital Gift Card Builder */}
-          <div className="mood-matcher-box" style={{ marginBottom: 0 }}>
+          <div
+            className="mood-matcher-box gift-card-builder-box"
+            style={{
+              marginBottom: 0,
+              backgroundImage:
+                "linear-gradient(145deg, rgba(20, 14, 34, 0.84) 0%, rgba(14, 11, 22, 0.88) 100%), radial-gradient(ellipse at 85% 0%, rgba(192, 132, 252, 0.25) 0%, transparent 65%), url('https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1200&q=85')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
             <span className="modal-badge">Instant Digital Delivery</span>
             <h3 style={{ color: '#fff', fontSize: '1.3rem', marginBottom: '0.4rem' }}>
               💳 Send a Bean Scene Gift Card
@@ -3625,7 +3692,15 @@ function App() {
             </p>
 
             {/* Live Gift Card Preview */}
-            <div className="digital-gift-card-preview">
+            <div
+              className="digital-gift-card-preview"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle at 85% 20%, rgba(245, 208, 169, 0.28), transparent 50%), linear-gradient(135deg, rgba(43, 22, 68, 0.82) 0%, rgba(76, 29, 149, 0.78) 52%, rgba(157, 23, 77, 0.82) 100%), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontWeight: 800, fontSize: '1rem', letterSpacing: 0.5 }}>☕ BEAN SCENE</span>
                 <span className="spec-pill" style={{ background: 'rgba(255,255,255,0.16)', color: '#fff' }}>
@@ -3707,7 +3782,16 @@ function App() {
           </div>
 
           {/* Right Card: Monthly / Weekly Whole-Bean Roastery Subscription Box */}
-          <div className="mood-matcher-box" style={{ marginBottom: 0 }}>
+          <div
+            className="mood-matcher-box bean-subscription-box"
+            style={{
+              marginBottom: 0,
+              backgroundImage:
+                "linear-gradient(145deg, rgba(20, 14, 34, 0.84) 0%, rgba(14, 11, 22, 0.88) 100%), radial-gradient(ellipse at 15% 0%, rgba(245, 208, 169, 0.2) 0%, transparent 65%), url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=85')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.4rem' }}>
               <span className="modal-badge" style={{ marginBottom: 0 }}>Small-Batch Roastery Delivery</span>
               <span style={{ fontSize: '0.78rem', color: '#4ade80', fontWeight: 700 }}>🚚 Free Express Shipping</span>
@@ -3780,97 +3864,123 @@ function App() {
       </section>
 
       {/* CUSTOMER LOVE / REVIEWS SECTION */}
-      <section className="section" id="reviews" style={{ paddingTop: 20 }}>
-        <div className="section-header">
-          <h2>Loved by Coffee Lovers</h2>
-          <p>Over 5,000+ handcrafted cups served with a 4.9★ community rating</p>
-          <div style={{ marginTop: '1rem' }}>
-            <button
-              type="button"
-              className="btn-secondary"
-              style={{ padding: '0.55rem 1.25rem', fontSize: '0.88rem' }}
-              onClick={() => setShowReviewForm((prev) => !prev)}
-            >
-              {showReviewForm ? '✕ Close Review Form' : '✍️ Share Your Experience (+25 Bean Points)'}
-            </button>
+      <section className="section reviews-section-highlight" id="reviews" style={{ paddingTop: 20 }}>
+        <div
+          className="reviews-showcase-shell"
+          style={{
+            backgroundImage:
+              "linear-gradient(145deg, rgba(20, 14, 34, 0.84) 0%, rgba(13, 10, 22, 0.88) 100%), radial-gradient(ellipse at 50% 0%, rgba(192, 132, 252, 0.28) 0%, transparent 65%), url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1600&q=85')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          <div className="section-header" style={{ marginBottom: '1.8rem' }}>
+            <span className="modal-badge">★ 4.9/5 Verified Guest Reviews</span>
+            <h2 className="reviews-highlight-title">Loved by Coffee Lovers</h2>
+            <p style={{ color: '#e9d5ff', fontWeight: 500 }}>
+              Over <strong style={{ color: 'var(--warm)' }}>5,000+ handcrafted cups</strong> served with a{' '}
+              <strong style={{ color: '#fbbf24' }}>4.9★ community rating</strong>
+            </p>
+            <div style={{ marginTop: '1.15rem' }}>
+              <button
+                type="button"
+                className="btn-primary"
+                style={{ padding: '0.62rem 1.45rem', fontSize: '0.9rem' }}
+                onClick={() => setShowReviewForm((prev) => !prev)}
+              >
+                {showReviewForm ? '✕ Close Review Form' : '✍️ Share Your Experience (+25 Bean Points)'}
+              </button>
+            </div>
           </div>
-        </div>
 
-        {showReviewForm && (
-          <form
-            onSubmit={handleAddReview}
-            className="mood-matcher-box"
-            style={{ maxWidth: 680, margin: '0 auto 2rem' }}
-          >
-            <h3 style={{ color: '#fff', fontSize: '1.15rem', marginBottom: '0.85rem' }}>
-              ✍️ Write a Community Review
-            </h3>
-            <div className="form-row">
-              <div className="form-group flex-1">
-                <label className="form-label">Your Name</label>
-                <input
-                  type="text"
-                  className="modal-input"
-                  placeholder={isLoggedIn ? userName : 'e.g. Aarav Verma'}
-                  value={revName}
-                  onChange={(e) => setRevName(e.target.value)}
-                />
-              </div>
-              <div className="form-group flex-1">
-                <label className="form-label">Your Vibe / Role</label>
-                <input
-                  type="text"
-                  className="modal-input"
-                  placeholder="e.g. Espresso Enthusiast"
-                  value={revRole}
-                  onChange={(e) => setRevRole(e.target.value)}
-                />
-              </div>
-              <div className="form-group" style={{ width: 130 }}>
-                <label className="form-label">Rating</label>
-                <select
-                  className="modal-input"
-                  value={revRating}
-                  onChange={(e) => setRevRating(e.target.value)}
-                >
-                  <option value="5.0">★★★★★ (5.0)</option>
-                  <option value="4.9">★★★★★ (4.9)</option>
-                  <option value="4.5">★★★★½ (4.5)</option>
-                  <option value="4.0">★★★★☆ (4.0)</option>
-                </select>
-              </div>
-            </div>
-            <div className="form-group">
-              <label className="form-label">Your Review</label>
-              <input
-                type="text"
-                className="modal-input"
-                placeholder="Tell us about your favorite coffee or pastry at Bean Scene..."
-                value={revText}
-                onChange={(e) => setRevText(e.target.value)}
-                required
-              />
-            </div>
-            <button type="submit" className="btn-primary" style={{ padding: '0.65rem 1.5rem', fontSize: '0.9rem' }}>
-              Post Review &amp; Claim +25 Pts
-            </button>
-          </form>
-        )}
-
-        <div className="testimonials-grid">
-          {reviewsList.map((t, i) => (
-            <div key={i} className="testimonial-card">
-              <StarRating rating={t.rating} />
-              <p style={{ color: 'var(--text)', fontSize: '0.96rem', lineHeight: 1.6 }}>"{t.text}"</p>
-              <div className="testimonial-author">
-                <div className="author-avatar">{(t.name || 'G')[0]}</div>
-                <div>
-                  <strong style={{ color: '#fff', display: 'block', fontSize: '0.95rem' }}>{t.name}</strong>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{t.role}</span>
+          {showReviewForm && (
+            <form
+              onSubmit={handleAddReview}
+              className="mood-matcher-box"
+              style={{ maxWidth: 680, margin: '0 auto 2rem' }}
+            >
+              <h3 style={{ color: '#fff', fontSize: '1.15rem', marginBottom: '0.85rem' }}>
+                ✍️ Write a Community Review
+              </h3>
+              <div className="form-row">
+                <div className="form-group flex-1">
+                  <label className="form-label">Your Name</label>
+                  <input
+                    type="text"
+                    className="modal-input"
+                    placeholder={isLoggedIn ? userName : 'e.g. Aarav Verma'}
+                    value={revName}
+                    onChange={(e) => setRevName(e.target.value)}
+                  />
+                </div>
+                <div className="form-group flex-1">
+                  <label className="form-label">Your Vibe / Role</label>
+                  <input
+                    type="text"
+                    className="modal-input"
+                    placeholder="e.g. Espresso Enthusiast"
+                    value={revRole}
+                    onChange={(e) => setRevRole(e.target.value)}
+                  />
+                </div>
+                <div className="form-group" style={{ width: 130 }}>
+                  <label className="form-label">Rating</label>
+                  <select
+                    className="modal-input"
+                    value={revRating}
+                    onChange={(e) => setRevRating(e.target.value)}
+                  >
+                    <option value="5.0">★★★★★ (5.0)</option>
+                    <option value="4.9">★★★★★ (4.9)</option>
+                    <option value="4.5">★★★★½ (4.5)</option>
+                    <option value="4.0">★★★★☆ (4.0)</option>
+                  </select>
                 </div>
               </div>
-            </div>
-          ))}
+              <div className="form-group">
+                <label className="form-label">Your Review</label>
+                <input
+                  type="text"
+                  className="modal-input"
+                  placeholder="Tell us about your favorite coffee or pastry at Bean Scene..."
+                  value={revText}
+                  onChange={(e) => setRevText(e.target.value)}
+                  required
+                />
+              </div>
+              <button type="submit" className="btn-primary" style={{ padding: '0.65rem 1.5rem', fontSize: '0.9rem' }}>
+                Post Review &amp; Claim +25 Pts
+              </button>
+            </form>
+          )}
+
+          <div className="testimonials-grid">
+            {reviewsList.map((t, i) => (
+              <div
+                key={i}
+                className="testimonial-card"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(155deg, rgba(28, 20, 46, 0.88) 0%, rgba(17, 13, 28, 0.92) 100%), radial-gradient(circle at 85% 15%, rgba(245, 208, 169, 0.18), transparent 55%), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80')",
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <StarRating rating={t.rating} />
+                  <span className="review-verified-pill">✓ Verified Guest</span>
+                </div>
+                <p className="testimonial-quote-text">"{t.text}"</p>
+                <div className="testimonial-author">
+                  <div className="author-avatar">{(t.name || 'G')[0]}</div>
+                  <div>
+                    <strong className="testimonial-author-name">{t.name}</strong>
+                    <span className="testimonial-author-role">{t.role}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -3899,7 +4009,14 @@ function App() {
         {(() => {
           const branch = CAFE_BRANCHES.find((b) => b.id === activeBranchId) || CAFE_BRANCHES[0];
           return (
-            <div className="store-finder-card">
+            <div
+              className="store-finder-card"
+              style={{
+                backgroundImage: `linear-gradient(135deg, rgba(20, 14, 32, 0.84) 0%, rgba(14, 11, 22, 0.88) 100%), radial-gradient(ellipse at 20% 0%, rgba(192, 132, 252, 0.22) 0%, transparent 65%), url('${branch.image}')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
               <div className="store-finder-details">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '0.65rem' }}>
                   <span
@@ -3978,7 +4095,14 @@ function App() {
               </div>
 
               {/* Interactive Visual Roastery Map Preview */}
-              <div className="store-map-visual">
+              <div
+                className="store-map-visual"
+                style={{
+                  backgroundImage: `linear-gradient(180deg, rgba(15, 12, 24, 0.15) 0%, rgba(15, 12, 24, 0.72) 100%), url('${branch.image}')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
                 <div className="store-map-overlay-card">
                   <div className="map-pin-pulse">☕</div>
                   <div>
@@ -3994,7 +4118,15 @@ function App() {
 
       {/* SUBSCRIBE SECTION */}
       <section id="subscribe">
-        <div className="subscribe">
+        <div
+          className="subscribe"
+          style={{
+            backgroundImage:
+              "linear-gradient(135deg, rgba(20, 12, 30, 0.76) 0%, rgba(13, 10, 20, 0.72) 100%), radial-gradient(ellipse at 50% 0%, rgba(192, 132, 252, 0.28) 0%, transparent 65%), url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1400&q=85')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
           <h2>Subscribe for Latest Offers</h2>
           <p>Get exclusive deals, secret menu drops, and 10% off your next cup</p>
           <form className="subscribe-form" onSubmit={handleSubscribe}>

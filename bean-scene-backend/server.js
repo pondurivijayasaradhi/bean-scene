@@ -16,7 +16,18 @@ let users = [
 
 let orders = [];
 let reservations = [];
-let subscribers = [];
+let subscribers = ['vijayasaradhiponduri@gmail.com', 'hello@beanscene.com'];
+let visitors = [
+  {
+    id: 'vis-1',
+    name: 'Vijaya Saradhi',
+    email: 'vijayasaradhiponduri@gmail.com',
+    action: 'Active Session • Menu & Cup Studio',
+    device: 'Chrome • Desktop',
+    location: 'Live Web App',
+    time: new Date().toISOString(),
+  },
+];
 
 let products = [
   // Hot Coffee
@@ -25,7 +36,7 @@ let products = [
     name: 'Cappuccino',
     description: 'Rich espresso with steamed milk foam',
     price: 4.5,
-    image: '/cappuccino.jpg',
+    image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80',
     category: 'coffee',
     rating: 4.9,
     reviews: 218,
@@ -39,7 +50,7 @@ let products = [
     name: 'Latte',
     description: 'Smooth espresso with steamed milk',
     price: 4.8,
-    image: '/latte.jpg',
+    image: 'https://images.unsplash.com/photo-1561882468-9110e03e0f78?auto=format&fit=crop&w=600&q=80',
     category: 'coffee',
     rating: 4.8,
     reviews: 195,
@@ -53,7 +64,7 @@ let products = [
     name: 'Americano',
     description: 'Espresso with hot water',
     price: 3.5,
-    image: '/americano.jpg',
+    image: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=600&q=80',
     category: 'coffee',
     rating: 4.7,
     reviews: 143,
@@ -118,6 +129,48 @@ let products = [
     caffeine: '180mg',
     badge: '🔥 Strong',
   },
+  {
+    id: 19,
+    name: 'Pistachio Velvet Latte',
+    description: 'Double espresso infused with roasted Sicilian pistachio cream',
+    price: 5.4,
+    image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=600&q=80',
+    category: 'coffee',
+    rating: 4.9,
+    reviews: 214,
+    popular: true,
+    calories: 185,
+    caffeine: '150mg',
+    badge: '🥜 Roasted Pistachio',
+  },
+  {
+    id: 20,
+    name: 'Hazelnut Cortado',
+    description: 'Equal parts rich espresso and warm toasted hazelnut milk',
+    price: 4.6,
+    image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80',
+    category: 'coffee',
+    rating: 4.8,
+    reviews: 152,
+    popular: false,
+    calories: 95,
+    caffeine: '160mg',
+    badge: '🌰 Toasted Hazelnut',
+  },
+  {
+    id: 21,
+    name: 'Spanish Condensed Latte',
+    description: 'Velvety espresso layered with silky sweetened condensed milk',
+    price: 5.1,
+    image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80',
+    category: 'coffee',
+    rating: 4.9,
+    reviews: 241,
+    popular: true,
+    calories: 220,
+    caffeine: '155mg',
+    badge: '✨ Sweet & Bold',
+  },
 
   // Iced Beverages
   {
@@ -125,7 +178,7 @@ let products = [
     name: 'Iced Coffee',
     description: 'Chilled coffee over ice',
     price: 4.2,
-    image: '/iced_coffee.jpg',
+    image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80',
     category: 'iced',
     rating: 4.8,
     reviews: 176,
@@ -190,6 +243,76 @@ let products = [
     caffeine: '140mg',
     badge: '🍦 Blended',
   },
+  {
+    id: 22,
+    name: 'Brown Sugar Oat Shaken',
+    description: 'Blonde espresso shaken with brown sugar, cinnamon, and oat milk',
+    price: 5.4,
+    image: 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=600&q=80',
+    category: 'iced',
+    rating: 4.9,
+    reviews: 278,
+    popular: true,
+    calories: 130,
+    caffeine: '185mg',
+    badge: '🌱 Oat & Cinnamon',
+  },
+  {
+    id: 23,
+    name: 'Pistachio Cream Cold Brew',
+    description: '20-hour cold brew topped with silky pistachio sweet cold foam',
+    price: 5.6,
+    image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=600&q=80',
+    category: 'iced',
+    rating: 4.9,
+    reviews: 221,
+    popular: true,
+    calories: 175,
+    caffeine: '195mg',
+    badge: '🥜 Cold Foam',
+  },
+  {
+    id: 24,
+    name: 'Strawberry Matcha Cloud',
+    description: 'Ceremonial Uji matcha layered over house strawberry purée',
+    price: 5.7,
+    image: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=600&q=80',
+    category: 'iced',
+    rating: 4.9,
+    reviews: 256,
+    popular: true,
+    calories: 165,
+    caffeine: '85mg',
+    badge: '🍓 Layered Matcha',
+  },
+  {
+    id: 25,
+    name: 'Salted Caramel Nitro Brew',
+    description: 'Velvety nitrogen-infused cold brew with sea salt caramel foam',
+    price: 5.3,
+    image: 'https://images.unsplash.com/photo-1497636577773-f1231844b336?auto=format&fit=crop&w=600&q=80',
+    category: 'iced',
+    rating: 4.8,
+    reviews: 164,
+    popular: false,
+    calories: 110,
+    caffeine: '210mg',
+    badge: '⚡ Nitro Draft',
+  },
+  {
+    id: 26,
+    name: 'Mango Passion Iced Espresso',
+    description: 'Crisp sparkling tropical mango & passionfruit topped with espresso',
+    price: 4.9,
+    image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80',
+    category: 'iced',
+    rating: 4.7,
+    reviews: 138,
+    popular: false,
+    calories: 115,
+    caffeine: '140mg',
+    badge: '🥭 Tropical Fusion',
+  },
 
   // Bakery
   {
@@ -197,7 +320,7 @@ let products = [
     name: 'Croissant',
     description: 'Buttery, flaky French pastry',
     price: 3.9,
-    image: '/croissant.jpg',
+    image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80',
     category: 'bakery',
     rating: 4.6,
     reviews: 112,
@@ -211,7 +334,7 @@ let products = [
     name: 'Blueberry Muffin',
     description: 'Freshly baked with real blueberries',
     price: 3.5,
-    image: '/blueberry_muffin.jpg',
+    image: 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&w=600&q=80',
     category: 'bakery',
     rating: 4.7,
     reviews: 98,
@@ -276,6 +399,62 @@ let products = [
     caffeine: '0mg',
     badge: '🥑 Sourdough',
   },
+  {
+    id: 27,
+    name: 'Almond Frangipane Croissant',
+    description: 'Double-baked croissant filled with sweet almond cream & flakes',
+    price: 4.8,
+    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80',
+    category: 'bakery',
+    rating: 4.9,
+    reviews: 193,
+    popular: true,
+    calories: 330,
+    caffeine: '0mg',
+    badge: '🥐 Double Baked',
+  },
+  {
+    id: 28,
+    name: 'Tiramisu Espresso Cake',
+    description: 'Espresso-soaked sponge layered with whipped mascarpone & cocoa',
+    price: 5.8,
+    image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=600&q=80',
+    category: 'bakery',
+    rating: 4.9,
+    reviews: 234,
+    popular: true,
+    calories: 360,
+    caffeine: '35mg',
+    badge: '🍰 Mascarpone',
+  },
+  {
+    id: 29,
+    name: 'Belgian Waffle & Berries',
+    description: 'Crisp pearl-sugar Liège waffle topped with warm berry compote',
+    price: 5.5,
+    image: 'https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&w=600&q=80',
+    category: 'bakery',
+    rating: 4.8,
+    reviews: 162,
+    popular: false,
+    calories: 310,
+    caffeine: '0mg',
+    badge: '🍓 Warm Waffle',
+  },
+  {
+    id: 30,
+    name: 'Smoked Salmon Cream Bagel',
+    description: 'Toasted sesame bagel with herb cream cheese, capers & salmon',
+    price: 6.9,
+    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80',
+    category: 'bakery',
+    rating: 4.9,
+    reviews: 187,
+    popular: true,
+    calories: 340,
+    caffeine: '0mg',
+    badge: '🥯 Savory Artisan',
+  },
 ];
 
 // Get Products
@@ -307,7 +486,10 @@ app.post('/api/products', (req, res) => {
     name,
     description: description || 'Handcrafted Bean Scene specialty',
     price: Number(price),
-    image: image || imageUrl || '/cappuccino.jpg',
+    image:
+      image ||
+      imageUrl ||
+      'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80',
     category: category || 'coffee',
     rating: 4.9,
     reviews: 1,
@@ -396,7 +578,20 @@ app.post('/api/login', (req, res) => {
 
 // Place Order
 app.post('/api/orders', (req, res) => {
-  const { id, items, total, user, email } = req.body;
+  const {
+    id,
+    items,
+    total,
+    user,
+    customer,
+    email,
+    fulfillment,
+    pickupSlot,
+    paymentMethod,
+    transactionId,
+    paymentStatus,
+    currency,
+  } = req.body;
 
   if (!items || items.length === 0) {
     return res.status(400).json({ error: 'Cart is empty' });
@@ -406,8 +601,15 @@ app.post('/api/orders', (req, res) => {
     id: id || `BSC-${Math.floor(1000 + Math.random() * 9000)}`,
     items,
     total,
-    user: user || 'Guest',
+    user: user || customer || 'Guest',
+    customer: customer || user || 'Guest',
     email: email || 'guest@beanscene.com',
+    fulfillment: fulfillment || '🏪 In-Café Pickup',
+    pickupSlot: pickupSlot || '⚡ ASAP (Ready in 5–8 mins)',
+    paymentMethod: paymentMethod || '📱 UPI / QR Pay',
+    transactionId: transactionId || 'UPI-VERIFIED',
+    paymentStatus: paymentStatus || 'Paid ✓',
+    currency: currency || 'USD',
     status: 'Received',
     placedAt: new Date().toISOString(),
   };
@@ -450,11 +652,12 @@ app.get('/api/reservations', (req, res) => {
 });
 
 app.post('/api/reservations', (req, res) => {
-  const { passId, name, zone, guests, time } = req.body;
+  const { passId, name, zone, tableId, guests, time } = req.body;
   const booking = {
     passId: passId || `VIP-${Math.floor(100 + Math.random() * 900)}`,
     name: name || 'Valued Guest',
     zone: zone || 'Sunlit Window Booth',
+    tableId: tableId || 'T1',
     guests: guests || '2 Guests',
     time: time || '10:30 AM',
     createdAt: new Date().toISOString(),
@@ -462,6 +665,37 @@ app.post('/api/reservations', (req, res) => {
 
   reservations.unshift(booking);
   res.status(201).json(booking);
+});
+
+// Live Visitors & Users Activity Tracker
+app.get('/api/visitors', (req, res) => {
+  res.json({
+    status: 'ok',
+    visitors,
+    users: users.map((u) => ({ name: u.name, email: u.email, role: u.role })),
+    subscribers,
+  });
+});
+
+app.post('/api/visitors', (req, res) => {
+  const body = req.body || {};
+  const entry = {
+    id: `vis-${Date.now()}`,
+    name: body.name || 'Guest Visitor',
+    email: body.email || 'Anonymous Session',
+    action: body.action || 'Viewing Bean Scene Live App',
+    device: body.device || 'Web Browser',
+    location: body.location || 'Live Web',
+    time: new Date().toISOString(),
+  };
+  visitors = [entry, ...visitors.slice(0, 49)];
+  res.json({
+    status: 'recorded',
+    visitor: entry,
+    visitors,
+    users: users.map((u) => ({ name: u.name, email: u.email, role: u.role })),
+    subscribers,
+  });
 });
 
 const PORT = 8080;

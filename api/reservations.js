@@ -26,11 +26,12 @@ export default async function handler(req, res) {
   const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {};
 
   if (req.method === 'POST') {
-    const { passId, name, zone, guests, time } = body;
+    const { passId, name, zone, tableId, guests, time } = body;
     const booking = {
       passId: passId || `VIP-${Math.floor(100 + Math.random() * 900)}`,
       name: name || 'Valued Guest',
       zone: zone || 'Sunlit Window Booth',
+      tableId: tableId || 'T1',
       guests: guests || '2 Guests',
       time: time || '10:30 AM',
       createdAt: new Date().toISOString(),

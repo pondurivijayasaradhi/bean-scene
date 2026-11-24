@@ -39,10 +39,12 @@ export default async function handler(req, res) {
       customer,
       email,
       fulfillment,
+      pickupSlot,
       paymentMethod,
       transactionId,
       paymentStatus,
       pointsEarned,
+      currency,
     } = body;
 
     if (!items || items.length === 0) {
@@ -57,9 +59,11 @@ export default async function handler(req, res) {
       customer: customer || user || 'Guest',
       email: email || 'guest@beanscene.com',
       fulfillment: fulfillment || '🏪 In-Café Pickup',
+      pickupSlot: pickupSlot || '⚡ ASAP (Ready in 5–8 mins)',
       paymentMethod: paymentMethod || '📱 UPI / QR Pay',
       transactionId: transactionId || 'UPI-VERIFIED',
       paymentStatus: paymentStatus || 'Paid ✓',
+      currency: currency || 'USD',
       pointsEarned: pointsEarned || Math.max(10, Math.round(Number(total || 0) * 10)),
       status: 'Received',
       placedAt: new Date().toISOString(),

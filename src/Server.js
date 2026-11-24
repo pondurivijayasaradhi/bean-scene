@@ -578,7 +578,20 @@ app.post('/api/login', (req, res) => {
 
 // Place Order
 app.post('/api/orders', (req, res) => {
-  const { id, items, total, user, email, fulfillment, paymentMethod } = req.body;
+  const {
+    id,
+    items,
+    total,
+    user,
+    customer,
+    email,
+    fulfillment,
+    pickupSlot,
+    paymentMethod,
+    transactionId,
+    paymentStatus,
+    currency,
+  } = req.body;
 
   if (!items || items.length === 0) {
     return res.status(400).json({ error: 'Cart is empty' });
@@ -588,11 +601,15 @@ app.post('/api/orders', (req, res) => {
     id: id || `BSC-${Math.floor(1000 + Math.random() * 9000)}`,
     items,
     total,
-    user: user || 'Guest',
-    customer: user || 'Guest',
+    user: user || customer || 'Guest',
+    customer: customer || user || 'Guest',
     email: email || 'guest@beanscene.com',
     fulfillment: fulfillment || '🏪 In-Café Pickup',
+    pickupSlot: pickupSlot || '⚡ ASAP (Ready in 5–8 mins)',
     paymentMethod: paymentMethod || '📱 UPI / QR Pay',
+    transactionId: transactionId || 'UPI-VERIFIED',
+    paymentStatus: paymentStatus || 'Paid ✓',
+    currency: currency || 'USD',
     status: 'Received',
     placedAt: new Date().toISOString(),
   };
@@ -635,11 +652,12 @@ app.get('/api/reservations', (req, res) => {
 });
 
 app.post('/api/reservations', (req, res) => {
-  const { passId, name, zone, guests, time } = req.body;
+  const { passId, name, zone, tableId, guests, time } = req.body;
   const booking = {
     passId: passId || `VIP-${Math.floor(100 + Math.random() * 900)}`,
     name: name || 'Valued Guest',
     zone: zone || 'Sunlit Window Booth',
+    tableId: tableId || 'T1',
     guests: guests || '2 Guests',
     time: time || '10:30 AM',
     createdAt: new Date().toISOString(),

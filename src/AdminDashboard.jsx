@@ -445,59 +445,114 @@ function AdminDashboard() {
 
         {/* 5 Glowing Glass Executive KPI Cards */}
         <div className="admin-kpi-grid">
-          <div className="admin-kpi-card" style={{ borderTop: '3px solid #4ade80' }}>
+          <div
+            className="admin-kpi-card"
+            style={{
+              borderTop: '4px solid #4ade80',
+              borderColor: 'rgba(74, 222, 128, 0.35)',
+              boxShadow: '0 18px 42px rgba(0, 0, 0, 0.55), 0 0 28px rgba(74, 222, 128, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.18)',
+              backgroundImage:
+                "linear-gradient(155deg, rgba(22, 34, 34, 0.88) 0%, rgba(16, 14, 28, 0.92) 100%), radial-gradient(circle at 85% 15%, rgba(74, 222, 128, 0.22), transparent 60%), url('https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
             <div className="admin-kpi-top">
-              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Total Live Revenue</span>
-              <span className="admin-kpi-icon" style={{ color: '#4ade80', background: 'rgba(74, 222, 128, 0.12)' }}>💰</span>
+              <span className="admin-kpi-title" style={{ color: '#bbf7d0' }}>Total Live Revenue</span>
+              <span className="admin-kpi-icon" style={{ color: '#4ade80', background: 'rgba(74, 222, 128, 0.18)', borderColor: 'rgba(74, 222, 128, 0.45)', boxShadow: '0 0 16px rgba(74, 222, 128, 0.3)' }}>💰</span>
             </div>
-            <div className="admin-kpi-value" style={{ color: '#4ade80' }}>${totalRevenue.toFixed(2)}</div>
-            <div className="admin-kpi-sub">
+            <div className="admin-kpi-value" style={{ color: '#4ade80', textShadow: '0 0 24px rgba(74, 222, 128, 0.45)' }}>${totalRevenue.toFixed(2)}</div>
+            <div className="admin-kpi-sub" style={{ color: '#e2e8f0' }}>
               <span style={{ color: '#4ade80' }}>●</span> UPI QR &amp; Card Gateway Active
             </div>
           </div>
 
-          <div className="admin-kpi-card" style={{ borderTop: '3px solid #f5d0a9' }}>
+          <div
+            className="admin-kpi-card"
+            style={{
+              borderTop: '4px solid #f5d0a9',
+              borderColor: 'rgba(245, 208, 169, 0.38)',
+              boxShadow: '0 18px 42px rgba(0, 0, 0, 0.55), 0 0 28px rgba(245, 208, 169, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.18)',
+              backgroundImage:
+                "linear-gradient(155deg, rgba(36, 26, 34, 0.88) 0%, rgba(16, 14, 28, 0.92) 100%), radial-gradient(circle at 85% 15%, rgba(245, 208, 169, 0.24), transparent 60%), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
             <div className="admin-kpi-top">
-              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Total Orders</span>
-              <span className="admin-kpi-icon" style={{ color: '#f5d0a9', background: 'rgba(245, 208, 169, 0.12)' }}>☕</span>
+              <span className="admin-kpi-title" style={{ color: '#fde68a' }}>Total Orders</span>
+              <span className="admin-kpi-icon" style={{ color: '#f5d0a9', background: 'rgba(245, 208, 169, 0.18)', borderColor: 'rgba(245, 208, 169, 0.45)', boxShadow: '0 0 16px rgba(245, 208, 169, 0.3)' }}>☕</span>
             </div>
-            <div className="admin-kpi-value" style={{ color: 'var(--warm)' }}>{orders.length}</div>
-            <div className="admin-kpi-sub">
+            <div className="admin-kpi-value" style={{ color: '#f5d0a9', textShadow: '0 0 24px rgba(245, 208, 169, 0.45)' }}>{orders.length}</div>
+            <div className="admin-kpi-sub" style={{ color: '#e2e8f0' }}>
               <span style={{ color: 'var(--warm)' }}>●</span> 4-Stage Kitchen Prep Queue
             </div>
           </div>
 
-          <div className="admin-kpi-card" style={{ borderTop: '3px solid #c084fc' }}>
+          <div
+            className="admin-kpi-card"
+            style={{
+              borderTop: '4px solid #c084fc',
+              borderColor: 'rgba(192, 132, 252, 0.4)',
+              boxShadow: '0 18px 42px rgba(0, 0, 0, 0.55), 0 0 28px rgba(192, 132, 252, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.18)',
+              backgroundImage:
+                "linear-gradient(155deg, rgba(32, 20, 48, 0.88) 0%, rgba(16, 14, 28, 0.92) 100%), radial-gradient(circle at 85% 15%, rgba(192, 132, 252, 0.25), transparent 60%), url('https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
             <div className="admin-kpi-top">
-              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Active Menu Items</span>
-              <span className="admin-kpi-icon" style={{ color: '#c084fc', background: 'rgba(192, 132, 252, 0.12)' }}>🥐</span>
+              <span className="admin-kpi-title" style={{ color: '#e9d5ff' }}>Active Menu Items</span>
+              <span className="admin-kpi-icon" style={{ color: '#c084fc', background: 'rgba(192, 132, 252, 0.18)', borderColor: 'rgba(192, 132, 252, 0.45)', boxShadow: '0 0 16px rgba(192, 132, 252, 0.3)' }}>🥐</span>
             </div>
-            <div className="admin-kpi-value" style={{ color: '#fff' }}>{products.length}</div>
-            <div className="admin-kpi-sub">
+            <div className="admin-kpi-value" style={{ color: '#fff', textShadow: '0 0 24px rgba(192, 132, 252, 0.5)' }}>{products.length}</div>
+            <div className="admin-kpi-sub" style={{ color: '#e2e8f0' }}>
               <span style={{ color: '#c084fc' }}>●</span> Coffee, Iced &amp; Artisan Bakery
             </div>
           </div>
 
-          <div className="admin-kpi-card" style={{ borderTop: '3px solid #f472b6' }}>
+          <div
+            className="admin-kpi-card"
+            style={{
+              borderTop: '4px solid #f472b6',
+              borderColor: 'rgba(244, 114, 182, 0.38)',
+              boxShadow: '0 18px 42px rgba(0, 0, 0, 0.55), 0 0 28px rgba(244, 114, 182, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.18)',
+              backgroundImage:
+                "linear-gradient(155deg, rgba(38, 18, 38, 0.88) 0%, rgba(16, 14, 28, 0.92) 100%), radial-gradient(circle at 85% 15%, rgba(244, 114, 182, 0.24), transparent 60%), url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=600&q=80')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
             <div className="admin-kpi-top">
-              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Table Reservations</span>
-              <span className="admin-kpi-icon" style={{ color: '#f472b6', background: 'rgba(244, 114, 182, 0.12)' }}>🪑</span>
+              <span className="admin-kpi-title" style={{ color: '#fbcfe8' }}>Table Reservations</span>
+              <span className="admin-kpi-icon" style={{ color: '#f472b6', background: 'rgba(244, 114, 182, 0.18)', borderColor: 'rgba(244, 114, 182, 0.45)', boxShadow: '0 0 16px rgba(244, 114, 182, 0.3)' }}>🪑</span>
             </div>
-            <div className="admin-kpi-value" style={{ color: '#f472b6' }}>{reservations.length}</div>
-            <div className="admin-kpi-sub">
+            <div className="admin-kpi-value" style={{ color: '#f472b6', textShadow: '0 0 24px rgba(244, 114, 182, 0.45)' }}>{reservations.length}</div>
+            <div className="admin-kpi-sub" style={{ color: '#e2e8f0' }}>
               <span style={{ color: '#f472b6' }}>●</span> 4 VIP Café Seating Zones
             </div>
           </div>
 
-          <div className="admin-kpi-card" style={{ borderTop: '3px solid #38bdf8' }}>
+          <div
+            className="admin-kpi-card"
+            style={{
+              borderTop: '4px solid #38bdf8',
+              borderColor: 'rgba(56, 189, 248, 0.38)',
+              boxShadow: '0 18px 42px rgba(0, 0, 0, 0.55), 0 0 28px rgba(56, 189, 248, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.18)',
+              backgroundImage:
+                "linear-gradient(155deg, rgba(18, 28, 44, 0.88) 0%, rgba(16, 14, 28, 0.92) 100%), radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.24), transparent 60%), url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=600&q=80')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
             <div className="admin-kpi-top">
-              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)' }}>Users &amp; Subscribers</span>
-              <span className="admin-kpi-icon" style={{ color: '#38bdf8', background: 'rgba(56, 189, 248, 0.12)' }}>👥</span>
+              <span className="admin-kpi-title" style={{ color: '#bae6fd' }}>Users &amp; Subscribers</span>
+              <span className="admin-kpi-icon" style={{ color: '#38bdf8', background: 'rgba(56, 189, 248, 0.18)', borderColor: 'rgba(56, 189, 248, 0.45)', boxShadow: '0 0 16px rgba(56, 189, 248, 0.3)' }}>👥</span>
             </div>
-            <div className="admin-kpi-value" style={{ color: '#38bdf8' }}>
+            <div className="admin-kpi-value" style={{ color: '#38bdf8', textShadow: '0 0 24px rgba(56, 189, 248, 0.45)' }}>
               {users.length + subscribers.length}
             </div>
-            <div className="admin-kpi-sub">
+            <div className="admin-kpi-sub" style={{ color: '#e2e8f0' }}>
               <span style={{ color: '#38bdf8' }}>●</span> {visitors.length} Active Visitor Sessions
             </div>
           </div>
@@ -506,90 +561,184 @@ function AdminDashboard() {
         {/* Visual Revenue, Category Share & Payment Gateway Analytics Charts */}
         <div className="admin-charts-grid">
           {/* Left Chart Card: Menu & Category Distribution */}
-          <div className="admin-glass-panel" style={{ padding: '1.35rem 1.6rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <div
+            className="admin-glass-panel admin-chart-card"
+            style={{
+              padding: '1.5rem 1.75rem',
+              borderTop: '4px solid #f5d0a9',
+              borderColor: 'rgba(245, 208, 169, 0.38)',
+              boxShadow: '0 22px 50px rgba(0, 0, 0, 0.55), 0 0 32px rgba(245, 208, 169, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.18)',
+              backgroundImage:
+                "linear-gradient(155deg, rgba(28, 20, 44, 0.88) 0%, rgba(16, 13, 28, 0.92) 100%), radial-gradient(circle at 85% 15%, rgba(245, 208, 169, 0.22), transparent 60%), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1000&q=80')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.15rem' }}>
               <div>
-                <h3 style={{ color: '#fff', fontSize: '1.05rem', margin: 0 }}>📊 Category &amp; Menu Share</h3>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                  Distribution across {products.length} active artisan specials
+                <h3 className="admin-chart-title">📊 Category &amp; Menu Share</h3>
+                <span className="admin-chart-sub">
+                  Distribution across <strong style={{ color: '#f5d0a9' }}>{products.length} active artisan specials</strong>
                 </span>
               </div>
-              <span className="spec-pill">30-Item Catalog</span>
+              <span
+                className="spec-pill"
+                style={{
+                  background: 'rgba(245, 208, 169, 0.16)',
+                  borderColor: 'rgba(245, 208, 169, 0.48)',
+                  color: '#fde68a',
+                  fontWeight: 700,
+                  boxShadow: '0 0 16px rgba(245, 208, 169, 0.22)',
+                }}
+              >
+                ✨ {products.length}-Item Catalog
+              </span>
             </div>
 
             <div className="admin-chart-bars">
               <div className="admin-chart-row">
                 <div className="admin-chart-label-row">
-                  <span>☕ Hot Espresso &amp; Lattes ({coffeeCount} items)</span>
-                  <strong style={{ color: '#f5d0a9' }}>{coffeePct}%</strong>
+                  <span className="admin-chart-row-title">☕ Hot Espresso &amp; Lattes ({coffeeCount} items)</span>
+                  <strong className="admin-chart-pct" style={{ color: '#fde68a', textShadow: '0 0 14px rgba(245, 208, 169, 0.45)' }}>{coffeePct}%</strong>
                 </div>
                 <div className="admin-bar-track">
-                  <div className="admin-bar-fill" style={{ width: `${coffeePct}%`, background: 'linear-gradient(90deg, #f5d0a9, #f59e0b)' }} />
+                  <div
+                    className="admin-bar-fill"
+                    style={{
+                      width: `${coffeePct}%`,
+                      background: 'linear-gradient(90deg, #fde68a, #f59e0b)',
+                      boxShadow: '0 0 14px rgba(245, 158, 11, 0.55)',
+                    }}
+                  />
                 </div>
               </div>
 
               <div className="admin-chart-row">
                 <div className="admin-chart-label-row">
-                  <span>🧊 Iced &amp; Cold Brews ({icedCount} items)</span>
-                  <strong style={{ color: '#38bdf8' }}>{icedPct}%</strong>
+                  <span className="admin-chart-row-title">🧊 Iced &amp; Cold Brews ({icedCount} items)</span>
+                  <strong className="admin-chart-pct" style={{ color: '#7dd3fc', textShadow: '0 0 14px rgba(56, 189, 248, 0.45)' }}>{icedPct}%</strong>
                 </div>
                 <div className="admin-bar-track">
-                  <div className="admin-bar-fill" style={{ width: `${icedPct}%`, background: 'linear-gradient(90deg, #38bdf8, #818cf8)' }} />
+                  <div
+                    className="admin-bar-fill"
+                    style={{
+                      width: `${icedPct}%`,
+                      background: 'linear-gradient(90deg, #38bdf8, #818cf8)',
+                      boxShadow: '0 0 14px rgba(56, 189, 248, 0.55)',
+                    }}
+                  />
                 </div>
               </div>
 
               <div className="admin-chart-row">
                 <div className="admin-chart-label-row">
-                  <span>🥐 Artisan French Bakery ({bakeryCount} items)</span>
-                  <strong style={{ color: '#c084fc' }}>{bakeryPct}%</strong>
+                  <span className="admin-chart-row-title">🥐 Artisan French Bakery ({bakeryCount} items)</span>
+                  <strong className="admin-chart-pct" style={{ color: '#e9d5ff', textShadow: '0 0 14px rgba(192, 132, 252, 0.5)' }}>{bakeryPct}%</strong>
                 </div>
                 <div className="admin-bar-track">
-                  <div className="admin-bar-fill" style={{ width: `${bakeryPct}%`, background: 'linear-gradient(90deg, #c084fc, #f472b6)' }} />
+                  <div
+                    className="admin-bar-fill"
+                    style={{
+                      width: `${bakeryPct}%`,
+                      background: 'linear-gradient(90deg, #c084fc, #f472b6)',
+                      boxShadow: '0 0 14px rgba(244, 114, 182, 0.55)',
+                    }}
+                  />
                 </div>
               </div>
             </div>
           </div>
 
           {/* Right Chart Card: Payment Gateway & Revenue Split */}
-          <div className="admin-glass-panel" style={{ padding: '1.35rem 1.6rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <div
+            className="admin-glass-panel admin-chart-card"
+            style={{
+              padding: '1.5rem 1.75rem',
+              borderTop: '4px solid #4ade80',
+              borderColor: 'rgba(74, 222, 128, 0.38)',
+              boxShadow: '0 22px 50px rgba(0, 0, 0, 0.55), 0 0 32px rgba(74, 222, 128, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.18)',
+              backgroundImage:
+                "linear-gradient(155deg, rgba(20, 32, 38, 0.88) 0%, rgba(16, 13, 28, 0.92) 100%), radial-gradient(circle at 85% 15%, rgba(74, 222, 128, 0.22), transparent 60%), url('https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1000&q=80')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.15rem' }}>
               <div>
-                <h3 style={{ color: '#fff', fontSize: '1.05rem', margin: 0 }}>💳 Payment Gateway Split</h3>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                  {totalOrdersCount > 0 ? `Live split across ${totalOrdersCount} order(s)` : 'Projected checkout channel share'}
+                <h3 className="admin-chart-title">💳 Payment Gateway Split</h3>
+                <span className="admin-chart-sub">
+                  {totalOrdersCount > 0 ? (
+                    <>
+                      Live split across <strong style={{ color: '#4ade80' }}>{totalOrdersCount} order(s)</strong>
+                    </>
+                  ) : (
+                    'Projected checkout channel share'
+                  )}
                 </span>
               </div>
-              <span className="spec-pill" style={{ color: '#4ade80' }}>🔒 SSL Active</span>
+              <span
+                className="spec-pill"
+                style={{
+                  background: 'rgba(74, 222, 128, 0.16)',
+                  borderColor: 'rgba(74, 222, 128, 0.48)',
+                  color: '#4ade80',
+                  fontWeight: 700,
+                  boxShadow: '0 0 16px rgba(74, 222, 128, 0.25)',
+                }}
+              >
+                🔒 SSL Active
+              </span>
             </div>
 
             <div className="admin-chart-bars">
               <div className="admin-chart-row">
                 <div className="admin-chart-label-row">
-                  <span>📱 UPI / QR Instant Pay ({upiOrders} orders)</span>
-                  <strong style={{ color: '#4ade80' }}>{upiPct}%</strong>
+                  <span className="admin-chart-row-title">📱 UPI / QR Instant Pay ({upiOrders} orders)</span>
+                  <strong className="admin-chart-pct" style={{ color: '#4ade80', textShadow: '0 0 14px rgba(74, 222, 128, 0.5)' }}>{upiPct}%</strong>
                 </div>
                 <div className="admin-bar-track">
-                  <div className="admin-bar-fill" style={{ width: `${upiPct}%`, background: 'linear-gradient(90deg, #4ade80, #10b981)' }} />
+                  <div
+                    className="admin-bar-fill"
+                    style={{
+                      width: `${upiPct}%`,
+                      background: 'linear-gradient(90deg, #4ade80, #10b981)',
+                      boxShadow: '0 0 14px rgba(74, 222, 128, 0.6)',
+                    }}
+                  />
                 </div>
               </div>
 
               <div className="admin-chart-row">
                 <div className="admin-chart-label-row">
-                  <span>💳 3D Platinum Card ({cardOrders} orders)</span>
-                  <strong style={{ color: '#c084fc' }}>{cardPct}%</strong>
+                  <span className="admin-chart-row-title">💳 3D Platinum Card ({cardOrders} orders)</span>
+                  <strong className="admin-chart-pct" style={{ color: '#e9d5ff', textShadow: '0 0 14px rgba(192, 132, 252, 0.45)' }}>{cardPct}%</strong>
                 </div>
                 <div className="admin-bar-track">
-                  <div className="admin-bar-fill" style={{ width: `${cardPct}%`, background: 'linear-gradient(90deg, #c084fc, #a855f7)' }} />
+                  <div
+                    className="admin-bar-fill"
+                    style={{
+                      width: `${cardPct}%`,
+                      background: 'linear-gradient(90deg, #c084fc, #a855f7)',
+                      boxShadow: '0 0 14px rgba(192, 132, 252, 0.55)',
+                    }}
+                  />
                 </div>
               </div>
 
               <div className="admin-chart-row">
                 <div className="admin-chart-label-row">
-                  <span>💵 Pay at Counter ({counterOrders} orders)</span>
-                  <strong style={{ color: '#f5d0a9' }}>{counterPct}%</strong>
+                  <span className="admin-chart-row-title">💵 Pay at Counter ({counterOrders} orders)</span>
+                  <strong className="admin-chart-pct" style={{ color: '#fde68a', textShadow: '0 0 14px rgba(245, 208, 169, 0.45)' }}>{counterPct}%</strong>
                 </div>
                 <div className="admin-bar-track">
-                  <div className="admin-bar-fill" style={{ width: `${counterPct}%`, background: 'linear-gradient(90deg, #f5d0a9, #fb923c)' }} />
+                  <div
+                    className="admin-bar-fill"
+                    style={{
+                      width: `${counterPct}%`,
+                      background: 'linear-gradient(90deg, #fde68a, #fb923c)',
+                      boxShadow: '0 0 14px rgba(251, 146, 60, 0.55)',
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -648,21 +797,53 @@ function AdminDashboard() {
         {activeTab === 'products' && (
           <>
             {/* Form Card */}
-            <div className="admin-glass-panel" style={{ marginBottom: '2rem' }}>
-              <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--warm)', marginBottom: '1.25rem' }}>
-                {isEditing ? '✏️ Edit Product' : '➕ Add New Specialty Product'}
-              </h2>
+            <div
+              className="admin-glass-panel admin-product-form-card"
+              style={{
+                marginBottom: '2rem',
+                borderTop: '4px solid #c084fc',
+                borderColor: 'rgba(192, 132, 252, 0.42)',
+                boxShadow:
+                  '0 24px 55px rgba(0, 0, 0, 0.58), 0 0 36px rgba(192, 132, 252, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                backgroundImage:
+                  "linear-gradient(155deg, rgba(28, 20, 48, 0.88) 0%, rgba(16, 13, 28, 0.92) 100%), radial-gradient(circle at 85% 15%, rgba(192, 132, 252, 0.24), transparent 60%), url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1400&q=85')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <span className="modal-badge" style={{ marginBottom: '0.35rem' }}>
+                    {isEditing ? '✨ Editing Catalog Item' : '✨ Roastery Menu Studio'}
+                  </span>
+                  <h2 className="admin-form-highlight-title" style={{ margin: 0 }}>
+                    {isEditing ? '✏️ Edit Product' : '➕ Add New Specialty Product'}
+                  </h2>
+                </div>
+                <span
+                  className="spec-pill"
+                  style={{
+                    background: 'rgba(192, 132, 252, 0.16)',
+                    borderColor: 'rgba(192, 132, 252, 0.48)',
+                    color: '#e9d5ff',
+                    fontWeight: 700,
+                    boxShadow: '0 0 16px rgba(192, 132, 252, 0.24)',
+                  }}
+                >
+                  ⚡ Instant Cloud &amp; Menu Sync
+                </span>
+              </div>
 
               <form
                 onSubmit={handleSubmit}
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                  gap: '1.1rem',
+                  gap: '1.15rem',
                 }}
               >
                 <div>
-                  <label className="form-label">Product Name *</label>
+                  <label className="form-label admin-highlight-label">Product Name *</label>
                   <input
                     type="text"
                     name="name"
@@ -670,12 +851,12 @@ function AdminDashboard() {
                     onChange={handleChange}
                     required
                     placeholder="e.g. Hazelnut Cortado"
-                    className="modal-input"
+                    className="modal-input admin-highlight-input"
                   />
                 </div>
 
                 <div>
-                  <label className="form-label">Price ($) *</label>
+                  <label className="form-label admin-highlight-label">Price ($) *</label>
                   <input
                     type="number"
                     name="price"
@@ -684,13 +865,13 @@ function AdminDashboard() {
                     required
                     step="0.01"
                     placeholder="4.90"
-                    className="modal-input"
+                    className="modal-input admin-highlight-input"
                   />
                 </div>
 
                 <div>
-                  <label className="form-label">Category</label>
-                  <select name="category" value={form.category} onChange={handleChange} className="modal-input">
+                  <label className="form-label admin-highlight-label">Category</label>
+                  <select name="category" value={form.category} onChange={handleChange} className="modal-input admin-highlight-input">
                     <option value="coffee">☕ Hot Coffee</option>
                     <option value="iced">🧊 Iced Beverage</option>
                     <option value="bakery">🥐 Bakery</option>
@@ -698,19 +879,19 @@ function AdminDashboard() {
                 </div>
 
                 <div>
-                  <label className="form-label">Image URL</label>
+                  <label className="form-label admin-highlight-label">Image URL</label>
                   <input
                     type="text"
                     name="imageUrl"
                     value={form.imageUrl}
                     onChange={handleChange}
                     placeholder="https://images.unsplash.com/..."
-                    className="modal-input"
+                    className="modal-input admin-highlight-input"
                   />
                 </div>
 
                 <div style={{ gridColumn: '1 / -1' }}>
-                  <label className="form-label">Description *</label>
+                  <label className="form-label admin-highlight-label">Description *</label>
                   <textarea
                     name="description"
                     value={form.description}
@@ -718,11 +899,11 @@ function AdminDashboard() {
                     required
                     rows="2"
                     placeholder="Describe flavor notes and ingredients..."
-                    className="modal-input"
+                    className="modal-input admin-highlight-input"
                   />
                 </div>
 
-                <div style={{ gridColumn: '1 / -1', display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <div className="admin-featured-toggle-row" style={{ gridColumn: '1 / -1' }}>
                   <input
                     type="checkbox"
                     id="featuredCheck"
@@ -731,14 +912,22 @@ function AdminDashboard() {
                     onChange={handleChange}
                     style={{ width: 18, height: 18, accentColor: '#c084fc', cursor: 'pointer' }}
                   />
-                  <label htmlFor="featuredCheck" style={{ fontWeight: 600, cursor: 'pointer' }}>
-                    Mark as Popular / Featured on Menu
+                  <label htmlFor="featuredCheck" style={{ fontWeight: 700, color: '#fde68a', cursor: 'pointer' }}>
+                    ⭐ Mark as Popular / Featured on Menu
                   </label>
                 </div>
 
-                <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '0.85rem', marginTop: '0.5rem' }}>
-                  <button type="submit" className="btn-primary" style={{ padding: '0.75rem 1.8rem', fontSize: '0.95rem' }}>
-                    {isEditing ? 'Update Product' : 'Add Product'}
+                <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '0.85rem', marginTop: '0.35rem' }}>
+                  <button
+                    type="submit"
+                    className="btn-primary"
+                    style={{
+                      padding: '0.8rem 1.95rem',
+                      fontSize: '0.96rem',
+                      boxShadow: '0 10px 28px rgba(192, 132, 252, 0.45)',
+                    }}
+                  >
+                    {isEditing ? '✨ Update Product' : '➕ Add Product'}
                   </button>
                   {isEditing && (
                     <button
@@ -755,11 +944,26 @@ function AdminDashboard() {
             </div>
 
             {/* Products Table */}
-            <div className="admin-glass-panel" style={{ padding: 0, overflow: 'hidden' }}>
+            <div
+              className="admin-glass-panel admin-catalog-table-card"
+              style={{
+                padding: 0,
+                overflow: 'hidden',
+                borderTop: '4px solid #f5d0a9',
+                borderColor: 'rgba(245, 208, 169, 0.38)',
+                boxShadow:
+                  '0 24px 55px rgba(0, 0, 0, 0.58), 0 0 36px rgba(245, 208, 169, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.18)',
+                backgroundImage:
+                  "linear-gradient(160deg, rgba(24, 18, 40, 0.91) 0%, rgba(15, 12, 26, 0.94) 100%), radial-gradient(circle at 88% 8%, rgba(245, 208, 169, 0.18), transparent 55%), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1400&q=80')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
               <div
                 style={{
                   padding: '1.5rem 2rem',
-                  borderBottom: '1px solid rgba(255,255,255,0.08)',
+                  borderBottom: '1px solid rgba(245, 208, 169, 0.22)',
+                  background: 'linear-gradient(135deg, rgba(34, 24, 54, 0.72), rgba(20, 15, 34, 0.78))',
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
@@ -767,16 +971,19 @@ function AdminDashboard() {
                   gap: '1rem',
                 }}
               >
-                <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#fff', margin: 0 }}>
-                  All Menu Products ({filteredProducts.length})
-                </h2>
+                <div>
+                  <span className="modal-badge" style={{ marginBottom: '0.3rem' }}>☕ Live Menu Inventory</span>
+                  <h2 className="admin-form-highlight-title" style={{ margin: 0 }}>
+                    All Menu Products ({filteredProducts.length})
+                  </h2>
+                </div>
                 <input
                   type="text"
-                  className="modal-input"
+                  className="modal-input admin-highlight-input"
                   placeholder="🔍 Filter by name or category..."
                   value={searchFilter}
                   onChange={(e) => setSearchFilter(e.target.value)}
-                  style={{ maxWidth: 280 }}
+                  style={{ maxWidth: 295 }}
                 />
               </div>
 
@@ -784,11 +991,11 @@ function AdminDashboard() {
                 <p style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text-muted)' }}>Loading...</p>
               ) : (
                 <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                  <table className="admin-products-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                     <thead>
-                      <tr style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                      <tr className="admin-table-head-row">
                         <th style={{ padding: '1rem 1.5rem' }}>Image</th>
-                        <th style={{ padding: '1rem 1.5rem' }}>Name</th>
+                        <th style={{ padding: '1rem 1.5rem' }}>Name &amp; Flavor Notes</th>
                         <th style={{ padding: '1rem 1.5rem' }}>Category</th>
                         <th style={{ padding: '1rem 1.5rem' }}>Price</th>
                         <th style={{ padding: '1rem 1.5rem' }}>Featured</th>
@@ -796,85 +1003,135 @@ function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredProducts.map((p) => (
-                        <tr key={p.id} style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                          <td style={{ padding: '0.9rem 1.5rem' }}>
-                            <img
-                              src={p.imageUrl || p.image}
-                              alt={p.name}
-                              style={{ width: 54, height: 54, objectFit: 'cover', borderRadius: 12 }}
-                            />
-                          </td>
-                          <td style={{ padding: '0.9rem 1.5rem', fontWeight: 600, color: '#fff' }}>
-                            <div>{p.name}</div>
-                            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 400 }}>
-                              {p.description}
-                            </div>
-                          </td>
-                          <td style={{ padding: '0.9rem 1.5rem', textTransform: 'capitalize', color: 'var(--text-muted)' }}>
-                            {p.category || 'coffee'}
-                          </td>
-                          <td style={{ padding: '0.9rem 1.5rem', fontWeight: 700, color: 'var(--warm)' }}>
-                            ${Number(p.price).toFixed(2)}
-                          </td>
-                          <td style={{ padding: '0.9rem 1.5rem' }}>
-                            {p.featured || p.popular ? (
+                      {filteredProducts.map((p) => {
+                        const cat = (p.category || 'coffee').toLowerCase();
+                        const catStyle =
+                          cat === 'iced'
+                            ? {
+                                bg: 'rgba(56, 189, 248, 0.16)',
+                                border: 'rgba(56, 189, 248, 0.45)',
+                                color: '#7dd3fc',
+                                label: '🧊 Iced',
+                              }
+                            : cat === 'bakery'
+                            ? {
+                                bg: 'rgba(192, 132, 252, 0.16)',
+                                border: 'rgba(192, 132, 252, 0.45)',
+                                color: '#e9d5ff',
+                                label: '🥐 Bakery',
+                              }
+                            : {
+                                bg: 'rgba(245, 208, 169, 0.16)',
+                                border: 'rgba(245, 208, 169, 0.45)',
+                                color: '#fde68a',
+                                label: '☕ Coffee',
+                              };
+                        return (
+                          <tr key={p.id} className="admin-table-body-row">
+                            <td style={{ padding: '0.95rem 1.5rem' }}>
+                              <img
+                                src={p.imageUrl || p.image}
+                                alt={p.name}
+                                className="admin-product-thumb"
+                              />
+                            </td>
+                            <td style={{ padding: '0.95rem 1.5rem' }}>
+                              <div className="admin-product-row-name">{p.name}</div>
+                              <div className="admin-product-row-desc">{p.description}</div>
+                            </td>
+                            <td style={{ padding: '0.95rem 1.5rem' }}>
                               <span
                                 style={{
-                                  background: 'rgba(52, 211, 153, 0.16)',
-                                  color: '#6ee7b7',
-                                  padding: '0.25rem 0.75rem',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '0.3rem',
+                                  background: catStyle.bg,
+                                  border: `1px solid ${catStyle.border}`,
+                                  color: catStyle.color,
+                                  padding: '0.28rem 0.78rem',
                                   borderRadius: 999,
-                                  fontSize: '0.75rem',
-                                  fontWeight: 600,
+                                  fontSize: '0.78rem',
+                                  fontWeight: 700,
                                 }}
                               >
-                                Yes
+                                {catStyle.label}
                               </span>
-                            ) : (
-                              <span
-                                style={{
-                                  background: 'rgba(255, 255, 255, 0.06)',
-                                  color: 'var(--text-muted)',
-                                  padding: '0.25rem 0.75rem',
-                                  borderRadius: 999,
-                                  fontSize: '0.75rem',
-                                }}
-                              >
-                                No
+                            </td>
+                            <td style={{ padding: '0.95rem 1.5rem' }}>
+                              <span className="admin-product-price-pill">
+                                ${Number(p.price).toFixed(2)}
                               </span>
-                            )}
-                          </td>
-                          <td style={{ padding: '0.9rem 1.5rem' }}>
-                            <div style={{ display: 'flex', gap: '0.5rem' }}>
-                              <button
-                                type="button"
-                                onClick={() => handleEdit(p)}
-                                className="order-btn"
-                                style={{ padding: '0.35rem 0.85rem', fontSize: '0.8rem' }}
-                              >
-                                Edit
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => handleDelete(p.id)}
-                                style={{
-                                  background: 'rgba(248, 113, 113, 0.15)',
-                                  border: '1px solid rgba(248, 113, 113, 0.4)',
-                                  color: '#fca5a5',
-                                  padding: '0.35rem 0.85rem',
-                                  borderRadius: 999,
-                                  fontSize: '0.8rem',
-                                  fontWeight: 600,
-                                  cursor: 'pointer',
-                                }}
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+                            </td>
+                            <td style={{ padding: '0.95rem 1.5rem' }}>
+                              {p.featured || p.popular ? (
+                                <span
+                                  style={{
+                                    background: 'rgba(74, 222, 128, 0.18)',
+                                    border: '1px solid rgba(74, 222, 128, 0.48)',
+                                    color: '#4ade80',
+                                    padding: '0.28rem 0.82rem',
+                                    borderRadius: 999,
+                                    fontSize: '0.76rem',
+                                    fontWeight: 800,
+                                    boxShadow: '0 0 14px rgba(74, 222, 128, 0.25)',
+                                  }}
+                                >
+                                  ★ Yes
+                                </span>
+                              ) : (
+                                <span
+                                  style={{
+                                    background: 'rgba(255, 255, 255, 0.08)',
+                                    border: '1px solid rgba(255, 255, 255, 0.18)',
+                                    color: '#cbd5e1',
+                                    padding: '0.28rem 0.82rem',
+                                    borderRadius: 999,
+                                    fontSize: '0.76rem',
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  No
+                                </span>
+                              )}
+                            </td>
+                            <td style={{ padding: '0.95rem 1.5rem' }}>
+                              <div style={{ display: 'flex', gap: '0.55rem' }}>
+                                <button
+                                  type="button"
+                                  onClick={() => handleEdit(p)}
+                                  className="order-btn"
+                                  style={{
+                                    padding: '0.38rem 0.95rem',
+                                    fontSize: '0.8rem',
+                                    fontWeight: 700,
+                                    background: 'linear-gradient(135deg, rgba(192, 132, 252, 0.24), rgba(245, 208, 169, 0.18))',
+                                    borderColor: 'rgba(192, 132, 252, 0.55)',
+                                    color: '#f8f5ff',
+                                  }}
+                                >
+                                  ✏️ Edit
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDelete(p.id)}
+                                  style={{
+                                    background: 'rgba(248, 113, 113, 0.2)',
+                                    border: '1px solid rgba(248, 113, 113, 0.5)',
+                                    color: '#fecaca',
+                                    padding: '0.38rem 0.95rem',
+                                    borderRadius: 999,
+                                    fontSize: '0.8rem',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  🗑️ Delete
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
