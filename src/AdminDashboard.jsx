@@ -173,10 +173,22 @@ function AdminDashboard() {
           }
         }
         if (ordRes.status === 'fulfilled' && Array.isArray(ordRes.value.data) && ordRes.value.data.length > 0) {
-          setOrders(ordRes.value.data);
+          setOrders((prev) => {
+            const remote = ordRes.value.data;
+            const localOnly = prev.filter((loc) => !remote.some((rem) => String(rem.id) === String(loc.id)));
+            const mergedOrders = [...localOnly, ...remote];
+            localStorage.setItem('beanSceneOrders', JSON.stringify(mergedOrders));
+            return mergedOrders;
+          });
         }
         if (resvRes.status === 'fulfilled' && Array.isArray(resvRes.value.data) && resvRes.value.data.length > 0) {
-          setReservations(resvRes.value.data);
+          setReservations((prev) => {
+            const remote = resvRes.value.data;
+            const localOnly = prev.filter((loc) => !remote.some((rem) => String(rem.passId) === String(loc.passId)));
+            const mergedResv = [...localOnly, ...remote];
+            localStorage.setItem('beanSceneReservations', JSON.stringify(mergedResv));
+            return mergedResv;
+          });
         }
         if (visRes.status === 'fulfilled' && visRes.value.data) {
           if (Array.isArray(visRes.value.data.visitors) && visRes.value.data.visitors.length > 0) {

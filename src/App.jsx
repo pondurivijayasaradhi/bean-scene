@@ -118,10 +118,32 @@ if (!API_BASE_URL) {
           responseData = [];
         }
       } else if (method === 'post') {
+        const createdOrder = { id: body.id || `BSC-${Date.now()}`, ...body, status: body.status || 'Received' };
+        try {
+          const prevOrders = JSON.parse(localStorage.getItem('beanSceneOrders') || '[]');
+          const exists = prevOrders.some((o) => String(o.id) === String(createdOrder.id));
+          if (!exists) {
+            localStorage.setItem('beanSceneOrders', JSON.stringify([createdOrder, ...prevOrders]));
+          }
+        } catch {
+          // Ignore storage error
+        }
         responseData = {
           message: 'Order placed successfully!',
-          order: { id: body.id || `BSC-${Date.now()}`, ...body, status: 'Received' },
+          order: createdOrder,
         };
+      } else if (method === 'patch') {
+        const orderIdFromUrl = url.split('/api/orders/')[1]?.split('?')[0] || body.id;
+        try {
+          const prevOrders = JSON.parse(localStorage.getItem('beanSceneOrders') || '[]');
+          const nextOrders = prevOrders.map((o) =>
+            String(o.id) === String(orderIdFromUrl) ? { ...o, status: body.status || o.status } : o
+          );
+          localStorage.setItem('beanSceneOrders', JSON.stringify(nextOrders));
+        } catch {
+          // Ignore storage error
+        }
+        responseData = { id: orderIdFromUrl, ...body };
       } else {
         responseData = { ...body };
       }
@@ -200,10 +222,12 @@ const CATEGORIES = [
 ];
 
 const MOOD_PAIRINGS = [
-  { key: 'focus', label: '⚡ Power Focus',       drinkId: 10, foodId: 5  },
-  { key: 'sweet', label: '🍯 Sweet & Cozy',      drinkId: 7,  foodId: 16 },
-  { key: 'chill', label: '🧊 Cool & Refreshing', drinkId: 11, foodId: 6  },
-  { key: 'zen',   label: '🍵 Zen & Savory',      drinkId: 13, foodId: 18 },
+  { key: 'focus',     label: '⚡ Power Focus',       drinkId: 10, foodId: 5  },
+  { key: 'sweet',     label: '🍯 Sweet & Cozy',      drinkId: 7,  foodId: 16 },
+  { key: 'pistachio', label: '🥜 Pistachio Luxe',    drinkId: 19, foodId: 27 },
+  { key: 'chill',     label: '🧊 Cool & Refreshing', drinkId: 11, foodId: 6  },
+  { key: 'berry',     label: '🍓 Berry Matcha Bliss', drinkId: 24, foodId: 28 },
+  { key: 'zen',       label: '🍵 Zen & Savory',      drinkId: 13, foodId: 30 },
 ];
 
 // Visual Cup Builder Options
@@ -722,23 +746,39 @@ function App() {
     });
   };
 
-  // Quick 1-Click Add to Cart from Menu Card
+  // Quick 1-Click Add to Cart from Menu Card (merges quantities if already in cart)
   const handleQuickAdd = (product) => {
-    setCart((prev) => [
-      ...prev,
-      {
-        id: `${product.id}-${prev.length + 1}-${product.name}`,
-        productId: product.id,
-        name: product.name,
-        image: product.image,
-        size: 'regular',
-        milk: product.category === 'bakery' ? null : 'whole',
-        notes: '',
-        unitPrice: product.price,
-        price: product.price,
-        quantity: 1,
-      },
-    ]);
+    const defaultSize = 'regular';
+    const defaultMilk = product.category === 'bakery' ? null : 'whole';
+    setCart((prev) => {
+      const existingIdx = prev.findIndex(
+        (item) =>
+          item.productId === product.id &&
+          item.size === defaultSize &&
+          item.milk === defaultMilk &&
+          !item.notes
+      );
+      if (existingIdx > -1) {
+        return prev.map((item, idx) =>
+          idx === existingIdx ? { ...item, quantity: (item.quantity || 1) + 1 } : item
+        );
+      }
+      return [
+        ...prev,
+        {
+          id: `${product.id}-${prev.length + 1}-${product.name}`,
+          productId: product.id,
+          name: product.name,
+          image: product.image,
+          size: defaultSize,
+          milk: defaultMilk,
+          notes: '',
+          unitPrice: product.price,
+          price: product.price,
+          quantity: 1,
+        },
+      ];
+    });
     showToast(`Quick-added ${product.name} to cart!`);
   };
 
@@ -993,8 +1033,11 @@ function App() {
         .slice(0, 3);
       replyText = '⚡ Need a serious boost? These have our highest caffeine kick (165mg–200mg):';
     } else if (lower.includes('oat') || lower.includes('vegan') || lower.includes('matcha') || lower.includes('milk')) {
-      suggested = products.filter((p) => p.id === 1 || p.id === 13 || p.id === 9);
-      replyText = '🌱 Our Cappuccino, Uji Matcha Latte, and Flat White pair wonderfully with creamy Oat or Almond milk:';
+      suggested = products.filter((p) => p.id === 22 || p.id === 24 || p.id === 13 || p.id === 1).slice(0, 3);
+      replyText = '🌱 Our Brown Sugar Oat Shaken Espresso, Strawberry Matcha Cloud, and Cappuccino are incredible with Oat milk:';
+    } else if (lower.includes('pistachio') || lower.includes('nut') || lower.includes('hazelnut')) {
+      suggested = products.filter((p) => p.id === 19 || p.id === 23 || p.id === 20 || p.id === 27).slice(0, 3);
+      replyText = '🥜 Here are our rich roasted Pistachio & Toasted Hazelnut artisan creations:';
     } else if (lower.includes('bakery') || lower.includes('pastry') || lower.includes('food') || lower.includes('eat') || lower.includes('croissant')) {
       suggested = products.filter((p) => p.category === 'bakery').slice(0, 3);
       replyText = '🥐 Fresh out of our ovens this morning:';
@@ -1213,10 +1256,15 @@ function App() {
   };
 
   // Calculate dynamic unit and total price in modal
-  const isBakeryItem = activeItem?.category === 'bakery' ||
+  const isBakeryItem =
+    activeItem?.category === 'bakery' ||
     activeItem?.name?.toLowerCase().includes('croissant') ||
-    activeItem?.name?.toLowerCase().includes('muffin');
-  const sizeCost = orderSize === 'large' ? 0.80 : 0;
+    activeItem?.name?.toLowerCase().includes('muffin') ||
+    activeItem?.name?.toLowerCase().includes('cake') ||
+    activeItem?.name?.toLowerCase().includes('waffle') ||
+    activeItem?.name?.toLowerCase().includes('bagel') ||
+    activeItem?.name?.toLowerCase().includes('toast');
+  const sizeCost = !isBakeryItem && orderSize === 'large' ? 0.80 : 0;
   const milkCost = !isBakeryItem && (orderMilk === 'oat' || orderMilk === 'almond') ? 0.50 : 0;
   const modalUnitPrice = (activeItem?.price || 0) + sizeCost + milkCost;
   const modalTotalPrice = modalUnitPrice * orderQty;
@@ -1232,21 +1280,38 @@ function App() {
     return earned;
   };
 
-  // Add customized item from modal to cart
+  // Add customized item from modal to cart (merges quantities if identical config exists)
   const handleAddModalToCart = () => {
-    const customizedItem = {
-      id: `${activeItem.id}-${Date.now()}`,
-      productId: activeItem.id,
-      name: activeItem.name,
-      image: activeItem.image || DEFAULT_PRODUCTS.find(p => p.id === activeItem.id)?.image,
-      size: orderSize,
-      milk: isBakeryItem ? null : orderMilk,
-      notes: orderNotes,
-      unitPrice: modalUnitPrice,
-      price: modalUnitPrice,
-      quantity: orderQty,
-    };
-    setCart((prev) => [...prev, customizedItem]);
+    const cleanNotes = orderNotes.trim();
+    const itemSize = isBakeryItem ? 'regular' : orderSize;
+    const itemMilk = isBakeryItem ? null : orderMilk;
+    setCart((prev) => {
+      const existingIdx = prev.findIndex(
+        (item) =>
+          item.productId === activeItem.id &&
+          item.size === itemSize &&
+          item.milk === itemMilk &&
+          (item.notes || '') === cleanNotes
+      );
+      if (existingIdx > -1) {
+        return prev.map((item, idx) =>
+          idx === existingIdx ? { ...item, quantity: (item.quantity || 1) + orderQty } : item
+        );
+      }
+      const customizedItem = {
+        id: `${activeItem.id}-${Date.now()}`,
+        productId: activeItem.id,
+        name: activeItem.name,
+        image: activeItem.image || DEFAULT_PRODUCTS.find((p) => p.id === activeItem.id)?.image,
+        size: itemSize,
+        milk: itemMilk,
+        notes: cleanNotes,
+        unitPrice: modalUnitPrice,
+        price: modalUnitPrice,
+        quantity: orderQty,
+      };
+      return [...prev, customizedItem];
+    });
     setShowOrderModal(false);
     showToast(`Added ${orderQty}× ${activeItem.name} to cart`);
   };
@@ -1344,11 +1409,14 @@ function App() {
   const handleDirectOrderNow = async (e) => {
     e.preventDefault();
     const customer = orderCustomer.trim() || (isLoggedIn ? userName : 'Guest');
+    const itemDesc = isBakeryItem
+      ? `${activeItem.name}${orderNotes.trim() ? ` (${orderNotes.trim()})` : ''}`
+      : `${activeItem.name} (${orderSize === 'large' ? 'Large' : 'Regular'}, ${orderMilk} milk${orderNotes.trim() ? ` • ${orderNotes.trim()}` : ''})`;
     const draft = {
       source: 'modal',
       items: [
         {
-          name: `${activeItem.name} (${orderSize === 'large' ? 'Large' : 'Regular'}${!isBakeryItem ? `, ${orderMilk} milk` : ''})`,
+          name: itemDesc,
           quantity: orderQty,
           price: modalUnitPrice,
         },
@@ -1523,10 +1591,18 @@ function App() {
         axios.get(`${API_BASE_URL}/api/visitors`),
       ]);
       if (ordRes.status === 'fulfilled' && Array.isArray(ordRes.value.data) && ordRes.value.data.length > 0) {
-        setOrderHistory(ordRes.value.data);
+        setOrderHistory((prev) => {
+          const remote = ordRes.value.data;
+          const localOnly = prev.filter((loc) => !remote.some((rem) => String(rem.id) === String(loc.id)));
+          return [...localOnly, ...remote];
+        });
       }
       if (resvRes.status === 'fulfilled' && Array.isArray(resvRes.value.data) && resvRes.value.data.length > 0) {
-        setReservationsList(resvRes.value.data);
+        setReservationsList((prev) => {
+          const remote = resvRes.value.data;
+          const localOnly = prev.filter((loc) => !remote.some((rem) => String(rem.passId) === String(loc.passId)));
+          return [...localOnly, ...remote];
+        });
       }
       if (visRes.status === 'fulfilled' && visRes.value.data) {
         if (Array.isArray(visRes.value.data.visitors) && visRes.value.data.visitors.length > 0) {
@@ -1550,6 +1626,9 @@ function App() {
     const nextStatus = stages[(stages.indexOf(currentStatus || 'Received') + 1) % stages.length];
     setOrderHistory((prev) =>
       prev.map((o) => (o.id === orderId ? { ...o, status: nextStatus } : o))
+    );
+    setConfirmedOrder((prev) =>
+      prev && prev.id === orderId ? { ...prev, status: nextStatus } : prev
     );
     try {
       await axios.patch(`${API_BASE_URL}/api/orders/${orderId}`, { status: nextStatus });
@@ -2928,32 +3007,34 @@ function App() {
             <p className="modal-desc">{activeItem.description}</p>
 
             <form onSubmit={handleDirectOrderNow}>
-              {/* Size Selection */}
-              <div className="form-group">
-                <label className="form-label">Select Size</label>
-                <div className="pill-group">
-                  <label className="pill-option">
-                    <input
-                      type="radio"
-                      name="modal-size"
-                      value="regular"
-                      checked={orderSize === 'regular'}
-                      onChange={() => setOrderSize('regular')}
-                    />
-                    <span>Regular</span>
-                  </label>
-                  <label className="pill-option">
-                    <input
-                      type="radio"
-                      name="modal-size"
-                      value="large"
-                      checked={orderSize === 'large'}
-                      onChange={() => setOrderSize('large')}
-                    />
-                    <span>Large (+$0.80)</span>
-                  </label>
+              {/* Size Selection (for coffee & iced beverages) */}
+              {!isBakeryItem && (
+                <div className="form-group">
+                  <label className="form-label">Select Size</label>
+                  <div className="pill-group">
+                    <label className="pill-option">
+                      <input
+                        type="radio"
+                        name="modal-size"
+                        value="regular"
+                        checked={orderSize === 'regular'}
+                        onChange={() => setOrderSize('regular')}
+                      />
+                      <span>Regular (12oz)</span>
+                    </label>
+                    <label className="pill-option">
+                      <input
+                        type="radio"
+                        name="modal-size"
+                        value="large"
+                        checked={orderSize === 'large'}
+                        onChange={() => setOrderSize('large')}
+                      />
+                      <span>Large 16oz (+$0.80)</span>
+                    </label>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Milk / Style options (for coffee beverages) */}
               {!isBakeryItem && (
@@ -3472,6 +3553,13 @@ function App() {
                   <div key={item.id} className="cart-item-row">
                     <div className="cart-item-info">
                       <h4>{item.name}</h4>
+                      {(item.size || item.milk || item.notes) && (
+                        <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent)', marginBottom: '0.15rem' }}>
+                          {item.size ? `${item.size === 'large' ? 'Large 16oz' : 'Regular'}` : ''}
+                          {item.milk ? ` • ${item.milk} milk` : ''}
+                          {item.notes ? ` • "${item.notes}"` : ''}
+                        </span>
+                      )}
                       <p>Qty: {item.quantity} × ${(item.unitPrice || item.price).toFixed(2)}</p>
                     </div>
                     <span className="cart-item-price">
