@@ -6446,60 +6446,165 @@ function App() {
 
         return (
           <div className="modal-backdrop" onClick={() => setShowWellnessModal(false)}>
-            <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div
+              className="modal-card wellness-modal-highlight-card"
+              style={{
+                borderTop: `4px solid ${zoneColor}`,
+                borderColor: 'rgba(192, 132, 252, 0.45)',
+                boxShadow:
+                  '0 28px 65px rgba(0, 0, 0, 0.72), 0 0 42px rgba(192, 132, 252, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                backgroundImage:
+                  "linear-gradient(155deg, rgba(24, 18, 42, 0.92) 0%, rgba(14, 11, 24, 0.95) 100%), radial-gradient(circle at 85% 12%, rgba(192, 132, 252, 0.25), transparent 60%), url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1000&q=85')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="modal-header">
                 <div>
-                  <span className="modal-badge">Smart Coffee Wellness</span>
-                  <h3 className="modal-title">📊 Daily Caffeine &amp; Hydration Tracker</h3>
+                  <span
+                    className="modal-badge"
+                    style={{
+                      background: 'rgba(192, 132, 252, 0.18)',
+                      border: '1px solid rgba(192, 132, 252, 0.45)',
+                      color: '#e9d5ff',
+                      padding: '0.22rem 0.75rem',
+                      borderRadius: 999,
+                      display: 'inline-block',
+                      marginBottom: '0.4rem',
+                    }}
+                  >
+                    ✨ Smart Coffee Wellness
+                  </span>
+                  <h3 className="modal-title wellness-highlight-title">
+                    📊 Daily Caffeine &amp; Hydration Tracker
+                  </h3>
                 </div>
                 <button type="button" className="modal-close" onClick={() => setShowWellnessModal(false)}>
                   ✕
                 </button>
               </div>
 
-              <div className="order-summary-box" style={{ marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '0.45rem' }}>
+              <div
+                className="order-summary-box wellness-glass-panel"
+                style={{
+                  marginBottom: '1rem',
+                  borderTop: `3px solid ${zoneColor}`,
+                  borderColor: 'rgba(245, 208, 169, 0.35)',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '0.55rem' }}>
                   <div>
-                    <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', display: 'block' }}>
+                    <span
+                      style={{
+                        fontSize: '0.75rem',
+                        fontWeight: 800,
+                        letterSpacing: '0.8px',
+                        color: '#fde68a',
+                        display: 'block',
+                        marginBottom: '0.15rem',
+                        textShadow: '0 1px 4px rgba(0, 0, 0, 0.6)',
+                      }}
+                    >
                       TODAY&apos;S CAFFEINE INTAKE (CART + ORDERS)
                     </span>
-                    <strong style={{ fontSize: '1.75rem', color: zoneColor }}>
-                      {totalDailyCaffeine}mg <span style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>/ 400mg limit</span>
+                    <strong
+                      style={{
+                        fontSize: '1.95rem',
+                        fontWeight: 900,
+                        color: zoneColor,
+                        textShadow: `0 0 22px ${zoneColor}66`,
+                      }}
+                    >
+                      {totalDailyCaffeine}mg{' '}
+                      <span style={{ fontSize: '0.92rem', color: '#e2e8f0', fontWeight: 700 }}>/ 400mg limit</span>
                     </strong>
                   </div>
-                  <span className="spec-pill">🔥 {cartCaloriesKcal} kcal in cart</span>
+                  <span
+                    className="spec-pill"
+                    style={{
+                      background: 'rgba(245, 208, 169, 0.16)',
+                      border: '1px solid rgba(245, 208, 169, 0.48)',
+                      color: '#fde68a',
+                      fontWeight: 800,
+                      fontSize: '0.8rem',
+                      padding: '0.35rem 0.85rem',
+                      whiteSpace: 'nowrap',
+                      boxShadow: '0 0 16px rgba(245, 208, 169, 0.2)',
+                    }}
+                  >
+                    🔥 {cartCaloriesKcal} kcal in cart
+                  </span>
                 </div>
 
-                <div className="loyalty-progress-track" style={{ height: 11, margin: '0.5rem 0' }}>
+                <div
+                  className="loyalty-progress-track"
+                  style={{
+                    height: 12,
+                    margin: '0.6rem 0',
+                    background: 'rgba(11, 9, 18, 0.72)',
+                    border: '1px solid rgba(255, 255, 255, 0.14)',
+                  }}
+                >
                   <div
                     className="loyalty-progress-fill"
                     style={{
                       width: `${caffPct}%`,
-                      background: `linear-gradient(90deg, #4ade80, ${zoneColor})`,
+                      background: `linear-gradient(90deg, #4ade80, #fbbf24, ${zoneColor})`,
+                      boxShadow: `0 0 14px ${zoneColor}`,
                     }}
                   />
                 </div>
-                <span style={{ fontSize: '0.8rem', color: zoneColor, fontWeight: 700, display: 'block' }}>
+                <span
+                  style={{
+                    fontSize: '0.83rem',
+                    color: zoneColor,
+                    fontWeight: 800,
+                    display: 'block',
+                    textShadow: '0 1px 4px rgba(0, 0, 0, 0.65)',
+                  }}
+                >
                   {zoneLabel}
                 </span>
               </div>
 
               {/* Hydration Balance Counter */}
-              <div className="order-summary-box" style={{ marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <div
+                className="order-summary-box wellness-glass-panel"
+                style={{
+                  marginBottom: '1.1rem',
+                  borderTop: '3px solid #38bdf8',
+                  borderColor: 'rgba(56, 189, 248, 0.38)',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', marginBottom: '0.6rem' }}>
                   <div>
-                    <strong style={{ color: '#fff', fontSize: '0.9rem', display: 'block' }}>
+                    <strong
+                      style={{
+                        color: '#bae6fd',
+                        fontSize: '0.96rem',
+                        fontWeight: 800,
+                        display: 'block',
+                        textShadow: '0 0 14px rgba(56, 189, 248, 0.35)',
+                      }}
+                    >
                       💧 Hydration Balance ({waterGlasses} / {recommendedWaterCups} glasses)
                     </strong>
-                    <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
+                    <span style={{ color: '#e2e8f0', fontSize: '0.78rem', fontWeight: 500 }}>
                       Barista rule: 1 glass of water per espresso shot for zero jitters
                     </span>
                   </div>
-                  <div style={{ display: 'flex', gap: '0.4rem' }}>
+                  <div style={{ display: 'flex', gap: '0.45rem', flexShrink: 0 }}>
                     <button
                       type="button"
                       className="btn-secondary"
-                      style={{ padding: '0.28rem 0.65rem', fontSize: '0.82rem' }}
+                      style={{
+                        padding: '0.32rem 0.75rem',
+                        fontSize: '0.88rem',
+                        fontWeight: 800,
+                        borderColor: 'rgba(56, 189, 248, 0.45)',
+                        color: '#bae6fd',
+                      }}
                       onClick={() => setWaterGlasses((w) => Math.max(0, w - 1))}
                     >
                       −
@@ -6507,20 +6612,36 @@ function App() {
                     <button
                       type="button"
                       className="btn-primary"
-                      style={{ padding: '0.28rem 0.7rem', fontSize: '0.82rem' }}
+                      style={{
+                        padding: '0.32rem 0.8rem',
+                        fontSize: '0.84rem',
+                        boxShadow: '0 6px 18px rgba(192, 132, 252, 0.45)',
+                      }}
                       onClick={() => setWaterGlasses((w) => w + 1)}
                     >
                       + 💧
                     </button>
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '0.38rem',
+                    flexWrap: 'wrap',
+                    padding: '0.45rem 0.65rem',
+                    borderRadius: 12,
+                    background: 'rgba(11, 9, 18, 0.52)',
+                    border: '1px solid rgba(56, 189, 248, 0.2)',
+                  }}
+                >
                   {Array.from({ length: Math.max(recommendedWaterCups, waterGlasses) }).map((_, i) => (
                     <span
                       key={i}
                       style={{
-                        fontSize: '1.15rem',
-                        opacity: i < waterGlasses ? 1 : 0.25,
+                        fontSize: '1.18rem',
+                        opacity: i < waterGlasses ? 1 : 0.28,
+                        filter: i < waterGlasses ? 'drop-shadow(0 0 8px rgba(56, 189, 248, 0.7))' : 'none',
+                        transition: 'all 0.2s ease',
                       }}
                     >
                       💧
@@ -6530,34 +6651,46 @@ function App() {
               </div>
 
               {/* Gentle / Low-Caffeine Smart Recommendations */}
-              <div style={{ marginBottom: '1rem' }}>
-                <span style={{ fontSize: '0.78rem', color: 'var(--warm)', fontWeight: 700, display: 'block', marginBottom: '0.5rem' }}>
+              <div style={{ marginBottom: '1.1rem' }}>
+                <span
+                  style={{
+                    fontSize: '0.83rem',
+                    color: '#fde68a',
+                    fontWeight: 800,
+                    display: 'block',
+                    marginBottom: '0.6rem',
+                    letterSpacing: '0.3px',
+                    textShadow: '0 1px 6px rgba(245, 208, 169, 0.35)',
+                  }}
+                >
                   🍵 Low-Caffeine &amp; Zero-Caffeine Pairing Picks
                 </span>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.55rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.6rem' }}>
                   {gentlePicks.map((gp) => (
                     <div
                       key={gp.id}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        padding: '0.5rem 0.7rem',
-                        borderRadius: 12,
-                        background: 'rgba(255,255,255,0.04)',
-                        border: '1px solid var(--border)',
-                      }}
+                      className="wellness-pick-card"
                     >
                       <div>
-                        <strong style={{ color: '#fff', fontSize: '0.8rem', display: 'block' }}>{gp.name}</strong>
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>
-                          ⚡ {gp.caffeine} • {formatPrice(gp.price)}
+                        <strong style={{ color: '#ffffff', fontSize: '0.86rem', fontWeight: 800, display: 'block', marginBottom: '0.15rem' }}>
+                          {gp.name}
+                        </strong>
+                        <span style={{ color: '#fde68a', fontSize: '0.76rem', fontWeight: 700 }}>
+                          ⚡ {gp.caffeine} • <span style={{ color: '#e9d5ff' }}>{formatPrice(gp.price)}</span>
                         </span>
                       </div>
                       <button
                         type="button"
                         className="order-btn"
-                        style={{ padding: '0.25rem 0.6rem', fontSize: '0.74rem' }}
+                        style={{
+                          padding: '0.3rem 0.68rem',
+                          fontSize: '0.82rem',
+                          fontWeight: 800,
+                          background: 'linear-gradient(135deg, rgba(192, 132, 252, 0.28), rgba(245, 208, 169, 0.2))',
+                          borderColor: 'rgba(192, 132, 252, 0.6)',
+                          color: '#fff',
+                          boxShadow: '0 4px 12px rgba(192, 132, 252, 0.3)',
+                        }}
                         onClick={() => handleQuickAdd(gp)}
                       >
                         +
@@ -6570,10 +6703,15 @@ function App() {
               <button
                 type="button"
                 className="btn-primary"
-                style={{ width: '100%', justifyContent: 'center' }}
+                style={{
+                  width: '100%',
+                  justifyContent: 'center',
+                  fontWeight: 800,
+                  boxShadow: '0 10px 28px rgba(192, 132, 252, 0.45)',
+                }}
                 onClick={() => setShowWellnessModal(false)}
               >
-                Done
+                ✓ Done
               </button>
             </div>
           </div>

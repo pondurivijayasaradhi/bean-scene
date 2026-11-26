@@ -628,7 +628,6 @@ app.get('/api/orders', (req, res) => {
     const userOrders = orders.filter((order) => order.email === email);
     return res.json(userOrders);
   }
-
   res.json(orders);
 });
 
